@@ -969,7 +969,7 @@ export const Wall = pipe(
   Destructable,
 )(Entity);
 
-export const Box = pipe(
+export const Debris = pipe(
   Rendering,
   // Destructable,
   Containing,

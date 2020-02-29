@@ -14,6 +14,14 @@ export default function (engine) {
         activate: () => Keymap.none(engine),
         label: 'stay',
       },
+      i: {
+        activate: () => Keymap.activateInventory(engine),
+        label: 'Open Inventory',
+      },
+      b: {
+        activate: () => Keymap.addDebris(engine.game),
+        label: 'Add Debris',
+      }
     };
   }
   // instantiate class
@@ -30,5 +38,14 @@ export default function (engine) {
     durability: 20,
     keymap: keymap(engine),
   })
+
+  // default items to container
+  const axe = Array(2).fill('').map(() => Item.axe(engine));
+  actor.container = [
+    new Entity.ContainerSlot({
+      itemType: axe[0].name,
+      items: axe,
+    }),
+  ]
   return actor;
 }

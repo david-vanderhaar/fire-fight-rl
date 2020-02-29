@@ -3,11 +3,12 @@ import * as ROT from 'rot-js';
 import * as Constant from './constants';
 import * as Helper from '../helper';
 import { addActor as addWaveEnemy } from './Keymap/KeyActions/addActor';
-import { addBox  } from './Keymap/KeyActions/addBox';
+import { addDebris  } from './Keymap/KeyActions/addDebris';
 import * as Message from './message';
 import { Display } from './Display/konvaCustom';
+import { add } from 'rot-js/lib/color';
 
-const GAME_MODE_TYPES = {WAVE: 0, TEST:1};
+const GAME_MODE_TYPES = {WAVE: 0, TEST: 1, ENTITY_ONLY:2 };
 const MAP_WIDTH = 60;
 const MAP_HEIGHT = 30;
 const TILE_WIDTH = 20;
@@ -64,7 +65,7 @@ export class Game {
         addWaveEnemy(this);
       }
     } else if (this.mode.type === GAME_MODE_TYPES.TEST) {
-      addBox(this);
+      addDebris(this);
     }
   }
   

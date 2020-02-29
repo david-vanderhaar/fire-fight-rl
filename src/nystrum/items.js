@@ -6,6 +6,7 @@ export const TYPE = {
   KUNAI: 'Kunai',
   DIRECTIONAL_KUNAI: 'Directional Kunai',
   SWORD: 'Sword',
+  AXE: 'Axe',
   BARRIER: 'Barrier',
 }
 
@@ -343,6 +344,19 @@ export const sword = (engine) => new Entity.Weapon({
   renderer: {
     // character: '|',
     character: '🗡️',
+    color: 'white',
+    background: '',
+  },
+})
+export const axe = (engine) => new Entity.Weapon({
+  game: engine.game,
+  name: TYPE.AXE,
+  passable: true,
+  attackDamage: 5,
+  equipmentType: Constant.EQUIPMENT_TYPES.HAND,
+  renderer: {
+    // character: '|',
+    character: 'P',
     color: 'white',
     background: '',
   },
