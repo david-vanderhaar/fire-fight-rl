@@ -25,6 +25,7 @@ import { sandPulse } from './KeyActions/sandPulseV2';
 import { sandWall } from './KeyActions/sandWall';
 import { die } from './KeyActions/die';
 import { none } from './KeyActions/none';
+import { addDebris } from './KeyActions/addDebris';
 
 export {
   activateDropItem,
@@ -55,4 +56,5 @@ export {
   sandTomb,
   sandSkin,
   sandClone,
+  addDebris
 }

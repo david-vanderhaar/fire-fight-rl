@@ -3,6 +3,7 @@ import * as ROT from 'rot-js';
 import * as Constant from './constants';
 import * as Helper from '../helper';
 import { addActor as addWaveEnemy } from './Keymap/KeyActions/addActor';
+import { addDebris  } from './Keymap/KeyActions/addDebris';
 import * as Message from './message';
 import { Display } from './Display/konvaCustom';
 const mapData = require('./Maps/building.json');
@@ -31,7 +32,7 @@ export class Game {
     }),
     tileKey = Constant.TILE_KEY,
     mode = {
-      type: GAME_MODE_TYPES.WAVE,
+      type: GAME_MODE_TYPES.TEST,
       data: {
         level: 1,
         highestLevel: null,
@@ -63,6 +64,8 @@ export class Game {
       for (let i = 0; i < Math.pow(this.mode.data.level, 2); i++) {
         addWaveEnemy(this);
       }
+    } else if (this.mode.type === GAME_MODE_TYPES.TEST) {
+      addDebris(this);
     }
   }
   
@@ -144,12 +147,12 @@ export class Game {
   }
 
   createLevel () {
-    // let digger = new ROT.Map.Arena();
+    let digger = new ROT.Map.Arena(this.mapWidth, this.mapHeight);
     // let digger = new ROT.Map.Rogue();
     // let digger = new ROT.Map.DividedMaze();
     // let digger = new ROT.Map.EllerMaze();
     // let digger = new ROT.Map.Cellular();
-    let digger = new ROT.Map.Digger(this.mapWidth, this.mapHeight);
+    // let digger = new ROT.Map.Digger(this.mapWidth, this.mapHeight);
     // let digger = new ROT.Map.IceyMaze();
     // let digger = new ROT.Map.Uniform();
     let freeCells = [];
