@@ -31,10 +31,7 @@ export const addDebris = (game) => {
     durability: 5,
   })
 
-  if (game.randomlyPlaceActorOnMap(box)) {
-    game.draw();
-  };
-  if (game.randomlyPlaceActorOnMap(stick)) {
+  if (game.randomlyPlaceActorOnMap(box) && game.randomlyPlaceActorOnMap(stick)) {
     game.draw();
   };
 }

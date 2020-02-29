@@ -8,7 +8,7 @@ import * as Message from './message';
 import { Display } from './Display/konvaCustom';
 import { add } from 'rot-js/lib/color';
 
-const GAME_MODE_TYPES = {WAVE: 0, TEST: 1, ENTITY_ONLY:2 };
+const GAME_MODE_TYPES = {WAVE: 0, TEST: 1};
 const MAP_WIDTH = 60;
 const MAP_HEIGHT = 30;
 const TILE_WIDTH = 20;
