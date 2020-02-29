@@ -828,7 +828,48 @@ const RangedChasing = superclass => class extends superclass {
   }
 }
 
-const Pushing = superclass => class extends superclass {
+
+
+const Spreading = superclass => class extends superclass {
+  constructor({ timeToSpread = 5, spreadCount = 1, ...args }) {
+    super({ ...args })
+    this.entityTypes = this.entityTypes.concat('SPREADING')
+  }
+
+  getAction (game) {
+    // if no more spreads then destroy
+    if (this.spreadCount <= 0) {
+      return new Action.DestroySelf({
+        game: game,
+        actor: this,
+        energyCost: Constant.ENERGY_THRESHOLD,
+        processDelay: 0,
+      });
+    }
+
+    // if its time to expand again, create clones
+    if (this.timeToSpread <= 0) {
+      // find adjacent spot to spread to
+      // clone
+      let cloneOverrides = [];
+      return new Action.CloneSelf({
+        game,
+        actor: this,
+        cloneArgs: cloneOverrides,
+        onSuccess: () => this.spreadCount -= 1,
+      })
+    }
+
+    this.timeToSpread -= 1;
+    return new Action.Say({
+      message: 'burning',
+      game,
+      actor: this,
+    })
+  }
+}
+
+  const Pushing = superclass => class extends superclass {
   constructor({ path = false, targetPos = null, ...args }) {
     super({ ...args })
     this.entityTypes = this.entityTypes.concat('PUSHING')
@@ -1049,6 +1090,13 @@ export const DestructiveCloudProjectileV2 = pipe(
   Acting, 
   Destructable,
   Parent, 
+)(Entity);
+
+export const FireSpread = pipe (
+  Acting,
+  Destructable,
+  Attacking,
+  Spreading,
 )(Entity);
 
 export const Particle = pipe(
