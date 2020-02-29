@@ -17,14 +17,7 @@ export const addBox = (game) => {
     game,
     durability: 10,
   })
-  // game.placeActorOnMap(actor)
   if (game.randomlyPlaceActorOnMap(actor)) {
-    // game.engine.addActor(actor);
     game.draw();
   };
 }
-
-  // renderer: {
-  // character: 'R',
-  // color: '#e6e6e6',
-  // background: '#36635b',
