@@ -66,8 +66,8 @@ export default function (engine) {
     pos: { x: 23, y: 7 },
     renderer: {
       character: 'R',
-      color: '#e6e6e6',
-      background: '#36635b',
+      color: Constant.THEMES.SOLARIZED.base3,
+      background: Constant.THEMES.SOLARIZED.yellow,
     },
     name: 'Rock Lee',
     actions: [],

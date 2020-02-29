@@ -5,10 +5,11 @@ import * as Helper from '../helper';
 import { addActor as addWaveEnemy } from './Keymap/KeyActions/addActor';
 import * as Message from './message';
 import { Display } from './Display/konvaCustom';
+const mapData = require('./Maps/building.json');
 
 const GAME_MODE_TYPES = {WAVE: 0};
-const MAP_WIDTH = 60;
-const MAP_HEIGHT = 30;
+const MAP_WIDTH = 50;
+const MAP_HEIGHT = 25;
 const TILE_WIDTH = 20;
 const TILE_HEIGHT = 20;
 const TILE_OFFSET = 5;
@@ -176,6 +177,27 @@ export class Game {
     this.randomlyPlaceAllActorsOnMap()
   }
 
+  createCustomLevel (data) {
+    Object.keys(data.tiles).forEach((key, i) => {
+      const tile = data.tiles[key];
+      let type = JSON.parse(tile.data);
+      let currentFrame = 0;
+      if (!type) {
+        type = 'GROUND';
+      }
+
+      if (Constant.TILE_KEY[type].animation) {
+        currentFrame = Helper.getRandomInt(0, Constant.TILE_KEY[type].animation.length)
+      }
+
+      this.map[key] = {
+        type,
+        currentFrame,
+        entities: [],
+      };
+    })
+  }
+
   canOccupyPosition (pos, entity = {passable: false}) {
     let result = false;
     let targetTile = this.map[Helper.coordsToString(pos)];
@@ -303,7 +325,8 @@ export class Game {
     this.engine.actors.forEach((actor) => {
       actor.game = this;
     });
-    this.createLevel();
+    // this.createLevel();
+    this.createCustomLevel(mapData);
     this.show(document);
     this.initializeMap();
     this.draw();
