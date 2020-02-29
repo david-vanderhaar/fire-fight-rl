@@ -21,7 +21,7 @@ export default function (engine) {
       b: {
         activate: () => Keymap.addDebris(engine.game),
         label: 'Add Debris',
-      }
+      },
     };
   }
   // instantiate class
