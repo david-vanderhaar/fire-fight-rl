@@ -969,6 +969,12 @@ export const Wall = pipe(
   Destructable,
 )(Entity);
 
+export const Box = pipe(
+  Rendering,
+  // Destructable,
+  Containing,
+)(Entity);
+
 export const MovingWall = pipe(
   Acting,
   Rendering,
@@ -1001,7 +1007,7 @@ export const RangedBandit = pipe(
 )(Entity);
 
 export const Player = pipe(
-  Acting, 
+  Acting,
   Rendering, 
   Charging, 
   Signing, 
