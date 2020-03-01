@@ -23,6 +23,7 @@ import { sandTomb } from './KeyActions/sandTomb';
 // import { sandPulse } from './KeyActions/sandPulse';
 import { sandPulse } from './KeyActions/sandPulseV2';
 import { sandWall } from './KeyActions/sandWall';
+import { chop } from './KeyActions/chop';
 import { die } from './KeyActions/die';
 import { none } from './KeyActions/none';
 import { addDebris } from './KeyActions/addDebris';
@@ -54,6 +55,7 @@ export {
   sandWall,
   sandPulse,
   sandTomb,
+  chop,
   sandSkin,
   sandClone,
   addDebris
