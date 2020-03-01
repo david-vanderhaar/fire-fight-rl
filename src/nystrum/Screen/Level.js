@@ -64,6 +64,9 @@ class Level extends React.Component {
             <p className='flow-text'>
               Save all of the citizens from the burning building and get them to the safe zone!
             </p>
+            <p className='flow-text'>
+              {`Wave ${this.state.game.mode.data.level}`}
+            </p>
           </div>
           <div className='col s2'>
             <KeymapUI keymap={this.state.game.visibleKeymap} />

@@ -2579,19 +2579,19 @@
       "type": 1,
       "character": "|",
       "color": "#fff",
-      "data": "\"SAFE\""
+      "data": "\"GROUND\""
     },
     "17,22": {
       "type": 1,
       "character": "|",
       "color": "#fff",
-      "data": "\"SAFE\""
+      "data": "\"GROUND\""
     },
     "17,23": {
       "type": 1,
       "character": "|",
       "color": "#fff",
-      "data": "\"SAFE\""
+      "data": "\"GROUND\""
     },
     "17,24": {
       "type": 0,

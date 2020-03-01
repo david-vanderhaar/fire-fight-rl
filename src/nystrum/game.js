@@ -47,6 +47,9 @@ export class Game {
       data: {
         level: 1,
         highestLevel: null,
+        fireIntensity: 1, // increase this number to increase fire spread
+        npcCount: 1,
+        debrisCount: 10,
       }
     },
     messages = [],
@@ -86,7 +89,7 @@ export class Game {
     }
   }
   
-  updateMode () {
+  updateMode () { // this is run every game turn
     if (this.mode.type === GAME_MODE_TYPES.WAVE) {
       const nonPlayerCharacters = this.engine.actors.filter((actor) => !actor.entityTypes.includes('PLAYING'));
       if (!nonPlayerCharacters.length) {
@@ -98,10 +101,12 @@ export class Game {
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
       this.propogateFire();
       this.burnEntities();
-      if (this.allSaved()) {
+
+      // triggerd once all npcs are saved
+      if (this.allSaved()) { 
         this.nextModeLevel();
-        // this.initializeMode();
         this.initializeGameData();
+        this.increaseIntensity()
       }
     }
 
@@ -121,6 +126,10 @@ export class Game {
   }
 
   // Fire Fight Specific
+
+  increaseIntensity () {
+    this.mode.data.fireIntensity += 1;
+  }
 
   allSaved () {
     let allSaved = true;
@@ -184,8 +193,7 @@ export class Game {
 
   propogateFire () {
     const fires = this.engine.actors.filter((actor) => actor.name === 'Pyro')
-    const fireSpreadingSpeed = 1 // increase this number to increase fire spread
-    if (fires.length < fireSpreadingSpeed) {
+    if (fires.length < this.mode.data.fireIntensity) {
       // find burnt tile
       const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'BURNT');
       const key = Helper.getRandomInArray(keys);
