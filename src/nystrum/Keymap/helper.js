@@ -23,7 +23,7 @@ export const createFourDirectionMoveOptions = (moveFunction, engine, label = 'mo
       activate: () => moveFunction(DIRECTIONS.E, engine),
       label: `${label} E`,
     },
-    x: {
+    s: {
       activate: () => moveFunction(DIRECTIONS.S, engine),
       label: `${label} S`,
     },
