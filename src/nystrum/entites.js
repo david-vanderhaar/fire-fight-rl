@@ -828,7 +828,66 @@ const RangedChasing = superclass => class extends superclass {
   }
 }
 
+const Dragging = superclass => class extends superclass {
+  constructor({ draggedEntity = null, ...args }) {
+    super({ ...args })
+    this.entityTypes = this.entityTypes.concat('DRAGGING')
+    this.draggedEntity = draggedEntity;
+  }
 
+  grab (pos) {
+    const tile = this.game.map[Helper.coordsToString(pos)];
+    if (!tile) return false;
+    if (tile.entities.length > 0) {
+      const entity = tile.entities[0];
+      if (!this.draggedEntity && entity.entityTypes.includes('DRAGGABLE')) {
+        this.draggedEntity = entity;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  release () {
+    if (!this.draggedEntity) return false;
+    this.draggedEntity = null;
+    return true;
+  }
+
+  drag (lastPos) {
+    // update entity position
+    console.log('drag');
+    const pos = this.draggedEntity.pos;
+    // get tile of draged entity
+    let tile = this.game.map[Helper.coordsToString(pos)]
+    // remove dragged entity from that tile
+    this.game.map[Helper.coordsToString(pos)] = { ...tile, entities: tile.entities.filter((e) => e.id !== this.draggedEntity.id) }
+    // update dragged ent to player's position
+    this.draggedEntity.pos = lastPos
+    // add dragged ent to new tile
+    this.game.map[Helper.coordsToString(lastPos)].entities.push(this.draggedEntity);
+  }
+
+  move (targetPos) {
+    const lastPos = {...this.pos}
+    if (this.draggedEntity) {
+      const moveSuccess = super.move(targetPos);
+      if (moveSuccess) {
+        this.drag(lastPos);
+        return true;
+      }
+      return moveSuccess;
+    }
+    return super.move(targetPos);
+  }
+}
+
+const Draggable = superclass => class extends superclass {
+  constructor({ ...args }) {
+    super({ ...args })
+    this.entityTypes = this.entityTypes.concat('DRAGGABLE')
+  }
+}
 
 const Spreading = superclass => class extends superclass {
   constructor({ timeToSpread = 5, spreadCount = 1, ...args }) {
@@ -843,8 +902,6 @@ const Spreading = superclass => class extends superclass {
   getAction (game) {
     // if no more spreads, then destroy
     if (this.spreadCount <= 0) {
-      console.log('destroying fire');
-      
       return new Action.DestroySelf({
         game: game,
         actor: this,
@@ -880,10 +937,8 @@ const Spreading = superclass => class extends superclass {
       let adjacentPos = null;
       let kill = 100;
       while (kill > 0) {
-        console.log('k ', kill);
         let newPos = Helper.getRandomInArray(adjacentPositions);
         let newTile = this.game.map[Helper.coordsToString(newPos)];
-        debugger;
         let tileExists = Boolean(newTile);
         let notBurnt = true;
         let canBurn = false;
@@ -897,8 +952,6 @@ const Spreading = superclass => class extends superclass {
         }
         kill -= 1;
       }
-      console.log('adjacentPos');
-      console.log(adjacentPos);
       
       if (adjacentPos) {
         // create new fire actor and place
@@ -920,7 +973,6 @@ const Spreading = superclass => class extends superclass {
 
         this.timeToSpread = this.timeToSpreadMax
         this.spreadCount -= 1
-        console.log('placing fire');
         
         return new Action.PlaceActor({
           targetPos: adjacentPos,
@@ -938,7 +990,6 @@ const Spreading = superclass => class extends superclass {
     }
 
     this.timeToSpread -= 1;
-    console.log('decreasing time spread');
     
     return new Action.Say({
       message: 'burning',
@@ -1073,6 +1124,38 @@ const IsParticle = superclass => class extends superclass {
   }
 }
 
+const Speaking = superclass => class extends superclass {
+  constructor({ messages = ['I have nothing to say.'], messageType, ...args }) {
+    super({ ...args })
+    this.entityTypes = this.entityTypes.concat('SPEAKING')
+    this.messages = messages;
+    this.messageType = messageType
+  }
+
+  getAction (game) {
+    const message = this.messages.shift();
+    this.messages.push(message);
+    return new Action.Say({
+      actor: this,
+      game,
+      message: message,
+      messageType: this.messageType
+    });
+  }
+}
+
+const Burnable = superclass => class extends superclass {
+  constructor({ ...args }) {
+    super({ ...args })
+    this.entityTypes = this.entityTypes.concat('BURNABLE')
+  }
+
+  burn () {
+    this.decreaseDurability(1)
+    return true;
+  }
+}
+
 export const UI_Actor = pipe(
   Acting, 
   Rendering, 
@@ -1085,6 +1168,15 @@ export const Actor = pipe(
   Rendering
 )(Entity);
 
+export const Speaker = pipe(
+  Acting,
+  Rendering,
+  Destructable,
+  Speaking,
+  Draggable,
+  Burnable,
+)(Entity);
+
 export const Wall = pipe(
   Rendering,
   Destructable,
@@ -1093,6 +1185,9 @@ export const Wall = pipe(
 export const Debris = pipe(
   Rendering,
   Containing,
+  Draggable,
+  Destructable,
+  Burnable,
 )(Entity);
 
 export const MovingWall = pipe(
@@ -1128,7 +1223,8 @@ export const RangedBandit = pipe(
 
 export const Player = pipe(
   Acting,
-  Rendering, 
+  Rendering,
+  Dragging,
   Charging, 
   Signing, 
   Containing, 
@@ -1138,6 +1234,7 @@ export const Player = pipe(
   Destructable, 
   Cloning,
   Playing,
+  Burnable,
 )(Entity);
 
 export const Weapon = pipe(

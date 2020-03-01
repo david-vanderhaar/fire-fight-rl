@@ -6,9 +6,12 @@ import { addActor as addWaveEnemy } from './Keymap/KeyActions/addActor';
 import { addDebris  } from './Keymap/KeyActions/addDebris';
 import * as Message from './message';
 import { Display } from './Display/konvaCustom';
-import { FireSpread } from './entites';
-// const mapData = require('./Maps/building.json');
-const mapData = require('./Maps/building_w_floor.json');
+import { FireSpread, Speaker } from './entites';
+import { MESSAGE_TYPE } from './message';
+
+// const MAP_DATA = require('./Maps/building.json');
+const MAP_DATA = require('./Maps/building_w_floor.json');
+const SOLANGE = require('./Data/solange.json');
 
 const GAME_MODE_TYPES = {WAVE: 0};
 const MAP_WIDTH = 50;
@@ -71,6 +74,7 @@ export class Game {
     if (this.mode.type === GAME_MODE_TYPES.TEST) {
       addDebris(this);
       this.addFire({ x: 20, y: 7 });
+      this.addNPC({ x: 7, y: 17 });
     }
   }
   
@@ -85,6 +89,7 @@ export class Game {
 
     if (this.mode.type === GAME_MODE_TYPES.TEST) {
       this.propogateFire();
+      this.burnEntities();
     }
 
   }
@@ -103,6 +108,27 @@ export class Game {
   }
 
   // Fire Fight Specific
+  addNPC (pos) {
+    // create new entity and place
+    let entity = new Speaker({
+      name: 'Tobi Lou',
+      messages: SOLANGE.lyrics,
+      messageType: MESSAGE_TYPE.STATUS_EFFECT,
+      pos,
+      game: this,
+      renderer: {
+        character: 'T',
+        color: Constant.THEMES.SOLARIZED.base3,
+        background: Constant.THEMES.SOLARIZED.violet,
+      },
+      durability: 2,
+    })
+
+    if (this.placeActorOnMap(entity)) {
+      this.engine.addActor(entity);
+      this.draw();
+    };
+  }
 
   addFire (pos) {
     // create new fire actor and place
@@ -130,12 +156,11 @@ export class Game {
 
   propogateFire () {
     const fires = this.engine.actors.filter((actor) => actor.name === 'Pyro')
-    const fireSpreadingSpeed = 2 // increase this number to increase fire spread
+    const fireSpreadingSpeed = 5 // increase this number to increase fire spread
     if (fires.length < fireSpreadingSpeed) {
       // find burnt tile
       const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'BURNT');
       const key = Helper.getRandomInArray(keys);
-      console.log(key);
       if (key) {
         const position = {
           x: parseInt(key.split(',')[0]),
@@ -144,6 +169,20 @@ export class Game {
         this.addFire(position)
       }
     }
+  }
+
+  burnEntities () {
+    // burn all entiies on burning tiles
+    const coordinates = Object.keys(this.map).filter((key) => this.map[key].type === 'BURNT');
+    const entities = coordinates.reduce((acc, curr) => acc.concat(this.map[curr].entities), []);
+    console.log(entities.filter((ent) => ent.entityTypes.includes('BURNABLE')));
+    
+    entities.forEach((ent) => {
+      if (ent.entityTypes.includes('BURNABLE')) {
+        const burned = ent.burn();
+        if (burned) this.addMessage(`${ent.name} is burned.`, MESSAGE_TYPE.DANGER);
+      }
+    })
   }
 
   // End
@@ -385,12 +424,13 @@ export class Game {
       actor.game = this;
     });
     // this.createLevel();
-    this.createCustomLevel(mapData);
+    this.createCustomLevel(MAP_DATA);
     this.show(document);
     this.initializeMap();
     this.draw();
     presserRef.current.focus();
-    this.randomlyPlaceAllActorsOnMap()
+    // this.randomlyPlaceAllActorsOnMap()
+    this.placeActorsOnMap()
     this.initializeMode();
   }
 

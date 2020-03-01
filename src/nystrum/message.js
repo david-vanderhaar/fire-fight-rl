@@ -1,4 +1,4 @@
-import { COLORS } from './constants';
+import { COLORS, THEMES } from './constants';
 import uuid from 'uuid/v1';
 
 export const MESSAGE_TYPE = {
@@ -15,8 +15,8 @@ export const MESSAGE_TYPE = {
     backgroundColor: COLORS.black_1,
   },
   STATUS_EFFECT: {
-    color: COLORS.purple_3,
-    backgroundColor: COLORS.black_1,
+    color: THEMES.SOLARIZED.base3,
+    backgroundColor: THEMES.SOLARIZED.violet,
   },
 }
 

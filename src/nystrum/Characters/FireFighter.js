@@ -14,6 +14,14 @@ export default function (engine) {
         activate: () => Keymap.none(engine),
         label: 'stay',
       },
+      g: {
+        activate: () => Keymap.activateGrab(engine),
+        label: 'grab',
+      },
+      r: {
+        activate: () => Keymap.releaseGrab(engine),
+        label: 'release',
+      },
       i: {
         activate: () => Keymap.activateInventory(engine),
         label: 'Open Inventory',
@@ -30,7 +38,7 @@ export default function (engine) {
   }
   // instantiate class
   let actor = new Entity.Player({
-    pos: { x: 28, y: 19 },
+    pos: { x: 19, y: 23 },
     renderer: {
       character: 'F',
       color: Constant.THEMES.SOLARIZED.base3,
@@ -39,7 +47,7 @@ export default function (engine) {
     name: 'Fire Fighter',
     actions: [],
     speed: 100,
-    durability: 20,
+    durability: 4,
     keymap: keymap(engine),
   })
 
