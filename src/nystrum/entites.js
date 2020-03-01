@@ -1156,6 +1156,13 @@ const Burnable = superclass => class extends superclass {
   }
 }
 
+const Helpless = superclass => class extends superclass {
+  constructor({ ...args }) {
+    super({ ...args })
+    this.entityTypes = this.entityTypes.concat('HELPLESS')
+  }
+}
+
 export const UI_Actor = pipe(
   Acting, 
   Rendering, 
@@ -1175,6 +1182,7 @@ export const Speaker = pipe(
   Speaking,
   Draggable,
   Burnable,
+  Helpless,
 )(Entity);
 
 export const Wall = pipe(

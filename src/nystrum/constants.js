@@ -40,8 +40,8 @@ export const THEMES = {
 export const TILE_KEY = {
   'GROUND': {
     background: THEMES.SOLARIZED.base03,
-    foreground: THEMES.SOLARIZED.green,
-    character: '"',
+    foreground: THEMES.SOLARIZED.base01,
+    character: '.',
     passable: true,
   },
   'FLOOR': {
@@ -57,11 +57,11 @@ export const TILE_KEY = {
     passable: true,
     animation: [
       { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'x', passable: true, },
       { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'x', passable: true, },
       { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'X', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'X', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.yellow, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.yellow, character: 'x', passable: true, },
       { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
     ]
   },
@@ -71,6 +71,14 @@ export const TILE_KEY = {
     character: '#',
     passable: false,
   },
+
+  'SAFE': {
+    background: THEMES.SOLARIZED.base02,
+    foreground: THEMES.SOLARIZED.green,
+    character: '+',
+    passable: true,
+  },
+
   'WATER': {
     animation: [
       { background: '#424242', foreground: '#9dc3d3', character: '░', passable: false,},

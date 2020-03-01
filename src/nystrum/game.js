@@ -10,10 +10,15 @@ import { FireSpread, Speaker } from './entites';
 import { MESSAGE_TYPE } from './message';
 
 // const MAP_DATA = require('./Maps/building.json');
-const MAP_DATA = require('./Maps/building_w_floor.json');
+// const MAP_DATA = require('./Maps/building_w_floor.json');
+const MAP_DATA = require('./Maps/building_w_ambo.json');
 const SOLANGE = require('./Data/solange.json');
 
-const GAME_MODE_TYPES = {WAVE: 0};
+const GAME_MODE_TYPES = {
+  WAVE: 0,
+  TEST: 1,
+  PLAY: 2,
+};
 const MAP_WIDTH = 50;
 const MAP_HEIGHT = 25;
 const TILE_WIDTH = 30;
@@ -27,6 +32,7 @@ export class Game {
     tileMap = {},
     mapWidth = MAP_WIDTH,
     mapHeight = MAP_HEIGHT,
+    getSelectedCharacter = () => false,
     display = new Display({
       containerId: 'display',
       width: (MAP_WIDTH * TILE_WIDTH) + TILE_OFFSET,
@@ -37,7 +43,7 @@ export class Game {
     }),
     tileKey = Constant.TILE_KEY,
     mode = {
-      type: GAME_MODE_TYPES.TEST,
+      type: GAME_MODE_TYPES.PLAY,
       data: {
         level: 1,
         highestLevel: null,
@@ -54,6 +60,7 @@ export class Game {
     this.tileKey = tileKey;
     this.mode = mode;
     this.messages = messages;
+    this.getSelectedCharacter = getSelectedCharacter;
   }
 
   initializeMode () {
@@ -71,10 +78,11 @@ export class Game {
       }
     } 
     
-    if (this.mode.type === GAME_MODE_TYPES.TEST) {
+    if (this.mode.type === GAME_MODE_TYPES.PLAY) {
       addDebris(this);
       this.addFire({ x: 20, y: 7 });
       this.addNPC({ x: 7, y: 17 });
+      // this.addNPC({ x: 19, y: 20 });
     }
   }
   
@@ -87,9 +95,14 @@ export class Game {
       }
     }
 
-    if (this.mode.type === GAME_MODE_TYPES.TEST) {
+    if (this.mode.type === GAME_MODE_TYPES.PLAY) {
       this.propogateFire();
       this.burnEntities();
+      if (this.allSaved()) {
+        this.nextModeLevel();
+        // this.initializeMode();
+        this.initializeGameData();
+      }
     }
 
   }
@@ -108,6 +121,21 @@ export class Game {
   }
 
   // Fire Fight Specific
+
+  allSaved () {
+    let allSaved = true;
+    const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
+
+    helpless.forEach((actor) => {
+      const tile = this.map[Helper.coordsToString(actor.pos)];
+      if (tile.type !== 'SAFE') {
+        allSaved = false;
+      }
+    })
+
+    return allSaved;
+  }
+
   addNPC (pos) {
     // create new entity and place
     let entity = new Speaker({
@@ -156,7 +184,7 @@ export class Game {
 
   propogateFire () {
     const fires = this.engine.actors.filter((actor) => actor.name === 'Pyro')
-    const fireSpreadingSpeed = 5 // increase this number to increase fire spread
+    const fireSpreadingSpeed = 1 // increase this number to increase fire spread
     if (fires.length < fireSpreadingSpeed) {
       // find burnt tile
       const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'BURNT');
@@ -175,8 +203,6 @@ export class Game {
     // burn all entiies on burning tiles
     const coordinates = Object.keys(this.map).filter((key) => this.map[key].type === 'BURNT');
     const entities = coordinates.reduce((acc, curr) => acc.concat(this.map[curr].entities), []);
-    console.log(entities.filter((ent) => ent.entityTypes.includes('BURNABLE')));
-    
     entities.forEach((ent) => {
       if (ent.entityTypes.includes('BURNABLE')) {
         const burned = ent.burn();
@@ -418,20 +444,30 @@ export class Game {
     this.draw();
   }
 
-  initialize (presserRef, document) {
+  initializeUI (presserRef, document) {
+    this.show(document);
+    presserRef.current.focus();
+  }
+
+  initializeGameData () {
     this.engine.game = this;
+    const selectedCharacter = this.getSelectedCharacter();
+    this.engine.actors = [selectedCharacter];
     this.engine.actors.forEach((actor) => {
       actor.game = this;
     });
     // this.createLevel();
     this.createCustomLevel(MAP_DATA);
-    this.show(document);
     this.initializeMap();
     this.draw();
-    presserRef.current.focus();
     // this.randomlyPlaceAllActorsOnMap()
     this.placeActorsOnMap()
     this.initializeMode();
+  }
+
+  initialize (presserRef, document) {
+    this.initializeUI(presserRef, document);
+    this.initializeGameData();
   }
 
   addMessage (text, type) {

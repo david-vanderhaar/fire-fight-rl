@@ -38,7 +38,7 @@ export default function (engine) {
   }
   // instantiate class
   let actor = new Entity.Player({
-    pos: { x: 19, y: 23 },
+    pos: { x: 19, y: 22 },
     renderer: {
       character: 'F',
       color: Constant.THEMES.SOLARIZED.base3,
