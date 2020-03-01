@@ -3,7 +3,7 @@ import FireFighter from './FireFighter';
 
 let Characters = () => {
   return {
-    RockLee,
+    // RockLee,
     FireFighter,
   }
 }

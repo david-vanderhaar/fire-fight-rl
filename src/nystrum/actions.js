@@ -427,10 +427,12 @@ export class ParticleMove extends CursorMove {
 }
 
 export class PlaceActor extends Base {
-  constructor({ targetPos, entity, ...args}) {
+  constructor({ targetPos, entity, interrupt = true, forcePlacement = false, ...args}) {
     super({...args});
     this.targetPos = targetPos
     this.entity = entity
+    this.interrupt = interrupt
+    this.forcePlacement = forcePlacement
   }
   perform() {
     let success = false;
@@ -452,12 +454,17 @@ export class PlaceActor extends Base {
     //   this.game.engine.start(); // should this be used outside of engine?
     //   success = true;      
     // }
-    if (this.game.canOccupyPosition(this.targetPos, this.entity)) {
+
+    let canOccupyPosition = this.forcePlacement ? true : this.game.canOccupyPosition(this.targetPos, this.entity);
+    const tile = this.game.map[Helper.coordsToString(this.targetPos)];
+
+    if (canOccupyPosition && tile) {
       this.entity.pos = this.targetPos;
+      tile.entities.push(this.entity);
       // this.game.engine.addActorAsPrevious(this.entity);
       // this.game.engine.addActor(this.entity);
       this.game.engine.addActorAsNext(this.entity);
-      this.interrupt = true;
+      // this.interrupt = true;
       // this.game.engine.start(); // BUGGED - should this be used outside of engine?
       success = true;
     }

@@ -6,13 +6,15 @@ import { addActor as addWaveEnemy } from './Keymap/KeyActions/addActor';
 import { addDebris  } from './Keymap/KeyActions/addDebris';
 import * as Message from './message';
 import { Display } from './Display/konvaCustom';
-const mapData = require('./Maps/building.json');
+import { FireSpread } from './entites';
+// const mapData = require('./Maps/building.json');
+const mapData = require('./Maps/building_w_floor.json');
 
 const GAME_MODE_TYPES = {WAVE: 0};
 const MAP_WIDTH = 50;
 const MAP_HEIGHT = 25;
-const TILE_WIDTH = 20;
-const TILE_HEIGHT = 20;
+const TILE_WIDTH = 30;
+const TILE_HEIGHT = 30;
 const TILE_OFFSET = 5;
 
 export class Game {
@@ -64,8 +66,11 @@ export class Game {
       for (let i = 0; i < Math.pow(this.mode.data.level, 2); i++) {
         addWaveEnemy(this);
       }
-    } else if (this.mode.type === GAME_MODE_TYPES.TEST) {
+    } 
+    
+    if (this.mode.type === GAME_MODE_TYPES.TEST) {
       addDebris(this);
+      this.addFire({ x: 20, y: 7 });
     }
   }
   
@@ -77,6 +82,11 @@ export class Game {
         this.initializeMode();
       }
     }
+
+    if (this.mode.type === GAME_MODE_TYPES.TEST) {
+      this.propogateFire();
+    }
+
   }
 
   setModeLevel (level) {
@@ -91,6 +101,52 @@ export class Game {
     this.setModeLevel(1);
     this.initializeMode();
   }
+
+  // Fire Fight Specific
+
+  addFire (pos) {
+    // create new fire actor and place
+    let fire = new FireSpread({
+      name: 'Pyro',
+      pos,
+      game: this,
+      renderer: {
+        character: '*',
+        color: Constant.THEMES.SOLARIZED.base3,
+        background: Constant.THEMES.SOLARIZED.red,
+      },
+      timeToSpread: 1,
+      spreadCount: 1,
+      durability: 1,
+      attackDamage: 1,
+      speed: 100,
+    })
+
+    if (this.placeActorOnMap(fire)) {
+      this.engine.addActor(fire);
+      this.draw();
+    };
+  }
+
+  propogateFire () {
+    const fires = this.engine.actors.filter((actor) => actor.name === 'Pyro')
+    const fireSpreadingSpeed = 2 // increase this number to increase fire spread
+    if (fires.length < fireSpreadingSpeed) {
+      // find burnt tile
+      const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'BURNT');
+      const key = Helper.getRandomInArray(keys);
+      console.log(key);
+      if (key) {
+        const position = {
+          x: parseInt(key.split(',')[0]),
+          y: parseInt(key.split(',')[1]),
+        }
+        this.addFire(position)
+      }
+    }
+  }
+
+  // End
 
   randomlyPlaceActorOnMap(actor) {
     let kill = 0;
@@ -334,6 +390,7 @@ export class Game {
     this.initializeMap();
     this.draw();
     presserRef.current.focus();
+    this.randomlyPlaceAllActorsOnMap()
     this.initializeMode();
   }
 

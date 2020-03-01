@@ -459,7 +459,7 @@ const Cloning = superclass => class extends superclass {
   createClone (cloneArgs) {
     if (this.clones.length < this.cloneLimit) {
       let clone = cloneDeep(this);
-      clone.name += ` Clone ${this.clones.length}`
+      clone.name = `Clone`
       clone.game = this.game;
       clone.id = uuid();
       delete clone.clones;
@@ -834,37 +834,117 @@ const Spreading = superclass => class extends superclass {
   constructor({ timeToSpread = 5, spreadCount = 1, ...args }) {
     super({ ...args })
     this.entityTypes = this.entityTypes.concat('SPREADING')
+    this.timeToSpreadMax = timeToSpread;
+    this.timeToSpread = timeToSpread;
+    this.spreadCountMax = spreadCount;
+    this.spreadCount = spreadCount;
   }
 
   getAction (game) {
-    // if no more spreads then destroy
+    // if no more spreads, then destroy
     if (this.spreadCount <= 0) {
+      console.log('destroying fire');
+      
       return new Action.DestroySelf({
         game: game,
         actor: this,
         energyCost: Constant.ENERGY_THRESHOLD,
         processDelay: 0,
+        onAfter: () => {
+          game.map[Helper.coordsToString(this.pos)].type = 'BURNT';
+        },
       });
     }
 
-    // if its time to expand again, create clones
+    // if its time to expand again, create a new fire spread and placeActor
     if (this.timeToSpread <= 0) {
       // find adjacent spot to spread to
-      // clone
-      let cloneOverrides = [];
-      return new Action.CloneSelf({
-        game,
-        actor: this,
-        cloneArgs: cloneOverrides,
-        onSuccess: () => this.spreadCount -= 1,
-      })
+      let adjacentPositions = [
+        {
+          x: this.pos.x + 1,
+          y: this.pos.y + 0,
+        },
+        {
+          x: this.pos.x + -1,
+          y: this.pos.y + 0,
+        },
+        {
+          x: this.pos.x + 0,
+          y: this.pos.y + 1,
+        },
+        {
+          x: this.pos.x + 0,
+          y: this.pos.y + -1,
+        },
+      ];
+      let adjacentPos = null;
+      let kill = 100;
+      while (kill > 0) {
+        console.log('k ', kill);
+        let newPos = Helper.getRandomInArray(adjacentPositions);
+        let newTile = this.game.map[Helper.coordsToString(newPos)];
+        debugger;
+        let tileExists = Boolean(newTile);
+        let notBurnt = true;
+        let canBurn = false;
+        if (newTile) {
+          notBurnt = newTile.type !== 'BURNT';
+          canBurn = ['WALL', 'FLOOR'].includes(newTile.type)
+        }
+        if (tileExists && notBurnt && canBurn) {
+          adjacentPos = newPos;
+          break;
+        }
+        kill -= 1;
+      }
+      console.log('adjacentPos');
+      console.log(adjacentPos);
+      
+      if (adjacentPos) {
+        // create new fire actor and place
+        let fire = new FireSpread({
+          name: 'Pyro',
+          pos: {x: 0, y: 0},
+          game,
+          renderer: {
+            character: '*',
+            color: Constant.THEMES.SOLARIZED.base3,
+            background: Constant.THEMES.SOLARIZED.red,
+          },
+          timeToSpread: this.timeToSpreadMax,
+          spreadCount: this.spreadCountMax,
+          durability: this.durability,
+          attackDamage: this.attackDamage,
+          speed: this.speed,
+        })
+
+        this.timeToSpread = this.timeToSpreadMax
+        this.spreadCount -= 1
+        console.log('placing fire');
+        
+        return new Action.PlaceActor({
+          targetPos: adjacentPos,
+          entity: fire,
+          game,
+          actor: this,
+          interrupt: false,
+          energyCost: Constant.ENERGY_THRESHOLD,
+          processDelay: 0,
+          forcePlacement: true,
+        })
+      }
+      this.timeToSpread = this.timeToSpreadMax
+      this.spreadCount -= 1
     }
 
     this.timeToSpread -= 1;
+    console.log('decreasing time spread');
+    
     return new Action.Say({
       message: 'burning',
       game,
       actor: this,
+      processDelay: 0,
     })
   }
 }
@@ -1099,6 +1179,7 @@ export const DestructiveCloudProjectileV2 = pipe(
 
 export const FireSpread = pipe (
   Acting,
+  Rendering,
   Destructable,
   Attacking,
   Spreading,

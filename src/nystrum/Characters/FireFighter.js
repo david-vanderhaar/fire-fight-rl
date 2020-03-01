@@ -21,20 +21,24 @@ export default function (engine) {
       b: {
         activate: () => Keymap.addDebris(engine.game),
         label: 'Add Debris',
-      }
+      },
+      y: {
+        activate: () => Keymap.addActor(engine.game),
+        label: 'Add Actor',
+      },
     };
   }
   // instantiate class
   let actor = new Entity.Player({
-    pos: { x: 23, y: 7 },
+    pos: { x: 28, y: 19 },
     renderer: {
       character: 'F',
-      color: 'red',
-      background: 'yellow',
+      color: Constant.THEMES.SOLARIZED.base3,
+      background: Constant.THEMES.SOLARIZED.yellow,
     },
     name: 'Fire Fighter',
     actions: [],
-    speed: 400,
+    speed: 100,
     durability: 20,
     keymap: keymap(engine),
   })

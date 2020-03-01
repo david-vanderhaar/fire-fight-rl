@@ -1,5 +1,6 @@
 import * as Helper from '../../../helper';
-import { Bandit, RangedBandit } from '../../entites';
+import * as Constant from '../../constants';
+import { Bandit, RangedBandit, FireSpread } from '../../entites';
 import * as Item from '../../items';
 
 const getBanditStats = () => {
@@ -90,27 +91,40 @@ const getBanditStats = () => {
     },
   ]
   return Helper.getRandomInArray(banditLevels);
-
 }
 
 export const addActor = (game) => {
-  let targetEntity = game.engine.actors[game.engine.currentActor]
-  let pos = Helper.getRandomPos(game.map).coordinates
-  const banditStats = getBanditStats();
+  // let targetEntity = game.engine.actors[game.engine.currentActor]
+  // let pos = Helper.getRandomPos(game.map).coordinates
+  // const banditStats = getBanditStats();
   // let actor = new RangedBandit({
-  let actor = new banditStats.entityClass({
-    targetEntity,
-    pos,
-    renderer: banditStats.renderer,
-    name: banditStats.name,
+  // let actor = new banditStats.entityClass({
+  //   targetEntity,
+  //   pos,
+  //   renderer: banditStats.renderer,
+  //   name: banditStats.name,
+  //   game,
+  //   actions: [],
+  //   attackDamage: banditStats.attackDamage,
+  //   durability: banditStats.durability,
+  //   speed: banditStats.speed,
+  //   // directional projectile destruction breaks engine
+  //   getProjectile: ({pos, targetPos, direction, range}) => Item.directionalKunai(game.engine, { ...pos }, direction, range)
+  //   // getProjectile: ({ pos, targetPos, direction, range }) => Item.kunai(game.engine, { ...pos }, { ...targetPos })
+  // })
+  let actor = new FireSpread({
+    name: 'Pyro',
     game,
-    actions: [],
-    attackDamage: banditStats.attackDamage,
-    durability: banditStats.durability,
-    speed: banditStats.speed,
-    // directional projectile destruction breaks engine
-    getProjectile: ({pos, targetPos, direction, range}) => Item.directionalKunai(game.engine, { ...pos }, direction, range)
-    // getProjectile: ({ pos, targetPos, direction, range }) => Item.kunai(game.engine, { ...pos }, { ...targetPos })
+    renderer: {
+      character: '*',
+      color: Constant.THEMES.SOLARIZED.base3,
+      background: Constant.THEMES.SOLARIZED.red,
+    },
+    timeToSpread: 1,
+    spreadCount: 1,
+    durability: 1,
+    attackDamage: 1,
+    speed: 100,
   })
   // game.placeActorOnMap(actor)
   if (game.randomlyPlaceActorOnMap(actor)) {

@@ -41,8 +41,29 @@ export const TILE_KEY = {
   'GROUND': {
     background: THEMES.SOLARIZED.base03,
     foreground: THEMES.SOLARIZED.base0,
+    character: '"',
+    passable: true,
+  },
+  'FLOOR': {
+    background: THEMES.SOLARIZED.base03,
+    foreground: THEMES.SOLARIZED.base0,
     character: '.',
     passable: true,
+  },
+  'BURNT': {
+    background: THEMES.SOLARIZED.base03,
+    foreground: THEMES.SOLARIZED.red,
+    character: 'X',
+    passable: true,
+    animation: [
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.yellow, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
+    ]
   },
   'WALL': {
     background: THEMES.SOLARIZED.base03,
