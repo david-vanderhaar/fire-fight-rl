@@ -181,8 +181,6 @@ export class Game {
   }
 
   createCustomLevel (data) {
-    console.log("Custom Level Data:", data);
-    
     Object.keys(data.tiles).forEach((key, i) => {
       const tile = data.tiles[key];
       let type = JSON.parse(tile.data);

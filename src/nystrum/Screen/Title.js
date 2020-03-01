@@ -11,7 +11,7 @@ const CharacterSelect = (props) => {
           }
 
           return (
-            <button
+            <button 
               key={index}
               className={`CharacterSelect__button btn ${color}`}
               onClick={() => {
@@ -20,10 +20,11 @@ const CharacterSelect = (props) => {
               }}
             >
               {character.name}
-            </button>
+            </button> 
           )
         })
       }
+      <a class="waves-effect button-pill waves-light btn-large button-color">Start Fight</a>
     </div>
   );
 }

@@ -26,6 +26,18 @@
   color: #61dafb;
 }
 
+.button-color {
+  background: #dc322f;
+}
+
+.button-pill {
+  border-radius: 16px;
+}
+
+.padding {
+  padding-top: 10px;
+}
+
 #display {
   /* overflow: scroll; */
 }

@@ -28,7 +28,7 @@ export const addDebris = (game) => {
       pos,
       renderer: {
         character: '/',
-        color: 'black',
+        color: Constant.THEMES.SOLARIZED.base1,
         background: '',
       },
       name: 'stick',
@@ -37,14 +37,5 @@ export const addDebris = (game) => {
     })
     game.randomlyPlaceActorOnMap(stick)
   }
-
-
- 
-
- 
-
- 
-
 game.draw();
-
 }
