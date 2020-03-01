@@ -39,6 +39,10 @@
   border: solid 4px #eee;
 }
 
+.Level > .row {
+  margin: 0;
+}
+
 .CharacterSelect {
   margin: auto;
   width: 300px;
@@ -60,6 +64,11 @@
 
 .Keymap {
   /* left: 0px; */
+  height: 50vh;
+}
+
+.Keymap .Button {
+  width: 100%;
 }
 
 .Inventory {
@@ -78,8 +87,10 @@
 .Messages {
   /* right: 0; */
   /* left: 600px; */
-  overflow-y: scroll;
-  height: 800px; 
+  /* overflow-y: scroll;
+  height: 800px;  */
+  height: 50vh;
+  overflow-y: hidden;
 }
 
 .Messages .Message {

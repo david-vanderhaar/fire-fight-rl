@@ -56,32 +56,21 @@ class Level extends React.Component {
     return (
       <div className="Level">
         <div className='row'>
-          <div className='col s8 game_display_container'>
-            {Game.DisplayElement(this.presserRef, Game.handleKeyPress, this.state.game.engine)}
-            <Information data={data} />
+          <div className='col s10'>
+            <div className='game_display_container'>
+              {Game.DisplayElement(this.presserRef, Game.handleKeyPress, this.state.game.engine)}
+              {/* <Information data={data} /> */}
+            </div>
+            <p className='flow-text'>
+              Save all of the citizens from the burning building and get them to the safe zone!
+            </p>
           </div>
           <div className='col s2'>
             <KeymapUI keymap={this.state.game.visibleKeymap} />
+            <Messages messages={this.state.game.messages.slice(-3).reverse()} />
           </div>
-          <div className='col s2'>
-            <Equipment equipment={this.state.game.visibleEquipment} />
-            <Inventory inventory={this.state.game.visibleInventory} />
-          </div>
-          {
-            !this.state.game.visibleEquipment && !this.state.game.visibleInventory && (
-              <div className='col s2'>
-                <Messages messages={this.state.game.messages.slice(-15).reverse()} />
-              </div>
-            )
-          }
-          {/* <div className='col s2'>
-            <Messages messages={this.state.game.messages.slice(-15).reverse()} />
-          </div>
-          <div className='col s2'>
-            <Messages messages={this.state.game.messages} />
-          </div> */}
+          {/* <button className='btn' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>Quit</button> */}
         </div>
-        <button className='btn' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>Quit</button>
       </div>
     );
   }
