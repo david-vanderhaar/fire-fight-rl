@@ -10,10 +10,6 @@ export default function (engine) {
   const keymap = (engine) => {
     return {
       ...createFourDirectionMoveOptions(Keymap.push, engine),
-      s: {
-        activate: () => Keymap.none(engine),
-        label: 'stay',
-      },
       g: {
         activate: () => Keymap.activateGrab(engine),
         label: 'grab',
@@ -33,6 +29,10 @@ export default function (engine) {
       y: {
         activate: () => Keymap.addActor(engine.game),
         label: 'Add Actor',
+      },
+      f: {
+        activate: () => Keymap.chop(engine),
+        label: 'chop',
       },
     };
   }

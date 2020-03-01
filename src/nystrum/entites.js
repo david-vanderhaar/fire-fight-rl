@@ -1184,6 +1184,7 @@ export const Wall = pipe(
 
 export const Debris = pipe(
   Rendering,
+  Destructable,
   Containing,
   Draggable,
   Destructable,
