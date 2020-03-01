@@ -7,7 +7,7 @@ export const addDebris = (game) => {
   
   let pos = null
 
-  for (var i = 20; i > 0; i--) {
+  for (var i = 5; i > 0; i--) {
     var box = new Debris({
       pos,
       renderer: {
@@ -17,12 +17,12 @@ export const addDebris = (game) => {
       },
       name: 'Box',
       game,
-      durability: 10,
+      durability: 3,
     })
     game.randomlyPlaceActorOnMap(box)
   }
 
-  for (var i = 20; i > 0; i--) {
+  for (var i = 5; i > 0; i--) {
     var stick = new Debris({
       pos,
       renderer: {
@@ -30,9 +30,9 @@ export const addDebris = (game) => {
         color: Constant.THEMES.SOLARIZED.base2,
         background: Constant.THEMES.SOLARIZED.base01,
       },
-      name: 'stick',
+      name: 'Stick',
       game,
-      durability: 5,
+      durability: 3,
     })
     game.randomlyPlaceActorOnMap(stick)
   }

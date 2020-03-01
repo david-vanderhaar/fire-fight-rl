@@ -72,6 +72,7 @@ export class Display {
       text: character,
       width: this.tileWidth,
       height: this.tileHeight,
+      fontSize: 20,
       fill: foreground,
       align: 'center',
       verticalAlign: 'middle',

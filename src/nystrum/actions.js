@@ -99,13 +99,14 @@ export class AddStatusEffect extends Base {
 };
 
 export class Say extends Base {
-  constructor({ message, processDelay = 50, ...args}) {
+  constructor({ message, messageType = MESSAGE_TYPE.INFORMATION, processDelay = 50, ...args}) {
     super({...args});
     this.message = message
+    this.messageType = messageType
     this.processDelay = processDelay
   }
   perform() {
-    this.game.addMessage(`${this.actor.name} says ${this.message}`, MESSAGE_TYPE.INFORMATION);
+    this.game.addMessage(`${this.actor.name} says "${this.message}"`, this.messageType);
     this.actor.energy -= this.energyCost;
     return {
       success: true,
@@ -657,6 +658,49 @@ export class Shove extends Base {
         energyCost: Constant.ENERGY_THRESHOLD
       })
     }
+
+    return {
+      success,
+      alternative,
+    }
+  }
+};
+
+export class GrabDirection extends Base {
+  constructor({ targetPos, ...args }) {
+    super({ ...args });
+    this.targetPos = targetPos
+  }
+
+  perform() {
+    let success = false;
+    let alternative = null;
+
+    if (this.actor.grab(this.targetPos)) {
+      this.actor.energy -= this.energyCost;
+      success = true;
+    }
+
+    return {
+      success,
+      alternative,
+    }
+  }
+};
+
+export class ReleaseGrab extends Base {
+  constructor({ ...args }) {
+    super({ ...args });
+  }
+
+  perform() {
+    let success = false;
+    let alternative = null;
+
+    if (this.actor.release()) {
+      this.actor.energy -= this.energyCost;
+      success = true;
+    };
 
     return {
       success,
