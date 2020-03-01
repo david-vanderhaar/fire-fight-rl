@@ -40,14 +40,14 @@ export const THEMES = {
 export const TILE_KEY = {
   'GROUND': {
     background: THEMES.SOLARIZED.base03,
-    foreground: THEMES.SOLARIZED.base0,
+    foreground: THEMES.SOLARIZED.green,
     character: '"',
     passable: true,
   },
   'FLOOR': {
-    background: THEMES.SOLARIZED.base03,
+    background: THEMES.SOLARIZED.base02,
     foreground: THEMES.SOLARIZED.base0,
-    character: '.',
+    character: '',
     passable: true,
   },
   'BURNT': {
@@ -66,8 +66,8 @@ export const TILE_KEY = {
     ]
   },
   'WALL': {
-    background: THEMES.SOLARIZED.base03,
-    foreground: THEMES.SOLARIZED.base0,
+    background: THEMES.SOLARIZED.base02,
+    foreground: THEMES.SOLARIZED.base2,
     character: '#',
     passable: false,
   },
