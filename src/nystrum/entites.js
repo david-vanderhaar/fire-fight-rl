@@ -9,10 +9,11 @@ import { cloneDeep, cloneDeepWith } from 'lodash';
 import { MESSAGE_TYPE } from './message';
 
 export class Entity {
-  constructor({ game = null, passable = false}) {
+  constructor({ game = null, passable = false, name = 'nameless'}) {
     let id = uuid();
     this.entityTypes = ['Entity']
     this.id = id;
+    this.name = name;
     this.game = game;
     this.passable = passable;
     this.active = true;
@@ -216,10 +217,9 @@ export const Equipable = superclass => class extends superclass {
 }
 
 const Acting = superclass => class extends superclass {
-  constructor({name, actions = [], speed = 100, energy = 0, ...args}) {
+  constructor({actions = [], speed = 100, energy = 0, ...args}) {
     super({...args})
     this.entityTypes = this.entityTypes.concat('ACTING')
-    this.name = name;
     this.actions = actions;
     this.speed = speed;
     this.energy = speed;
@@ -1156,6 +1156,69 @@ const Burnable = superclass => class extends superclass {
   }
 }
 
+const Exploding = superclass => class extends superclass {
+  constructor({ flammability = 1, explosivity = 1, ...args }) {
+    super({ ...args })
+    this.entityTypes = this.entityTypes.concat('EXPLODING')
+    this.flammability = flammability;
+    this.explosivity = explosivity;
+  }
+
+  enflame () {
+    // create num of fireSpreads
+    const fires = Array(this.flammability).fill('').map((item) => {
+      return new FireSpread({
+        name: 'Pyro',
+        pos: { ...this.pos },
+        game: this.game,
+        renderer: {
+          character: '*',
+          color: Constant.THEMES.SOLARIZED.base3,
+          background: Constant.THEMES.SOLARIZED.red,
+        },
+        timeToSpread: 1,
+        spreadCount: 1,
+        durability: 1,
+        attackDamage: 1,
+        speed: 100,
+      })
+    })
+
+    fires.forEach((fire) => {
+      // add them to map
+      this.game.placeActorOnMap(fire);
+      // add them to engine
+      this.game.engine.addActor(fire)
+    })
+  }
+
+  explode () {
+    let structure = {
+      x_offset: 0,
+      y_offset: 0,
+      positions: Array(this.explosivity).fill('').reduce((acc, curr, i) => {
+        return acc.concat(...Helper.getPointsOnCircumference(0, 0, i + 1))
+      }, [])
+    };
+
+    structure.positions.forEach((slot) => {
+      let position = {
+        x: this.pos.x + slot.x + structure.x_offset,
+        y: this.pos.y + slot.y + structure.y_offset
+      }
+      this.game.map[Helper.coordsToString(position)].type = 'BURNT';
+    });
+
+    this.game.draw();
+  }
+
+  destroy () {
+    this.enflame();
+    this.explode();
+    super.destroy();
+  }
+}
+
 const Helpless = superclass => class extends superclass {
   constructor({ ...args }) {
     super({ ...args })
@@ -1192,11 +1255,11 @@ export const Wall = pipe(
 
 export const Debris = pipe(
   Rendering,
-  Destructable,
   Containing,
   Draggable,
-  Destructable,
   Burnable,
+  Destructable,
+  Exploding,
 )(Entity);
 
 export const MovingWall = pipe(

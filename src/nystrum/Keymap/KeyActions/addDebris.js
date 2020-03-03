@@ -7,8 +7,8 @@ export const addDebris = (game) => {
   
   let pos = null
 
-  for (var i = 5; i > 0; i--) {
-    var box = new Debris({
+  for (let i = 5; i > 0; i--) {
+    let box = new Debris({
       pos,
       renderer: {
         character: '%',
@@ -22,8 +22,8 @@ export const addDebris = (game) => {
     game.randomlyPlaceActorOnMap(box)
   }
 
-  for (var i = 5; i > 0; i--) {
-    var stick = new Debris({
+  for (let i = 5; i > 0; i--) {
+    let stick = new Debris({
       pos,
       renderer: {
         character: 'L',

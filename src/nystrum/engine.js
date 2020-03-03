@@ -243,6 +243,7 @@ export class Engine {
         // await Helper.delay(time * 100);
         // await Helper.delay(time * action.processDelay);
         await Helper.delay(action.processDelay);
+        // await Helper.delay(0);
         action.particles.forEach((particle) => {
           this.game.removeActorFromMap(particle);
           particle.update(1);
