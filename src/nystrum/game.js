@@ -49,7 +49,7 @@ export class Game {
         highestLevel: null,
         fireIntensity: 1, // increase this number to increase fire spread
         npcCount: 1,
-        debrisCount: 10,
+        debrisCount: 4,
       }
     },
     messages = [],
@@ -82,10 +82,21 @@ export class Game {
     } 
     
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
-      addDebris(this);
-      this.addFire({ x: 20, y: 7 });
-      this.addNPC({ x: 7, y: 17 });
-      // this.addNPC({ x: 19, y: 20 });
+      for (let index = 0; index < this.mode.data.debrisCount; index++) {
+        addDebris(this, 'Box', '%', 1);  
+      }
+      for (let index = 0; index < this.mode.data.fireIntensity; index++) {
+        let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
+        let pos = Helper.getRandomInArray(array);
+        let posXY = pos.split(',')
+        this.addFire({x: posXY[0], y: posXY[1]});
+      }
+      for (let index = 0; index < this.mode.data.npcCount; index++) {
+        let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
+        let pos = Helper.getRandomInArray(array);
+        let posXY = pos.split(',')
+        this.addNPC({x: posXY[0], y: posXY[1]});
+      }
     }
   }
   
@@ -105,8 +116,8 @@ export class Game {
       // triggerd once all npcs are saved
       if (this.allSaved()) { 
         this.nextModeLevel();
-        this.initializeGameData();
         this.increaseIntensity()
+        this.initializeGameData();
       }
     }
 
@@ -129,6 +140,9 @@ export class Game {
 
   increaseIntensity () {
     this.mode.data.fireIntensity += 1;
+    this.mode.data.npcCount += 1;
+    this.mode.data.debrisCount += 1;
+
   }
 
   allSaved () {
@@ -285,7 +299,7 @@ export class Game {
     // let digger = new ROT.Map.IceyMaze();
     // let digger = new ROT.Map.Uniform();
     let freeCells = [];
-    let digCallback = function (x, y, value) {
+    let digCallback = function (x, y, value) {      
       let key = x + "," + y;
       let type = 'GROUND';
       let currentFrame = 0;
