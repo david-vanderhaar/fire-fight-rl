@@ -10,6 +10,7 @@ export const push = (direction, engine) => {
     game: engine.game,
     actor,
     direction,
-    energyCost: ENERGY_THRESHOLD
+    energyCost: ENERGY_THRESHOLD,
+    processDelay: 25,
   }))
 }

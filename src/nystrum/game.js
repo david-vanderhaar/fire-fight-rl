@@ -85,14 +85,15 @@ export class Game {
       for (let index = 0; index < this.mode.data.debrisCount; index++) {
         addDebris(this, 'Box', '%', 1);  
       }
+
+      let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
       for (let index = 0; index < this.mode.data.fireIntensity; index++) {
-        let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
         let pos = Helper.getRandomInArray(array);
         let posXY = pos.split(',')
         this.addFire({x: posXY[0], y: posXY[1]});
       }
+      
       for (let index = 0; index < this.mode.data.npcCount; index++) {
-        let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
         let pos = Helper.getRandomInArray(array);
         let posXY = pos.split(',')
         this.addNPC({x: posXY[0], y: posXY[1]});
