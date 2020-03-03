@@ -1206,7 +1206,8 @@ const Exploding = superclass => class extends superclass {
         x: this.pos.x + slot.x + structure.x_offset,
         y: this.pos.y + slot.y + structure.y_offset
       }
-      this.game.map[Helper.coordsToString(position)].type = 'BURNT';
+      const tile = this.game.map[Helper.coordsToString(position)];
+      if (tile) tile.type = 'BURNT';
     });
 
     this.game.draw();
