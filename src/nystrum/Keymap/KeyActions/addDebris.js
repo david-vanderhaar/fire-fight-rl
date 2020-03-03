@@ -6,7 +6,7 @@ import * as Item from '../../items';
 export const addDebris = (game, name = 'box', character = '%', durability = 10) => {    
   let debrisPosArray = Object.keys(game.map).filter((key) => game.map[key].type === 'FLOOR')
   let debrisPos = Helper.getRandomInArray(debrisPosArray);
-  let posXY = debrisPos.split(',')
+  let posXY = debrisPos.split(',').map((coord) => parseInt(coord))
   let box = new Debris({
     pos:{
       x: posXY[0],

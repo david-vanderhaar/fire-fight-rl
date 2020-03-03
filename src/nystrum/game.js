@@ -6,7 +6,7 @@ import { addActor as addWaveEnemy } from './Keymap/KeyActions/addActor';
 import { addDebris  } from './Keymap/KeyActions/addDebris';
 import * as Message from './message';
 import { Display } from './Display/konvaCustom';
-import { FireSpread, Speaker } from './entites';
+import { FireSpread, Speaker, Debris } from './entites';
 import { MESSAGE_TYPE } from './message';
 
 // const MAP_DATA = require('./Maps/building.json');
@@ -82,22 +82,26 @@ export class Game {
     } 
     
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
+      let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
+
       for (let index = 0; index < this.mode.data.debrisCount; index++) {
-        addDebris(this, 'Box', '%', 1);  
+        let pos = Helper.getRandomInArray(array);
+        let posXY = pos.split(',').map((coord) => parseInt(coord));
+        this.addDebris({ x: posXY[0], y: posXY[1] });
       }
 
-      let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
       for (let index = 0; index < this.mode.data.fireIntensity; index++) {
         let pos = Helper.getRandomInArray(array);
-        let posXY = pos.split(',')
+        let posXY = pos.split(',').map((coord) => parseInt(coord));
         this.addFire({x: posXY[0], y: posXY[1]});
       }
       
       for (let index = 0; index < this.mode.data.npcCount; index++) {
         let pos = Helper.getRandomInArray(array);
-        let posXY = pos.split(',')
+        let posXY = pos.split(',').map((coord) => parseInt(coord));
         this.addNPC({x: posXY[0], y: posXY[1]});
       }
+        
     }
   }
   
@@ -158,6 +162,23 @@ export class Game {
     })
 
     return allSaved;
+  }
+
+  addDebris (pos, name = 'box', character = '%', durability = 1) {
+    let box = new Debris({
+      pos,
+      renderer: {
+        character,
+        color: Constant.THEMES.SOLARIZED.base2,
+        background: Constant.THEMES.SOLARIZED.base01,
+      },
+      name,
+      game: this,
+      durability,
+    })
+
+    this.placeActorOnMap(box)
+    this.draw();
   }
 
   addNPC (pos) {
