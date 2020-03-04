@@ -29,6 +29,7 @@ export class Game {
   constructor({
     engine = null,
     map = {},
+    mapInitialized = false,
     tileMap = {},
     mapWidth = MAP_WIDTH,
     mapHeight = MAP_HEIGHT,
@@ -56,6 +57,7 @@ export class Game {
   }) {
     this.engine = engine;
     this.map = map;
+    this.mapInitialized = mapInitialized;
     this.tileMap = tileMap;
     this.mapWidth = mapWidth;
     this.mapHeight = mapHeight;
@@ -426,6 +428,8 @@ export class Game {
   }
 
   initializeMap () {
+    if (this.mapInitialized) return false;
+    this.mapInitialized = true;
     this.processTileMap((tileKey, x, y, character, foreground, background) => {
       let node = this.display.createTile(x, y, character, foreground, background);
       this.tileMap[tileKey] = node;

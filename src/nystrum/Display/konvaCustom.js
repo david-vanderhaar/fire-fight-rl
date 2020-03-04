@@ -41,6 +41,7 @@ export class Display {
   updateTile(tile, character, foreground, background) {
     // child[0] is the rectangle
     // child[1] is the text
+
     tile.children[0].fill(background);
     tile.children[1].fill(foreground);
     tile.children[1].text(character);
@@ -53,6 +54,10 @@ export class Display {
       y: (this.tileHeight * y) + (this.tileOffset + this.tileGutter),
       width: this.tileWidth,
       height: this.tileHeight,
+      transformsEnabled: 'position',
+      perfectDrawEnabled: false,
+      listening: false,
+      shadowForStrokeEnabled: false,
     });
 
     let rect = new Konva.Rect({
@@ -65,6 +70,7 @@ export class Display {
       transformsEnabled: 'position',
       perfectDrawEnabled: false,
       listening: false,
+      shadowForStrokeEnabled: false,
     });
 
     let text = new Konva.Text({
@@ -80,6 +86,7 @@ export class Display {
       transformsEnabled: 'position',
       perfectDrawEnabled: false,
       listening: false,
+      shadowForStrokeEnabled: false,
     });
 
     node.add(rect);

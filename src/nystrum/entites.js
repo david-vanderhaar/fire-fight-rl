@@ -1139,7 +1139,8 @@ const Speaking = superclass => class extends superclass {
       actor: this,
       game,
       message: message,
-      messageType: this.messageType
+      messageType: this.messageType,
+      processDelay: 0,
     });
   }
 }

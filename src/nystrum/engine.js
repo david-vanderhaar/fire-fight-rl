@@ -142,7 +142,6 @@ export class Engine {
 
   sortActorsByEnergy () {
     this.actors = this.actors.sort((a, b) => b.energy - a.energy);
-    console.log(this.actors);
   }
 
   addStatusEffect(newEffect) {

@@ -44,7 +44,7 @@ class Title extends React.Component {
             backgroundColor: '#e2e2e2',
           }}
         >
-          <div class='flow-text grey-text'>Fire Fight RL</div>
+          <div className='flow-text grey-text'>Fire Fight RL</div>
           <CharacterSelect 
             characters={this.props.characters} 
             selectedCharacter={this.props.selectedCharacter} 
@@ -52,7 +52,7 @@ class Title extends React.Component {
             setActiveScreen={this.props.setActiveScreen}
         />
           <button 
-            class='btn' 
+            className='btn' 
             onClick={() => this.props.setActiveScreen(SCREENS.LEVEL)}
             disabled={!this.props.selectedCharacter}
           >
