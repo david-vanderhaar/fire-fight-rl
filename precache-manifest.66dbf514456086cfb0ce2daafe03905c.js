@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "9a66132598ae6c4f7afb1284a4e9ae04",
+    "revision": "ccd4ad7fd0e78531d04457fbf6eecdac",
     "url": "/fire-fight-rl/index.html"
   },
   {
-    "revision": "2e27f98fb6df3c527397",
+    "revision": "2c9c522ba800bfe23cdd",
     "url": "/fire-fight-rl/static/css/main.517ea28a.chunk.css"
   },
   {
-    "revision": "5f0fbabf3f9792e263f2",
-    "url": "/fire-fight-rl/static/js/2.37afdd60.chunk.js"
+    "revision": "5f88e932ee79767859ea",
+    "url": "/fire-fight-rl/static/js/2.53631ab6.chunk.js"
   },
   {
-    "revision": "2e27f98fb6df3c527397",
-    "url": "/fire-fight-rl/static/js/main.7421f47b.chunk.js"
+    "revision": "2c9c522ba800bfe23cdd",
+    "url": "/fire-fight-rl/static/js/main.00aac058.chunk.js"
   },
   {
     "revision": "25ea64228d6a6d24e7f5",
