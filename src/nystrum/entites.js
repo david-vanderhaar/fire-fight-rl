@@ -1211,7 +1211,7 @@ const Exploding = superclass => class extends superclass {
       if (tile) tile.type = 'BURNT';
     });
 
-    this.game.draw();
+    // this.game.draw(); //may not need draw here
   }
 
   destroy () {

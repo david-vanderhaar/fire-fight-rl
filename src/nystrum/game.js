@@ -544,6 +544,7 @@ export const DisplayElement = (presserRef, handleKeyPress, engine) => {
       id='display'
       ref={presserRef}
       onKeyDown={(event) => handleKeyPress(event, engine)}
+      // onKeyUp={(event) => handleKeyPress(event, engine)}
       tabIndex='0'
     />
   )
