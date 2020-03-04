@@ -47,7 +47,7 @@ export class Game {
       data: {
         level: 1,
         highestLevel: null,
-        fireIntensity: 1, // increase this number to increase fire spread
+        fireIntensity: 3, // increase this number to increase fire spread
         npcCount: 1,
         debrisCount: 4,
       }

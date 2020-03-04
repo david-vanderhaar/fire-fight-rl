@@ -1,5 +1,7 @@
 import React from 'react';
 import { SCREENS } from './constants';
+
+// const backgroundImage = require('/fireMan.png')
 const CharacterSelect = (props) => {
   return (
     <div className='CharacterSelect'>
@@ -13,6 +15,9 @@ const CharacterSelect = (props) => {
           return (
             <button
               key={index}
+              style={{
+                color: 'red'
+              }}
               className={`CharacterSelect__button btn ${color}`}
               onClick={() => {
                 props.setSelectedCharacter(character)
@@ -39,25 +44,37 @@ class Title extends React.Component {
       <div className="Title">
         <div
           style={{
+
             width: '100vw',
             height: '100vh',
-            backgroundColor: '#e2e2e2',
+            backgroundColor: 'black',
+            backgroundImage: `url("/fireMan.png")`,
+            backgroundSize: '100vw 120vh'
           }}
         >
-          <div class='flow-text grey-text'>Fire Fight RL</div>
+          {/* <img class="responsive-img" src="/fireMan.png"></img> */}
+          
+          <div class='blue-text' style={{
+            textAlign: "center",
+            paddingTop: '240px',
+            paddingLeft: '50px',
+            fontSize: '200px',
+            fontFamily: 'glacial indifference',
+            textShadow: 'black 20px 20px 10px',
+          }}>FLUME</div>
           <CharacterSelect 
             characters={this.props.characters} 
             selectedCharacter={this.props.selectedCharacter} 
             setSelectedCharacter={this.props.setSelectedCharacter}
             setActiveScreen={this.props.setActiveScreen}
         />
-          <button 
+          {/* <button 
             class='btn' 
             onClick={() => this.props.setActiveScreen(SCREENS.LEVEL)}
             disabled={!this.props.selectedCharacter}
           >
             Play
-          </button>
+          </button> */}
         </div>
       </div>
     );
