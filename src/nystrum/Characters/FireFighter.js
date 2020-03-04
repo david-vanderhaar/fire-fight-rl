@@ -10,6 +10,10 @@ export default function (engine) {
   const keymap = (engine) => {
     return {
       ...createFourDirectionMoveOptions(Keymap.push, engine),
+      t: {
+        activate: () => Keymap.activateProjectile(engine, 1),
+        label: 'water',
+      },
       g: {
         activate: () => Keymap.activateGrab(engine),
         label: 'grab',

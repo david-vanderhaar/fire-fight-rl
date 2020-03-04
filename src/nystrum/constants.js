@@ -65,6 +65,21 @@ export const TILE_KEY = {
       { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
     ]
   },
+  'WET': {
+    background: THEMES.SOLARIZED.base03,
+    foreground: THEMES.SOLARIZED.blue,
+    character: '=',
+    passable: true,
+    animation: [
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '~', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base0, character: '~', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base1, character: '=', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base1, character: '~', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', passable: true, },
+    ]
+  },
   'WALL': {
     background: THEMES.SOLARIZED.base02,
     foreground: THEMES.SOLARIZED.base2,
@@ -295,6 +310,13 @@ export const PARTICLE_TEMPLATES = {
       character: '✤',
       color: '#36635b',
       background: '#F0D8C0',
+    }
+  },
+  water: {
+    renderer: {
+      character: '~',
+      color: THEMES.SOLARIZED.base3,
+      background: THEMES.SOLARIZED.blue,
     }
   },
 }

@@ -2,6 +2,7 @@ import { activateDropItem } from './KeyActions/activateDropItem';
 import { activateEquipment } from './KeyActions/activateEquipment';
 import { activateInventory } from './KeyActions/activateInventory';
 import { activateThrow } from './KeyActions/activateThrow';
+import { activateProjectile } from './KeyActions/activateProjectile';
 import { walk } from './KeyActions/walk';
 import { addActor } from './KeyActions/addActor';
 import { moveCursor } from './KeyActions/moveCursor';
@@ -35,6 +36,7 @@ export {
   activateEquipment,
   activateInventory,
   activateThrow,
+  activateProjectile,
   walk,
   addActor,
   moveCursor,

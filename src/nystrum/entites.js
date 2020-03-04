@@ -152,11 +152,12 @@ const HasInnerGates = superclass => class extends superclass {
 }
 
 const UI = superclass => class extends superclass {
-  constructor({ initiatedBy = null, ...args }) {
+  constructor({ initiatedBy = null, range = null, ...args }) {
     super({...args })
     this.entityTypes = this.entityTypes.concat('UI');
     this.initiatedBy = initiatedBy;
     this.active = true;
+    this.range = range;
   }
 
   hasEnoughEnergy() {
@@ -856,7 +857,6 @@ const Dragging = superclass => class extends superclass {
 
   drag (lastPos) {
     // update entity position
-    console.log('drag');
     const pos = this.draggedEntity.pos;
     // get tile of draged entity
     let tile = this.game.map[Helper.coordsToString(pos)]
