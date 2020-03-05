@@ -10,11 +10,14 @@ class Keymap extends React.Component {
           
           this.props.keymap && (
             Object.entries(this.props.keymap).map(([key, value], index) => {
-              return (
-                <Button key={index} onClick={() => null} color='grey darken-1'>
-                  {key} {value.label}
-                </Button>
-              )
+              const hidden = value.hasOwnProperty('hidden') ? value.hidden : false;
+              if (!hidden) {
+                return (
+                  <Button key={index} onClick={() => null} color='grey darken-1'>
+                    {key} {value.label}
+                  </Button>
+                )
+              }
             })
           )
         }

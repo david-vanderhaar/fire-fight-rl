@@ -15,20 +15,15 @@ const CharacterSelect = (props) => {
             <button
               key={index}
               style={{
-                color: '#641b10',
-                fontSize: '20px',
-                fontWeight: 'bold',
-                backgroundColor: '#e9a195',
                 position: 'relative',
                 top: '280px'
               }}
-              className={`CharacterSelect__button btn ${color}`}
+              className={`CharacterSelect__button btn btn-main`}
               onClick={() => {
                 props.setSelectedCharacter(character)
                 props.setActiveScreen(SCREENS.LEVEL)
               }}
             >
-              {/* {character.name} */}
               Play Game
             </button>
           )

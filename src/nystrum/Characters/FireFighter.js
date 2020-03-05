@@ -3,13 +3,13 @@ import * as Item from '../items';
 import * as Entity from '../entites';
 import * as Constant from '../constants';
 import * as Keymap from '../Keymap';
-import { createEightDirectionMoveOptions, createFourDirectionMoveOptions } from '../Keymap/helper';
+import { createFourDirectionMoveOptions } from '../Keymap/helper';
 
 export default function (engine) {
   // define keymap
   const keymap = (engine) => {
     return {
-      ...createFourDirectionMoveOptions(Keymap.push, engine),
+      ...createFourDirectionMoveOptions(Keymap.push, engine, 'push', true),
       t: {
         activate: () => Keymap.activateProjectile(engine, 4),
         label: 'water',

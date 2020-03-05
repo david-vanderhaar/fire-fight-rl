@@ -13,23 +13,27 @@ export const deactivateUIKeymap = (engine, visibleUIKey) => {
   engine.game[visibleUIKey] = null;
 }
 
-export const createFourDirectionMoveOptions = (moveFunction, engine, label = 'move') => {
+export const createFourDirectionMoveOptions = (moveFunction, engine, label = 'move', hidden = false) => {
   return {
     w: {
       activate: () => moveFunction(DIRECTIONS.N, engine),
       label: `${label} N`,
+      hidden,
     },
     d: {
       activate: () => moveFunction(DIRECTIONS.E, engine),
       label: `${label} E`,
+      hidden,
     },
     s: {
       activate: () => moveFunction(DIRECTIONS.S, engine),
       label: `${label} S`,
+      hidden,
     },
     a: {
       activate: () => moveFunction(DIRECTIONS.W, engine),
       label: `${label} W`,
+      hidden,
     },
   }
 }

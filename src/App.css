@@ -86,12 +86,16 @@
 
 .Instructions__block {
   background-color: #666;
-  width: 200px;
+  min-width: 200px;
   border-radius: 6px;
   padding: 8px;
   display: inline-block;
   margin: 0 12px 0 0;
   text-align: center;
+}
+
+.Instructions__block .btn-main {
+  width: 100%;
 }
 
 .Messages {
@@ -157,4 +161,16 @@
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 
+}
+
+.btn-main {
+  color: #641b10;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #e9a195;
+}
+
+.btn-main:hover, .btn-main:focus {
+  background-color: #641b10;
+  color: #e9a195;
 }

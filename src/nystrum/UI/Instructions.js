@@ -1,4 +1,5 @@
 import React from 'react';
+import { SCREENS } from '../Screen/constants';
 
 class Instructions extends React.Component {
   render() {
@@ -10,6 +11,14 @@ class Instructions extends React.Component {
         <div className='flow-text'>
           <div className='Instructions__block'>{`Wave ${this.props.game.mode.data.level}`}</div>
           <div className='Instructions__block'>{`${this.props.game.countNpcSafe()} of ${this.props.game.mode.data.npcCount} are safe!`}</div>
+          <div 
+            className='Instructions__block'
+            onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}
+          >
+            <button className='btn btn-main' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>
+              Restart
+            </button>
+          </div>
         </div>
       </div>
     );

@@ -121,8 +121,9 @@ export class Game {
       this.burnEntities();
 
       if (this.hasLost()) {
-        this.resetMode();
-        this.initializeGameData();
+        return;
+        // this.resetMode();
+        // this.initializeGameData();
       }
       // triggerd once all npcs are saved
       if (this.hasWon()) { 
@@ -144,13 +145,8 @@ export class Game {
   
   resetMode () {
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
-      console.log(this.mode.data);
       this.resetIntensity();
-      console.log(this.mode.data);
     }
-
-    
-
     this.setModeLevel(1);
     this.initializeMode();
   }
@@ -199,6 +195,8 @@ export class Game {
   hasLost () {
     const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
     if (helpless.length < this.mode.data.npcCount) {
+      const players = this.engine.actors.filter((actor) => actor.entityTypes.includes('PLAYING'));
+      if (players.length) players[0].destroy();
       return true
     }
     return false;

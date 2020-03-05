@@ -62,7 +62,7 @@ class Level extends React.Component {
               {Game.DisplayElement(this.presserRef, Game.handleKeyPress, this.state.game.engine)}
               {/* <Information data={data} /> */}
             </div>
-            <Instructions game={this.state.game} />
+            <Instructions game={this.state.game} setActiveScreen={this.props.setActiveScreen} />
           </div>
           <div className='col s2'>
             <KeymapUI keymap={this.state.game.visibleKeymap} />
