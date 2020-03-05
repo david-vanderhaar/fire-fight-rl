@@ -16,7 +16,12 @@ const CharacterSelect = (props) => {
             <button
               key={index}
               style={{
-                color: 'red'
+                color: '#641b10',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                backgroundColor: '#e9a195',
+                position: 'relative',
+                top: '50px'
               }}
               className={`CharacterSelect__button btn ${color}`}
               onClick={() => {
@@ -24,7 +29,8 @@ const CharacterSelect = (props) => {
                 props.setActiveScreen(SCREENS.LEVEL)
               }}
             >
-              {character.name}
+              {/* {character.name} */}
+              Play Game
             </button>
           )
         })
@@ -47,21 +53,26 @@ class Title extends React.Component {
 
             width: '100vw',
             height: '100vh',
-            backgroundColor: 'black',
-            backgroundImage: `url("/fireMan.png")`,
-            backgroundSize: '100vw 120vh'
+            backgroundColor: '#641b10',
+            backgroundImage: `url("/flume_2.jpg")`,
+            // backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundPositionY: '10px'
+
           }}
         >
           {/* <img class="responsive-img" src="/fireMan.png"></img> */}
           
-          <div class='blue-text' style={{
+          <div  style={{
+            color: '#2aa198',
             textAlign: "center",
             paddingTop: '240px',
             paddingLeft: '50px',
             fontSize: '200px',
             fontFamily: 'glacial indifference',
-            textShadow: 'black 20px 20px 10px',
-          }}>FLUME</div>
+            textShadow: 'black 10px 5px 0px',
+          }}></div>
           <CharacterSelect 
             characters={this.props.characters} 
             selectedCharacter={this.props.selectedCharacter} 
