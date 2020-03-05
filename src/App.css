@@ -84,6 +84,16 @@
   /* left: 600px; */
 }
 
+.Instructions__block {
+  background-color: #666;
+  width: 200px;
+  border-radius: 6px;
+  padding: 8px;
+  display: inline-block;
+  margin: 0 12px 0 0;
+  text-align: center;
+}
+
 .Messages {
   /* right: 0; */
   /* left: 600px; */

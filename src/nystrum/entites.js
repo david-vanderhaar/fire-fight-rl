@@ -152,11 +152,12 @@ const HasInnerGates = superclass => class extends superclass {
 }
 
 const UI = superclass => class extends superclass {
-  constructor({ initiatedBy = null, ...args }) {
+  constructor({ initiatedBy = null, range = null, ...args }) {
     super({...args })
     this.entityTypes = this.entityTypes.concat('UI');
     this.initiatedBy = initiatedBy;
     this.active = true;
+    this.range = range;
   }
 
   hasEnoughEnergy() {
@@ -856,7 +857,6 @@ const Dragging = superclass => class extends superclass {
 
   drag (lastPos) {
     // update entity position
-    console.log('drag');
     const pos = this.draggedEntity.pos;
     // get tile of draged entity
     let tile = this.game.map[Helper.coordsToString(pos)]
@@ -1068,6 +1068,8 @@ const Destructable = superclass => class extends superclass {
     const current = this.durability;
     const newDurability = current - (value - this.getDefense());
     this.durability = Math.min(current, newDurability);
+    this.renderer.character = this.durability;
+    this.game.draw()
     if (this.durability <= 0) {
       this.destroy();
     }
@@ -1139,7 +1141,8 @@ const Speaking = superclass => class extends superclass {
       actor: this,
       game,
       message: message,
-      messageType: this.messageType
+      messageType: this.messageType,
+      processDelay: 0,
     });
   }
 }
@@ -1210,7 +1213,7 @@ const Exploding = superclass => class extends superclass {
       if (tile) tile.type = 'BURNT';
     });
 
-    this.game.draw();
+    // this.game.draw(); //may not need draw here
   }
 
   destroy () {

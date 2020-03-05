@@ -1,6 +1,8 @@
 import * as ROT from 'rot-js';
 
 export const delay = (timeDelayed = 100) => {
+  // return;
+  if (timeDelayed <= 0) return;
   return new Promise(resolve => setTimeout(resolve, timeDelayed));
 }
 
@@ -27,8 +29,9 @@ export const coordsToString = (coords) => `${coords.x},${coords.y}`
 export const calculatePath = (game, targetPos, currentPos, topology = 4) => {
   let map = game.map
   let isPassable = function (x, y) {
-    if (map[x + "," + y]) {
-      return (map[x + "," + y].type === 'GROUND');
+    const tile = map[x + "," + y];
+    if (tile) {
+      return (game.tileKey[tile.type].passable);
     } else {
       return false
     }

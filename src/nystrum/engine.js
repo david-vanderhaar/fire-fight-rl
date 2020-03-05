@@ -60,7 +60,11 @@ export class Engine {
           }
           action.onAfter();
           if (!await this.processActionFX(action, result.success)) {
-            await Helper.delay(action.processDelay);
+            if (this.shouldAutoRun()) {
+              await Helper.delay(25);
+            } else {
+              await Helper.delay(action.processDelay);
+            }
             this.game.draw();
           }
           if (!actor.active) break;
@@ -142,7 +146,13 @@ export class Engine {
 
   sortActorsByEnergy () {
     this.actors = this.actors.sort((a, b) => b.energy - a.energy);
-    console.log(this.actors);
+  }
+
+  shouldAutoRun () {
+  // if there is no player, the engine will continue to run, we don't want it to run too fast
+    const hasPlayer = this.actors.filter((actor) => actor.entityTypes.includes('PLAYING')).length
+    if (hasPlayer) return false;
+    return true;
   }
 
   addStatusEffect(newEffect) {

@@ -29,6 +29,7 @@ export class Game {
   constructor({
     engine = null,
     map = {},
+    mapInitialized = false,
     tileMap = {},
     mapWidth = MAP_WIDTH,
     mapHeight = MAP_HEIGHT,
@@ -56,6 +57,7 @@ export class Game {
   }) {
     this.engine = engine;
     this.map = map;
+    this.mapInitialized = mapInitialized;
     this.tileMap = tileMap;
     this.mapWidth = mapWidth;
     this.mapHeight = mapHeight;
@@ -119,9 +121,14 @@ export class Game {
       this.burnEntities();
 
       // triggerd once all npcs are saved
-      if (this.allSaved()) { 
+      if (this.hasWon()) { 
         this.nextModeLevel();
         this.increaseIntensity()
+        this.initializeGameData();
+      }
+      
+      if (this.hasLost()) {
+        this.resetMode();
         this.initializeGameData();
       }
     }
@@ -137,6 +144,14 @@ export class Game {
   }
   
   resetMode () {
+    if (this.mode.type === GAME_MODE_TYPES.PLAY) {
+      console.log(this.mode.data);
+      this.resetIntensity();
+      console.log(this.mode.data);
+    }
+
+    
+
     this.setModeLevel(1);
     this.initializeMode();
   }
@@ -147,10 +162,28 @@ export class Game {
     this.mode.data.fireIntensity += 1;
     this.mode.data.npcCount += 1;
     this.mode.data.debrisCount += 1;
-
   }
 
-  allSaved () {
+  resetIntensity () {
+    this.mode.data.fireIntensity = 1;
+    this.mode.data.npcCount = 1;
+    this.mode.data.debrisCount = 4;
+  }
+
+  countNpcSafe () {
+    const helpless = this.engine.actors.filter((actor) => {
+      if (actor.entityTypes.includes('HELPLESS')) {
+        const tile = this.map[Helper.coordsToString(actor.pos)];
+        if (tile.type === 'SAFE') {
+          return true;
+        }
+      }
+      return false
+    });
+    return helpless.length;
+  }
+
+  hasWon () {
     let allSaved = true;
     const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
 
@@ -162,6 +195,14 @@ export class Game {
     })
 
     return allSaved;
+  }
+
+  hasLost () {
+    const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
+    if (helpless.length < this.mode.data.npcCount) {
+      return true
+    }
+    return false;
   }
 
   addDebris (pos, name = 'box', character = '%', durability = 1) {
@@ -426,6 +467,8 @@ export class Game {
   }
 
   initializeMap () {
+    if (this.mapInitialized) return false;
+    this.mapInitialized = true;
     this.processTileMap((tileKey, x, y, character, foreground, background) => {
       let node = this.display.createTile(x, y, character, foreground, background);
       this.tileMap[tileKey] = node;
@@ -540,6 +583,7 @@ export const DisplayElement = (presserRef, handleKeyPress, engine) => {
       id='display'
       ref={presserRef}
       onKeyDown={(event) => handleKeyPress(event, engine)}
+      // onKeyUp={(event) => handleKeyPress(event, engine)}
       tabIndex='0'
     />
   )

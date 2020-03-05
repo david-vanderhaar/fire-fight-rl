@@ -137,6 +137,58 @@ export class SayManyThings extends Base {
   }
 };
 
+export class SprayWater extends Base {
+  constructor({ targetPos, radius = 1, ...args}) {
+    super({...args});
+    this.targetPos = targetPos
+    this.radius = radius
+    this.particleTemplate = Constant.PARTICLE_TEMPLATES.water
+  }
+  perform() {
+
+    let structure = {
+      x_offset: 0,
+      y_offset: 0,
+      positions: Array(this.radius).fill('').reduce((acc, curr, i) => {
+        return acc.concat(...Helper.getPointsOnCircumference(0, 0, i + 1))
+      }, [])
+    };
+
+    const positions = structure.positions.map((slot) => {
+      return {
+        x: this.targetPos.x + slot.x + structure.x_offset,
+        y: this.targetPos.y + slot.y + structure.y_offset
+      }
+    }).concat({...this.targetPos});
+
+    positions.forEach((position) => {
+      const tile = this.game.map[Helper.coordsToString(position)];
+      if (tile) { 
+        if (tile.type === 'BURNT') tile.type = 'GROUND';
+        if (tile.type === 'FLOOR') tile.type = 'WET';
+      }
+    });
+
+    // adding particles
+    positions.forEach((pos) => {
+      this.addParticle(
+        3,
+        { ...pos },
+        {
+          x: Math.sign(pos.x - this.targetPos.x),
+          y: Math.sign(pos.y - this.targetPos.y)
+        },
+      )
+    })
+
+    this.actor.energy -= this.energyCost;
+    return {
+      success: true,
+      alternative: null,
+    }
+  }
+};
+
 export class EquipItemFromContainer extends Base {
   // entities can only equip items from their container/inventory
   constructor({ item, ...args }) {
@@ -397,7 +449,11 @@ export class CursorMove extends Base {
     let success = false;
     let alternative = null;
 
-    if (this.game.cursorCanOccupyPosition(this.targetPos)) {
+    const initiatedFrom = this.actor.initiatedBy.pos; 
+    const path = Helper.calculatePath(this.game, this.targetPos, initiatedFrom, 8);
+    const isInRange = this.actor.range ? path.length <= this.actor.range : true;
+
+    if (isInRange && this.game.cursorCanOccupyPosition(this.targetPos)) {
       let tile = this.game.map[Helper.coordsToString(this.actor.pos)]
       this.game.map[Helper.coordsToString(this.actor.pos)] = { ...tile, entities: tile.entities.filter((e) => e.id !== this.actor.id) }
       this.actor.pos = this.targetPos
