@@ -11,7 +11,7 @@ export default function (engine) {
     return {
       ...createFourDirectionMoveOptions(Keymap.push, engine),
       t: {
-        activate: () => Keymap.activateProjectile(engine, 1),
+        activate: () => Keymap.activateProjectile(engine, 4),
         label: 'water',
       },
       g: {

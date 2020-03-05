@@ -159,7 +159,7 @@ export class SprayWater extends Base {
         x: this.targetPos.x + slot.x + structure.x_offset,
         y: this.targetPos.y + slot.y + structure.y_offset
       }
-    });
+    }).concat({...this.targetPos});
 
     positions.forEach((position) => {
       const tile = this.game.map[Helper.coordsToString(position)];

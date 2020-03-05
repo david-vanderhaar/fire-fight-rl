@@ -121,9 +121,14 @@ export class Game {
       this.burnEntities();
 
       // triggerd once all npcs are saved
-      if (this.allSaved()) { 
+      if (this.hasWon()) { 
         this.nextModeLevel();
         this.increaseIntensity()
+        this.initializeGameData();
+      }
+      
+      if (this.hasLost()) {
+        this.resetMode();
         this.initializeGameData();
       }
     }
@@ -139,6 +144,14 @@ export class Game {
   }
   
   resetMode () {
+    if (this.mode.type === GAME_MODE_TYPES.PLAY) {
+      console.log(this.mode.data);
+      this.resetIntensity();
+      console.log(this.mode.data);
+    }
+
+    
+
     this.setModeLevel(1);
     this.initializeMode();
   }
@@ -149,10 +162,28 @@ export class Game {
     this.mode.data.fireIntensity += 1;
     this.mode.data.npcCount += 1;
     this.mode.data.debrisCount += 1;
-
   }
 
-  allSaved () {
+  resetIntensity () {
+    this.mode.data.fireIntensity = 1;
+    this.mode.data.npcCount = 1;
+    this.mode.data.debrisCount = 4;
+  }
+
+  countNpcSafe () {
+    const helpless = this.engine.actors.filter((actor) => {
+      if (actor.entityTypes.includes('HELPLESS')) {
+        const tile = this.map[Helper.coordsToString(actor.pos)];
+        if (tile.type === 'SAFE') {
+          return true;
+        }
+      }
+      return false
+    });
+    return helpless.length;
+  }
+
+  hasWon () {
     let allSaved = true;
     const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
 
@@ -164,6 +195,14 @@ export class Game {
     })
 
     return allSaved;
+  }
+
+  hasLost () {
+    const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
+    if (helpless.length < this.mode.data.npcCount) {
+      return true
+    }
+    return false;
   }
 
   addDebris (pos, name = 'box', character = '%', durability = 1) {

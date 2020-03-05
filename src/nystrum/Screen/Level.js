@@ -2,6 +2,7 @@ import React from 'react';
 import { SCREENS } from './constants';
 import * as Engine from '../engine';
 import * as Game from '../game';
+import Instructions from '../UI/Instructions';
 import Information from '../UI/Information';
 import Equipment from '../UI/Equipment';
 import Inventory from '../UI/Inventory';
@@ -61,12 +62,7 @@ class Level extends React.Component {
               {Game.DisplayElement(this.presserRef, Game.handleKeyPress, this.state.game.engine)}
               {/* <Information data={data} /> */}
             </div>
-            <p className='flow-text'>
-              Save all of the citizens from the burning building and get them to the safe zone!
-            </p>
-            <p className='flow-text'>
-              {`Wave ${this.state.game.mode.data.level}`}
-            </p>
+            <Instructions game={this.state.game} />
           </div>
           <div className='col s2'>
             <KeymapUI keymap={this.state.game.visibleKeymap} />

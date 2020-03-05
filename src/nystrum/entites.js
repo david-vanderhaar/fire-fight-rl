@@ -1068,6 +1068,8 @@ const Destructable = superclass => class extends superclass {
     const current = this.durability;
     const newDurability = current - (value - this.getDefense());
     this.durability = Math.min(current, newDurability);
+    this.renderer.character = this.durability;
+    this.game.draw()
     if (this.durability <= 0) {
       this.destroy();
     }
