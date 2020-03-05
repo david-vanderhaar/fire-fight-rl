@@ -48,7 +48,7 @@ export class Game {
       data: {
         level: 1,
         highestLevel: null,
-        fireIntensity: 3, // increase this number to increase fire spread
+        fireIntensity: 1, // increase this number to increase fire spread
         npcCount: 1,
         debrisCount: 4,
       }
@@ -120,15 +120,14 @@ export class Game {
       this.propogateFire();
       this.burnEntities();
 
+      if (this.hasLost()) {
+        this.resetMode();
+        this.initializeGameData();
+      }
       // triggerd once all npcs are saved
       if (this.hasWon()) { 
         this.nextModeLevel();
         this.increaseIntensity()
-        this.initializeGameData();
-      }
-      
-      if (this.hasLost()) {
-        this.resetMode();
         this.initializeGameData();
       }
     }
