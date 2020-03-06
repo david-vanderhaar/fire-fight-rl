@@ -49,7 +49,7 @@ export class Game {
         level: 1,
         highestLevel: null,
         fireIntensity: 1, // increase this number to increase fire spread
-        npcCount: 5,
+        npcCount: 1,
         debrisCount: 4,
         gasCanCount: 0,
       }
