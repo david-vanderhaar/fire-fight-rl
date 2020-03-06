@@ -152,7 +152,7 @@ export class Game {
 
   increaseIntensity () {
 
-    switch (this.mode.data.level ){
+    switch (this.mode.data.level){
       case 1:
         this.mode.data.fireIntensity = 1;
         this.mode.data.npcCount = 1;
@@ -179,6 +179,11 @@ export class Game {
         this.mode.data.debrisCount = 6;
         break;
       case 6:
+        this.mode.data.fireIntensity = 4;
+        this.mode.data.npcCount = 3;
+        this.mode.data.debrisCount = 10;
+        break;
+      default:
         this.mode.data.fireIntensity = 4;
         this.mode.data.npcCount = 3;
         this.mode.data.debrisCount = 10;
