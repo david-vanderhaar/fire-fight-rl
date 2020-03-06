@@ -51,7 +51,7 @@ export class Game {
         fireIntensity: 1, // increase this number to increase fire spread
         npcCount: 1,
         debrisCount: 4,
-        gasCanCount: 3,
+        gasCanCount: 0,
       }
     },
     messages = [],
@@ -94,7 +94,7 @@ export class Game {
       for (let index = 0; index < this.mode.data.gasCanCount; index++) {
         let pos = Helper.getRandomInArray(array);
         let posXY = pos.split(',').map((coord) => parseInt(coord));
-        this.addDebris({ x: posXY[0], y: posXY[1] }, 'gasCan', 'X', 1, 5);
+        this.addDebris({ x: posXY[0], y: posXY[1] }, 'gasCan', 'X', 1, 3);
       }
       for (let index = 0; index < this.mode.data.fireIntensity; index++) {
         let pos = Helper.getRandomInArray(array);
@@ -163,36 +163,55 @@ export class Game {
         this.mode.data.fireIntensity = 1;
         this.mode.data.npcCount = 1;
         this.mode.data.debrisCount = 4;
+        this.mode.data.gasCanCount = 0;
         break;
       case 2:
         this.mode.data.fireIntensity = 2;
         this.mode.data.npcCount = 1;
         this.mode.data.debrisCount = 4;
+        this.mode.data.gasCanCount = 1;
         break;
       case 3:
         this.mode.data.fireIntensity = 3;
         this.mode.data.npcCount = 2;
-        this.mode.data.debrisCount = 6;
+        this.mode.data.debrisCount = 50;
+        this.mode.data.gasCanCount = 1;
         break;
       case 4:
         this.mode.data.fireIntensity = 4;
-        this.mode.data.npcCount = 3;
+        this.mode.data.npcCount = 2;
         this.mode.data.debrisCount = 6;
+        this.mode.data.gasCanCount = 3;
         break;
       case 5:
         this.mode.data.fireIntensity = 5;
         this.mode.data.npcCount = 3;
         this.mode.data.debrisCount = 6;
+        this.mode.data.gasCanCount = 3;
         break;
       case 6:
         this.mode.data.fireIntensity = 4;
         this.mode.data.npcCount = 3;
         this.mode.data.debrisCount = 10;
+        this.mode.data.gasCanCount = 3;
+        break;
+      case 7:
+        this.mode.data.fireIntensity = 1;
+        this.mode.data.npcCount = 3;
+        this.mode.data.debrisCount = 80;
+        this.mode.data.gasCanCount = 25;
+        break;
+      case 8:
+        this.mode.data.fireIntensity = 3;
+        this.mode.data.npcCount = 3;
+        this.mode.data.debrisCount = 20;
+        this.mode.data.gasCanCount = 6;
         break;
       default:
-        this.mode.data.fireIntensity = 4;
+        this.mode.data.fireIntensity = 3;
         this.mode.data.npcCount = 3;
-        this.mode.data.debrisCount = 10;
+        this.mode.data.debrisCount = 20;
+        this.mode.data.gasCanCount = 5;
         break;
     }
   }
