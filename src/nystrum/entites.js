@@ -335,6 +335,20 @@ const Equiping = superclass => class extends superclass {
     this.equipment = equipment;
   }
 
+  hasItemNameEquipped (itemName) {
+    const equipment = this.equipment.filter((slot) => {
+      if (slot.item) {
+        if (slot.item.name === itemName) {
+          return true;
+        }
+      }
+      return false;
+    })
+
+    return equipment.length > 0;
+
+  }
+
   getItemInSlot (slotName) {
     let openSlots = this.equipment.filter((slot) => {
       return (slot.item === null && slot.type === slotName)
@@ -355,9 +369,10 @@ const Equiping = superclass => class extends superclass {
       }
       return slot;
     })
+    return foundSlot;
   }
   
-  unequip(item) {
+  unequip (item) {
     this.equipment = this.equipment.map((slot) => {
       if (slot.item) {
         if (slot.item.id === item.id) {
@@ -1053,8 +1068,19 @@ const Destructable = superclass => class extends superclass {
   }
 
   getDefense () {
+    let defense = this.defense;
     // add in reducer to get defense stats of all equpiment
-    return this.defense;
+    if (this.entityTypes.includes('EQUIPING')) {
+      this.equipment.forEach((slot) => {
+        if (slot.item) {
+          if (slot.item.entityTypes.includes('DESTRUCTABLE')) {
+            defense += slot.item.getDefense();
+          }
+        }
+      });
+    }
+    
+    return defense;
   }
 
   decreaseDurabilityWithoutDefense (value) {
@@ -1154,7 +1180,7 @@ const Burnable = superclass => class extends superclass {
   }
 
   burn () {
-    this.decreaseDurability(1)
+    this.decreaseDurability(2)
     return true;
   }
 }
@@ -1317,6 +1343,12 @@ export const Weapon = pipe(
   Rendering, 
   Equipable, 
   Attacking
+)(Entity);
+
+export const Armor = pipe(
+  Rendering, 
+  Equipable, 
+  Destructable,
 )(Entity);
 
 export const DestructiveProjectile = pipe(

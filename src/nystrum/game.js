@@ -3,7 +3,7 @@ import * as ROT from 'rot-js';
 import * as Constant from './constants';
 import * as Helper from '../helper';
 import { addActor as addWaveEnemy } from './Keymap/KeyActions/addActor';
-import { addDebris  } from './Keymap/KeyActions/addDebris';
+import * as Item from './items';
 import * as Message from './message';
 import { Display } from './Display/konvaCustom';
 import { FireSpread, Speaker, Debris } from './entites';
@@ -255,7 +255,8 @@ export class Game {
     // create new entity and place
     let entity = new Speaker({
       name: 'Tobi Lou',
-      messages: SOLANGE.lyrics,
+      // messages: SOLANGE.lyrics,
+      messages: ['help!', 'ahh!', 'It\'s getting hot in hurr.'],
       messageType: MESSAGE_TYPE.STATUS_EFFECT,
       pos,
       game: this,
@@ -287,7 +288,7 @@ export class Game {
       timeToSpread: 1,
       spreadCount: 1,
       durability: 1,
-      attackDamage: 1,
+      attackDamage: 2,
       speed: 100,
     })
 
@@ -428,11 +429,29 @@ export class Game {
         currentFrame = Helper.getRandomInt(0, Constant.TILE_KEY[type].animation.length)
       }
 
+    
       this.map[key] = {
         type,
         currentFrame,
         entities: [],
       };
+    })
+
+    this.placeInitialObjects();
+  }
+
+  placeInitialObjects () {
+    const objectsToPlace = {
+      '18,20': Item.axe(this.engine),
+      '19,20': Item.waterGun(this.engine),
+      '20,20': Item.fireJacket(this.engine),
+    }
+
+    Object.keys(objectsToPlace).forEach((key) => {
+      let tile = this.map[key];
+      if (tile) {
+        tile.entities.push(objectsToPlace[key]);
+      }
     })
   }
 

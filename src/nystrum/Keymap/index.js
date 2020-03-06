@@ -8,6 +8,7 @@ import { addActor } from './KeyActions/addActor';
 import { moveCursor } from './KeyActions/moveCursor';
 import { cloneSelf } from './KeyActions/cloneSelf'
 import { pickupRandom } from './KeyActions/pickupRandom'
+import { equipRandomFromTile } from './KeyActions/pickupRandom'
 import { charge } from './KeyActions/charging'
 import { sign } from './KeyActions/signing'
 import { signRelease } from './KeyActions/signing'
@@ -42,6 +43,7 @@ export {
   moveCursor,
   cloneSelf,
   pickupRandom,
+  equipRandomFromTile,
   charge,
   sign,
   signRelease,

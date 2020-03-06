@@ -5,6 +5,7 @@ import { cloneDeep } from 'lodash';
 import uuid from 'uuid/v1';
 import { Particle } from './entites';
 import { MESSAGE_TYPE } from './message';
+import { TYPE as ITEM_TYPES } from './items';
 
 export class Base {
   constructor({
@@ -146,6 +147,14 @@ export class SprayWater extends Base {
   }
   perform() {
 
+    if (!this.actor.hasItemNameEquipped(ITEM_TYPES.WATER_GUN)) {
+      this.game.addMessage(`${this.actor.name} doesn't have a ${ITEM_TYPES.WATER_GUN}.`, MESSAGE_TYPE.ERROR);
+      return {
+        success: false,
+        alternative: null,
+      }
+    }
+
     let structure = {
       x_offset: 0,
       y_offset: 0,
@@ -229,21 +238,25 @@ export class EquipItemFromTile extends Base {
   perform () {
     let success = false;
     let alternative = null;
+
     if (this.item.equipmentType) {
       let itemInSlot = this.actor.getItemInSlot(this.item.equipmentType);
+      // if (itemInSlot) {
+      //   this.game.map[Helper.coordsToString(this.actor.pos)].entities.push(itemInSlot);
+      // }
       if (itemInSlot) {
-        this.game.map[Helper.coordsToString(this.actor.pos)].entities.push(itemInSlot);
+        this.game.addMessage(`${this.actor.name}\'s equipment slots are full.`, MESSAGE_TYPE.ERROR);
+      } else {
+        this.actor.equip(this.item.equipmentType, this.item);
+        let entities = this.game.map[Helper.coordsToString(this.actor.pos)].entities
+        this.game.map[Helper.coordsToString(this.actor.pos)].entities = entities.filter((it) => it.id !== this.item.id);
+        this.game.addMessage(`${this.actor.name} equips ${this.item.name}.`, MESSAGE_TYPE.ACTION);
+        success = true;
+        this.actor.energy -= this.energyCost;
       }
 
-      let entities = this.game.map[Helper.coordsToString(this.actor.pos)].entities
-      this.game.map[Helper.coordsToString(this.actor.pos)].entities = entities.filter((it) => it.id !== this.item.id);
-      
-      this.actor.equip(this.item);
-      this.game.addMessage(`${this.actor.name} equips ${this.item.name}.`, MESSAGE_TYPE.ACTION);
-      success = true;
     }
 
-    this.actor.energy -= this.energyCost;
     return {
       success,
       alternative,
@@ -260,6 +273,23 @@ export class UnequipItem extends Base {
     this.game.addMessage(`${this.actor.name} puts ${this.item.name} away.`, MESSAGE_TYPE.ACTION);
     this.actor.unequip(this.item);
     this.actor.addToContainer(this.item);
+    this.actor.energy -= this.energyCost;
+    return {
+      success: true,
+      alternative: null,
+    }
+  }
+};
+
+export class UnequipItemToTile extends Base {
+  constructor({ item, ...args }) {
+    super({ ...args });
+    this.item = item;
+  }
+  perform() {
+    this.game.addMessage(`${this.actor.name} drops ${this.item.name}.`, MESSAGE_TYPE.ACTION);
+    this.actor.unequip(this.item);
+    this.game.map[Helper.coordsToString(this.actor.pos)].entities.splice(0, 0, this.item);
     this.actor.energy -= this.energyCost;
     return {
       success: true,

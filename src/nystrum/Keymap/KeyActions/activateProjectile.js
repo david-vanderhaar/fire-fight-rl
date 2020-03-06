@@ -47,14 +47,14 @@ const keymap = (engine, initiatedBy, previousKeymap, radius) => {
   };
 }
 
-export const activateProjectile = (engine, radius) => {
+export const activateProjectile = (engine, radius, range = 2) => {
   let currentActor = engine.actors[engine.currentActor]
   let game = engine.game;
   let pos = currentActor.pos;
 
   let cursor = new UI_Actor({
     initiatedBy: currentActor,
-    range: 3,
+    range,
     pos,
     renderer: {
       character: '█',

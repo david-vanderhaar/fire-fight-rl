@@ -66,7 +66,7 @@ class Level extends React.Component {
           </div>
           <div className='col s2'>
             <KeymapUI keymap={this.state.game.visibleKeymap} />
-            <Messages messages={this.state.game.messages.slice(-3).reverse()} />
+            <Messages messages={this.state.game.messages.slice(-5).reverse()} />
           </div>
           {/* <button className='btn' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>Quit</button> */}
         </div>
