@@ -765,6 +765,14 @@ export class GrabDirection extends Base {
     if (this.actor.grab(this.targetPos)) {
       this.actor.energy -= this.energyCost;
       success = true;
+
+      // add particles
+      this.addParticle(
+        2,
+        { ...this.targetPos },
+        { x: 0, y: 0 },
+        Constant.PARTICLE_TEMPLATES.succede.renderer,
+      )
     }
 
     return {
@@ -783,8 +791,17 @@ export class ReleaseGrab extends Base {
     let success = false;
     let alternative = null;
 
-    if (this.actor.release()) {
+    const releasedEntity = this.actor.release()
+    
+    if (releasedEntity) {
       this.actor.energy -= this.energyCost;
+      // add particles
+      this.addParticle(
+        2,
+        { ...releasedEntity.pos },
+        { x: 0, y: 0 },
+        Constant.PARTICLE_TEMPLATES.succede.renderer,
+      )
       success = true;
     };
 

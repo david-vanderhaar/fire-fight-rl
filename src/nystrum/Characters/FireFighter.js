@@ -14,6 +14,10 @@ export default function (engine) {
         activate: () => Keymap.activateProjectile(engine, 1, 5),
         label: 'shoot water',
       },
+      c: {
+        activate: () => Keymap.chop(engine),
+        label: 'chop',
+      },
       e: {
         activate: () => Keymap.activateEquipment(engine),
         label: 'equipment',
@@ -29,10 +33,6 @@ export default function (engine) {
       r: {
         activate: () => Keymap.releaseGrab(engine),
         label: 'release',
-      },
-      f: {
-        activate: () => Keymap.chop(engine),
-        label: 'chop',
       },
     };
   }

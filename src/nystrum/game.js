@@ -94,7 +94,7 @@ export class Game {
       for (let index = 0; index < this.mode.data.gasCanCount; index++) {
         let pos = Helper.getRandomInArray(array);
         let posXY = pos.split(',').map((coord) => parseInt(coord));
-        this.addDebris({ x: posXY[0], y: posXY[1] }, 'gasCan', 'X', 1, 3);
+        this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'X', 1, 3, Constant.THEMES.SOLARIZED.orange);
       }
       for (let index = 0; index < this.mode.data.fireIntensity; index++) {
         let pos = Helper.getRandomInArray(array);
@@ -236,7 +236,7 @@ export class Game {
   }
 
   getSaveCountRequirement () {
-    const minimum = Math.floor(this.mode.data.npcCount * 0.66);
+    const minimum = Math.ceil(this.mode.data.npcCount * 0.66);
     return Math.max(1, minimum);
   }
 
@@ -252,13 +252,13 @@ export class Game {
     return false;
   }
 
-  addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0) {
+  addDebris(pos, name = 'box', character = '%', durability = 5, explosivity = 0, background = Constant.THEMES.SOLARIZED.base01) {
     let box = new Debris({
       pos,
       renderer: {
         character,
         color: Constant.THEMES.SOLARIZED.base2,
-        background: Constant.THEMES.SOLARIZED.base01,
+        background,
       },
       name,
       game: this,
@@ -274,14 +274,14 @@ export class Game {
   addNPC (pos) {
     // create new entity and place
     let entity = new Speaker({
-      name: 'Tobi Lou',
+      name: 'Helpless Citizen',
       // messages: SOLANGE.lyrics,
       messages: ['help!', 'ahh!', 'It\'s getting hot in hurr.'],
-      messageType: MESSAGE_TYPE.STATUS_EFFECT,
+      messageType: MESSAGE_TYPE.ACTION,
       pos,
       game: this,
       renderer: {
-        character: 'T',
+        character: 'C',
         color: Constant.THEMES.SOLARIZED.base3,
         background: Constant.THEMES.SOLARIZED.violet,
       },

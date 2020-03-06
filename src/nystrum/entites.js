@@ -866,8 +866,9 @@ const Dragging = superclass => class extends superclass {
 
   release () {
     if (!this.draggedEntity) return false;
+    const draggedEntity = {...this.draggedEntity};
     this.draggedEntity = null;
-    return true;
+    return draggedEntity;
   }
 
   drag (lastPos) {

@@ -16,7 +16,6 @@ const keymapEquipment = (engine, initiatedBy) => {
       label: ''
     }
     obj['activate'] = () => {
-      console.log(`setting action for ${initiatedBy.name} to unequip ${slot.item.name}`);
       initiatedBy.setNextAction(new UnequipItemToTile({
         item: slot.item,
         game: engine.game,

@@ -305,6 +305,13 @@ export const PARTICLE_TEMPLATES = {
       background: 'red',
     }
   },
+  succede: {
+    renderer: {
+      character: 'x',
+      color: THEMES.SOLARIZED.base3,
+      background: THEMES.SOLARIZED.green,
+    }
+  },
   damage: {
     renderer: {
       character: '*',

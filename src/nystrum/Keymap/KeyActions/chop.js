@@ -8,7 +8,7 @@ const keyMapChop = (engine, initiatedBy, previousKeymap) => {
   return {
     Escape: {
       activate: goToPreviousKeymap,
-      label: 'Cancel Chop Action',
+      label: 'Cancel Chop',
     },
     w: {
       activate: () => {
