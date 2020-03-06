@@ -51,6 +51,7 @@ export class Game {
         fireIntensity: 1, // increase this number to increase fire spread
         npcCount: 1,
         debrisCount: 4,
+        gasCanCount: 3,
       }
     },
     messages = [],
@@ -89,6 +90,11 @@ export class Game {
         let pos = Helper.getRandomInArray(array);
         let posXY = pos.split(',').map((coord) => parseInt(coord));
         this.addDebris({ x: posXY[0], y: posXY[1] });
+      }
+      for (let index = 0; index < this.mode.data.gasCanCount; index++) {
+        let pos = Helper.getRandomInArray(array);
+        let posXY = pos.split(',').map((coord) => parseInt(coord));
+        this.addDebris({ x: posXY[0], y: posXY[1] }, 'gasCan', 'X', 1, 5);
       }
       for (let index = 0; index < this.mode.data.fireIntensity; index++) {
         let pos = Helper.getRandomInArray(array);
@@ -234,7 +240,7 @@ export class Game {
     return false;
   }
 
-  addDebris (pos, name = 'box', character = '%', durability = 1) {
+  addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0) {
     let box = new Debris({
       pos,
       renderer: {
@@ -245,6 +251,8 @@ export class Game {
       name,
       game: this,
       durability,
+      explosivity,
+      flammability: 0,
     })
 
     this.placeActorOnMap(box)
