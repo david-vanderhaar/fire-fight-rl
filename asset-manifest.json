@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/fire-fight-rl/static/css/main.86f187de.chunk.css",
-    "main.js": "/fire-fight-rl/static/js/main.bdbf3277.chunk.js",
-    "main.js.map": "/fire-fight-rl/static/js/main.bdbf3277.chunk.js.map",
+    "main.css": "/fire-fight-rl/static/css/main.37cf6e44.chunk.css",
+    "main.js": "/fire-fight-rl/static/js/main.6f65cbd2.chunk.js",
+    "main.js.map": "/fire-fight-rl/static/js/main.6f65cbd2.chunk.js.map",
     "runtime~main.js": "/fire-fight-rl/static/js/runtime~main.a72310dd.js",
     "runtime~main.js.map": "/fire-fight-rl/static/js/runtime~main.a72310dd.js.map",
     "static/js/2.7903e8f9.chunk.js": "/fire-fight-rl/static/js/2.7903e8f9.chunk.js",
     "static/js/2.7903e8f9.chunk.js.map": "/fire-fight-rl/static/js/2.7903e8f9.chunk.js.map",
     "index.html": "/fire-fight-rl/index.html",
-    "precache-manifest.edb01d568b7221793f30b54f622cc5f9.js": "/fire-fight-rl/precache-manifest.edb01d568b7221793f30b54f622cc5f9.js",
+    "precache-manifest.d7c41548807d10684db7ef308f7cf14e.js": "/fire-fight-rl/precache-manifest.d7c41548807d10684db7ef308f7cf14e.js",
     "service-worker.js": "/fire-fight-rl/service-worker.js",
-    "static/css/main.86f187de.chunk.css.map": "/fire-fight-rl/static/css/main.86f187de.chunk.css.map"
+    "static/css/main.37cf6e44.chunk.css.map": "/fire-fight-rl/static/css/main.37cf6e44.chunk.css.map"
   }
 }
