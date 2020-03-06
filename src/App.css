@@ -164,13 +164,13 @@
 }
 
 .btn-main {
-  color: #641b10;
+  background-color: #fdf6e3;
+  color: rgb(4, 49, 61);
   font-size: 20px;
   font-weight: bold;
-  background-color: #e9a195;
 }
 
 .btn-main:hover, .btn-main:focus {
-  background-color: #641b10;
-  color: #e9a195;
+  background-color: rgb(4, 49, 61);
+  color: #fdf6e3;
 }
