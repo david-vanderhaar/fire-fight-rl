@@ -1,5 +1,5 @@
 import { UI_Actor } from '../../entites';
-import { UnequipItem } from '../../actions';
+import { UnequipItem, UnequipItemToTile } from '../../actions';
 import { addAlphabeticallyToKeymap, deactivateUIKeymap } from '../helper';
 
 const keymapEquipment = (engine, initiatedBy) => {
@@ -17,14 +17,14 @@ const keymapEquipment = (engine, initiatedBy) => {
     }
     obj['activate'] = () => {
       console.log(`setting action for ${initiatedBy.name} to unequip ${slot.item.name}`);
-      initiatedBy.setNextAction(new UnequipItem({
+      initiatedBy.setNextAction(new UnequipItemToTile({
         item: slot.item,
         game: engine.game,
         actor: initiatedBy,
       }))
       deactivateUIKeymap(engine, 'visibleEquipment');
     }
-    obj['label'] = `Unequip ${slot.name}`;
+    obj['label'] = `Unequip ${slot.item.name}`;
     addAlphabeticallyToKeymap(keymap, obj);
     return true;
   })

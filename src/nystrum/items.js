@@ -1,12 +1,13 @@
 import * as Entity from './entites';
 import * as Constant from './constants';
-import * as Helper from '../helper';
 
 export const TYPE = {
   KUNAI: 'Kunai',
   DIRECTIONAL_KUNAI: 'Directional Kunai',
   SWORD: 'Sword',
   AXE: 'Axe',
+  ARMOR: 'Armor',
+  WATER_GUN: 'Water Gun',
   BARRIER: 'Barrier',
 }
 
@@ -348,16 +349,42 @@ export const sword = (engine) => new Entity.Weapon({
     background: '',
   },
 })
+
 export const axe = (engine) => new Entity.Weapon({
   game: engine.game,
   name: TYPE.AXE,
   passable: true,
   attackDamage: 5,
-  equipmentType: Constant.EQUIPMENT_TYPES.HAND,
+  equipmentType: Constant.EQUIPMENT_TYPES.GENERIC,
   renderer: {
-    // character: '|',
-    character: 'P',
+    character: 'a',
     color: 'white',
+    background: '',
+  },
+})
+
+export const waterGun = (engine) => new Entity.Weapon({
+  game: engine.game,
+  name: TYPE.WATER_GUN,
+  passable: true,
+  attackDamage: 0,
+  equipmentType: Constant.EQUIPMENT_TYPES.GENERIC,
+  renderer: {
+    character: 'w',
+    color: Constant.THEMES.SOLARIZED.blue,
+    background: '',
+  },
+})
+
+export const fireJacket = (engine) => new Entity.Armor({
+  game: engine.game,
+  name: 'Fire Jacket',
+  passable: true,
+  defense: 1,
+  equipmentType: Constant.EQUIPMENT_TYPES.GENERIC,
+  renderer: {
+    character: 'J',
+    color: Constant.THEMES.SOLARIZED.magenta,
     background: '',
   },
 })

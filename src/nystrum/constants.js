@@ -200,6 +200,7 @@ export const EQUIPMENT_TYPES = {
   BACK: 'BACK',
   HAND: 'HAND',
   FEET: 'FEET',
+  GENERIC: 'GENERIC',
 }
 
 export const EQUIPMENT_LAYOUTS = {
@@ -211,6 +212,12 @@ export const EQUIPMENT_LAYOUTS = {
       {type: EQUIPMENT_TYPES.HAND, name: 'left_hand', item: null},
       {type: EQUIPMENT_TYPES.HAND, name: 'right_hand', item: null},
       {type: EQUIPMENT_TYPES.FEET, name: 'feet', item: null},
+    ]
+  },
+  limited: () => {
+    return [
+      {type: EQUIPMENT_TYPES.GENERIC, name: 'slot_1', item: null},
+      {type: EQUIPMENT_TYPES.GENERIC, name: 'slot_2', item: null},
     ]
   }
 }

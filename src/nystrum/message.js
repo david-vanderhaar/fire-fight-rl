@@ -18,6 +18,10 @@ export const MESSAGE_TYPE = {
     color: THEMES.SOLARIZED.base3,
     backgroundColor: THEMES.SOLARIZED.violet,
   },
+  ERROR: {
+    color: THEMES.SOLARIZED.base3,
+    backgroundColor: THEMES.SOLARIZED.yellow,
+  },
 }
 
 export class Message {

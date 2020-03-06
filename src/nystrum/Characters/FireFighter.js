@@ -11,8 +11,16 @@ export default function (engine) {
     return {
       ...createFourDirectionMoveOptions(Keymap.push, engine, 'push', true),
       t: {
-        activate: () => Keymap.activateProjectile(engine, 4),
-        label: 'water',
+        activate: () => Keymap.activateProjectile(engine, 1, 5),
+        label: 'shoot water',
+      },
+      e: {
+        activate: () => Keymap.activateEquipment(engine),
+        label: 'equipment',
+      },
+      p: {
+        activate: () => Keymap.equipRandomFromTile(engine),
+        label: 'pick up',
       },
       g: {
         activate: () => Keymap.activateGrab(engine),
@@ -21,18 +29,6 @@ export default function (engine) {
       r: {
         activate: () => Keymap.releaseGrab(engine),
         label: 'release',
-      },
-      i: {
-        activate: () => Keymap.activateInventory(engine),
-        label: 'Open Inventory',
-      },
-      b: {
-        activate: () => Keymap.addDebris(engine.game),
-        label: 'Add Debris',
-      },
-      y: {
-        activate: () => Keymap.addActor(engine.game),
-        label: 'Add Actor',
       },
       f: {
         activate: () => Keymap.chop(engine),
@@ -49,6 +45,7 @@ export default function (engine) {
       background: Constant.THEMES.SOLARIZED.yellow,
     },
     name: 'Fire Fighter',
+    equipment: Constant.EQUIPMENT_LAYOUTS.limited(),
     actions: [],
     speed: 100,
     durability: 4,
@@ -56,12 +53,12 @@ export default function (engine) {
   })
 
   // default items to container
-  const axe = Array(2).fill('').map(() => Item.axe(engine));
-  actor.container = [
-    new Entity.ContainerSlot({
-      itemType: axe[0].name,
-      items: axe,
-    }),
-  ]
+  // const axe = Array(2).fill('').map(() => Item.axe(engine));
+  // actor.container = [
+  //   new Entity.ContainerSlot({
+  //     itemType: axe[0].name,
+  //     items: axe,
+  //   }),
+  // ]
   return actor;
 }
