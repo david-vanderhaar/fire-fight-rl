@@ -85,19 +85,16 @@ export class Game {
     
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
       let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
-
       for (let index = 0; index < this.mode.data.debrisCount; index++) {
         let pos = Helper.getRandomInArray(array);
         let posXY = pos.split(',').map((coord) => parseInt(coord));
         this.addDebris({ x: posXY[0], y: posXY[1] });
       }
-
       for (let index = 0; index < this.mode.data.fireIntensity; index++) {
         let pos = Helper.getRandomInArray(array);
         let posXY = pos.split(',').map((coord) => parseInt(coord));
         this.addFire({x: posXY[0], y: posXY[1]});
       }
-      
       for (let index = 0; index < this.mode.data.npcCount; index++) {
         let pos = Helper.getRandomInArray(array);
         let posXY = pos.split(',').map((coord) => parseInt(coord));
@@ -154,9 +151,39 @@ export class Game {
   // Fire Fight Specific
 
   increaseIntensity () {
-    this.mode.data.fireIntensity += 1;
-    this.mode.data.npcCount += 1;
-    this.mode.data.debrisCount += 1;
+
+    switch (this.mode.data.level ){
+      case 1:
+        this.mode.data.fireIntensity = 1;
+        this.mode.data.npcCount = 1;
+        this.mode.data.debrisCount = 4;
+        break;
+      case 2:
+        this.mode.data.fireIntensity = 2;
+        this.mode.data.npcCount = 1;
+        this.mode.data.debrisCount = 4;
+        break;
+      case 3:
+        this.mode.data.fireIntensity = 3;
+        this.mode.data.npcCount = 2;
+        this.mode.data.debrisCount = 6;
+        break;
+      case 4:
+        this.mode.data.fireIntensity = 4;
+        this.mode.data.npcCount = 3;
+        this.mode.data.debrisCount = 6;
+        break;
+      case 5:
+        this.mode.data.fireIntensity = 5;
+        this.mode.data.npcCount = 3;
+        this.mode.data.debrisCount = 6;
+        break;
+      case 6:
+        this.mode.data.fireIntensity = 4;
+        this.mode.data.npcCount = 3;
+        this.mode.data.debrisCount = 10;
+        break;
+    }
   }
 
   resetIntensity () {
