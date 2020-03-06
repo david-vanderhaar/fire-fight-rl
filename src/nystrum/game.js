@@ -49,7 +49,7 @@ export class Game {
         level: 1,
         highestLevel: null,
         fireIntensity: 1, // increase this number to increase fire spread
-        npcCount: 1,
+        npcCount: 5,
         debrisCount: 4,
         gasCanCount: 0,
       }
@@ -124,9 +124,8 @@ export class Game {
       this.burnEntities();
 
       if (this.hasLost()) {
-        return;
-        // this.resetMode();
-        // this.initializeGameData();
+        this.resetMode();
+        this.initializeGameData();
       }
       // triggerd once all npcs are saved
       if (this.hasWon()) { 
@@ -232,29 +231,23 @@ export class Game {
       }
       return false
     });
+    
     return helpless.length;
   }
 
+  getSaveCountRequirement () {
+    const minimum = Math.floor(this.mode.data.npcCount * 0.66);
+    return Math.max(1, minimum);
+  }
+
   hasWon () {
-    let allSaved = true;
-    const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
-
-    helpless.forEach((actor) => {
-      const tile = this.map[Helper.coordsToString(actor.pos)];
-      if (tile.type !== 'SAFE') {
-        allSaved = false;
-      }
-    })
-
-    return allSaved;
+    return this.countNpcSafe() >= this.getSaveCountRequirement();
   }
 
   hasLost () {
     const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
-    if (helpless.length < this.mode.data.npcCount) {
-      const players = this.engine.actors.filter((actor) => actor.entityTypes.includes('PLAYING'));
-      if (players.length) players[0].destroy();
-      return true
+    if (helpless.length < this.getSaveCountRequirement()) {
+      return true;
     }
     return false;
   }
@@ -349,6 +342,7 @@ export class Game {
       if (ent.entityTypes.includes('BURNABLE')) {
         const burned = ent.burn();
         if (burned) this.addMessage(`${ent.name} is burned.`, MESSAGE_TYPE.DANGER);
+        if (ent.willResetCanBurn) ent.resetCanBurn();
       }
     })
   }

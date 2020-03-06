@@ -10,11 +10,21 @@ class Instructions extends React.Component {
         </p>
         <div className='flow-text'>
           <div className='Instructions__block'>{`Wave ${this.props.game.mode.data.level}`}</div>
-          <div className='Instructions__block'>{`${this.props.game.countNpcSafe()} of ${this.props.game.mode.data.npcCount} are safe!`}</div>
+          <div className='Instructions__block'>
+            {
+              `${this.props.game.countNpcSafe()} of  ${this.props.game.getSaveCountRequirement()} are safe!`
+            }
+          </div>
           <div 
             className='Instructions__block'
             onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}
           >
+            {/* <button className='btn btn-main' onClick={() => window.location.reload()}>
+              Restart
+            </button> */}
+            {/* <button className='btn btn-main' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>
+              Restart
+            </button> */}
             <button className='btn btn-main' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>
               Restart
             </button>
