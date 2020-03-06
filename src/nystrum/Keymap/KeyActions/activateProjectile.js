@@ -30,6 +30,9 @@ const keymap = (engine, initiatedBy, previousKeymap, radius) => {
     let cursor = engine.actors[engine.currentActor];
     cursor.active = false;
     engine.game.removeActor(cursor);
+    // make sure actor is burnable once targeting is complete or canceled
+    initiatedBy['willResetCanBurn'] = true;
+    
   };
   return {
     Escape: {
@@ -39,6 +42,8 @@ const keymap = (engine, initiatedBy, previousKeymap, radius) => {
     ...createFourDirectionMoveOptions(moveCursor, engine),
     t: {
       activate: () => {
+        // make sure actor is burnable once targeting is complete or canceled
+        initiatedBy['canBurn'] = true;
         trigger(engine, initiatedBy, radius);
         goToPreviousKeymap();
       },
@@ -51,6 +56,8 @@ export const activateProjectile = (engine, radius, range = 2) => {
   let currentActor = engine.actors[engine.currentActor]
   let game = engine.game;
   let pos = currentActor.pos;
+  // prevent player from being burned while on fire.
+  currentActor['canBurn'] = false;
 
   let cursor = new UI_Actor({
     initiatedBy: currentActor,
