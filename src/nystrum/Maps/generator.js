@@ -62,17 +62,12 @@ const getNeighboringPoints = (origin) => {
 }
 
 const createUnit = (map, position, size, border) => {
-  // create polyomino within bounds
-  // for (let i = 0; i < size; i++) {
-  //   const newPosition = {
-  //     x: position.x + i,
-  //     y: position.y + i,
-  //   }
-  //   let tile = map[Helper.coordsToString(newPosition)];
-  //   if (tile) tile.type = 'FLOOR';
-  // }
-  for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) {
+  // const length = size; // this will leave a border
+  // const length = size + 1; // this will close the gap
+  const length = size + 1 - border; // this will calculate using border
+
+  for (let i = 0; i < length; i++) {
+    for (let j = 0; j < length; j++) {
       const newPosition = {
         x: position.x + i,
         y: position.y + j,
