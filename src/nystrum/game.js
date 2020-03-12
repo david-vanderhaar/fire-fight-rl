@@ -8,6 +8,7 @@ import * as Message from './message';
 import { Display } from './Display/konvaCustom';
 import { FireSpread, Speaker, Debris } from './entites';
 import { MESSAGE_TYPE } from './message';
+import { generate as generateBuilding } from './Maps/generator';
 
 // const MAP_DATA = require('./Maps/building.json');
 // const MAP_DATA = require('./Maps/building_w_floor.json');
@@ -44,16 +45,20 @@ export class Game {
     }),
     tileKey = Constant.TILE_KEY,
     mode = {
-      type: GAME_MODE_TYPES.PLAY,
-      data: {
-        level: 1,
-        highestLevel: null,
-        fireIntensity: 1, // increase this number to increase fire spread
-        npcCount: 1,
-        debrisCount: 4,
-        gasCanCount: 0,
-      }
+      type: GAME_MODE_TYPES.TEST,
+      data: {}
     },
+    // mode = {
+    //   type: GAME_MODE_TYPES.PLAY,
+    //   data: {
+    //     level: 1,
+    //     highestLevel: null,
+    //     fireIntensity: 1, // increase this number to increase fire spread
+    //     npcCount: 1,
+    //     debrisCount: 4,
+    //     gasCanCount: 0,
+    //   }
+    // },
     messages = [],
   }) {
     this.engine = engine;
@@ -70,18 +75,12 @@ export class Game {
   }
 
   initializeMode () {
-    if (this.mode.type === GAME_MODE_TYPES.WAVE) {
-      let highestLevel = localStorage.getItem('hidden_leaf_rl__highestLevel');
-      if (!highestLevel) { 
-        highestLevel = this.mode.data.level;
-      } else { 
-        highestLevel = Math.max(highestLevel , this.mode.data.level);
-      }
-      localStorage.setItem('hidden_leaf_rl__highestLevel', highestLevel);
-      this.mode.data.highestLevel = highestLevel
-      for (let i = 0; i < Math.pow(this.mode.data.level, 2); i++) {
-        addWaveEnemy(this);
-      }
+    if (this.mode.type === GAME_MODE_TYPES.TEST) {
+      const offsetX = Math.floor(MAP_WIDTH / 2)
+      const offsetY = Math.floor(MAP_HEIGHT / 2)
+      // generateBuilding(this.map, offsetX, offsetY, 2, 1, 1);
+      generateBuilding(this.map, offsetX, offsetY);
+      this.draw()
     } 
     
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
@@ -111,14 +110,6 @@ export class Game {
   }
   
   updateMode () { // this is run every game turn
-    if (this.mode.type === GAME_MODE_TYPES.WAVE) {
-      const nonPlayerCharacters = this.engine.actors.filter((actor) => !actor.entityTypes.includes('PLAYING'));
-      if (!nonPlayerCharacters.length) {
-        this.nextModeLevel();
-        this.initializeMode();
-      }
-    }
-
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
       this.propogateFire();
       this.burnEntities();
@@ -612,8 +603,8 @@ export class Game {
     this.engine.actors.forEach((actor) => {
       actor.game = this;
     });
-    // this.createLevel();
-    this.createCustomLevel(MAP_DATA);
+    this.createLevel();
+    // this.createCustomLevel(MAP_DATA);
     this.initializeMap();
     this.draw();
     // this.randomlyPlaceAllActorsOnMap()
