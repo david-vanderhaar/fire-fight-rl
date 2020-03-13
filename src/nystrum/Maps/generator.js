@@ -1,6 +1,6 @@
 import * as Helper from '../../helper';
 
-export const generate = (map, offsetX, offsetY, buildingSize = 9, unitSize = 3, borderWidth = 1) => {
+export const generate = (map, offsetX, offsetY, buildingSize = 6, unitSize = 6, borderWidth = 1) => {
   let data = {};
   const floorPlan = createFloorPlan(buildingSize);
   floorPlan.forEach((unit, i) => {
@@ -8,11 +8,9 @@ export const generate = (map, offsetX, offsetY, buildingSize = 9, unitSize = 3, 
       x: unit.x + offsetX + (unitSize * unit.x),
       y: unit.y + offsetY + (unitSize * unit.y),
     }
-    createUnit(map, offsetUnit, unitSize, borderWidth)
+    createUnit(map, offsetUnit, unitSize, 0)
   })
-  console.log(floorPlan);
-  
-  
+  removeInnerWalls(map);
   return data;
 }
 
@@ -39,7 +37,7 @@ const createFloorPlan = (unitCount) => {
   return result
 }
 
-const getNeighboringPoints = (origin) => {
+const getNeighboringPoints = (origin, eightWay = false) => {
   const neighbors = [
     {
       x: origin.x,
@@ -58,6 +56,27 @@ const getNeighboringPoints = (origin) => {
       y: origin.y
     },
   ]
+
+  if (eightWay) {
+    neighbors = neighbors.concat([
+      {
+        x: origin.x + 1,
+        y: origin.y + 1
+      },
+      {
+        x: origin.x + 1,
+        y: origin.y - 1
+      },
+      {
+        x: origin.x - 1,
+        y: origin.y - 1
+      },
+      {
+        x: origin.x - 1,
+        y: origin.y + 1
+      },
+    ])
+  }
   return neighbors;
 }
 
@@ -72,8 +91,44 @@ const createUnit = (map, position, size, border) => {
         x: position.x + i,
         y: position.y + j,
       }
+      let type = 'FLOOR';
+      if (i === 0 || i === (length - 1)) type = 'WALL';
+      if (j === 0 || j === (length - 1)) type = 'WALL';
       let tile = map[Helper.coordsToString(newPosition)];
-      if (tile) tile.type = 'FLOOR';
+      if (tile) tile.type = type;
     }
   }
+}
+
+const removeInnerWalls = (map) => {
+  let walls = Object.keys(map).filter((key) => {
+    return map[key].type === 'WALL';
+  })
+
+  let innerWalls = walls.filter((key) => {
+    const tile = map[key];
+    const coordArray = key.split(',').map((i) => parseInt(i));
+    const coords = {
+      x: coordArray[0],
+      y: coordArray[1],
+    }
+    const neighbors = getNeighboringPoints(coords, false).filter((point) => {
+      let t = map[Helper.coordsToString(point)];
+      if (t) {
+        if (['WALL', 'FLOOR'].includes(t.type)) {
+          return true;
+        }
+      }
+      return false
+    });
+    
+    if (neighbors.length === 4) {
+      return true;
+    }
+    return false;
+  })
+
+  innerWalls.forEach((key) => {
+    map[key].type = 'FLOOR';
+  })
 }
