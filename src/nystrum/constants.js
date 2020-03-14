@@ -86,7 +86,12 @@ export const TILE_KEY = {
     character: '#',
     passable: false,
   },
-
+  'DOOR': {
+    background: THEMES.SOLARIZED.base02,
+    foreground: THEMES.SOLARIZED.base0,
+    character: '+',
+    passable: true,
+  },
   'SAFE': {
     background: THEMES.SOLARIZED.base02,
     foreground: THEMES.SOLARIZED.green,
