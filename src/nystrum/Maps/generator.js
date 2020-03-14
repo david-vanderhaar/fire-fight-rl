@@ -1,56 +1,67 @@
 import * as Helper from '../../helper';
 
-export const generate = (map, offsetX, offsetY, buildingSize = 6, unitSize = 6, borderWidth = 1) => {
+export const generate = (map, offsetX, offsetY, unitCount = 20, unitSize = 4, borderWidth = 0) => {
   let data = {};
-  const floorPlan = createFloorPlan(buildingSize);
-  let maxX = 0; 
-  let minX = 0; 
-  let maxY = 0; 
-  let minY = 0; 
-  floorPlan.forEach((pos) => {
-    if (pos.x > maxX) maxX = pos.x;
-    if (pos.x < minX) minX = pos.x;
-    if (pos.y > maxY) maxY = pos.y;
-    if (pos.y < minY) minY = pos.y;
-  })
-  const floorPlanWidth = Math.abs(maxX) + Math.abs(minX) + 1;
-  const floorPlanHeight = Math.abs(maxY) + Math.abs(minY) + 1;
-  console.log(floorPlanWidth);
-  console.log(floorPlanHeight);
+  // const floorPlan = createFloorPlan(unitCount);
+  // let maxX = 0; 
+  // let minX = 0; 
+  // let maxY = 0; 
+  // let minY = 0; 
+  // floorPlan.forEach((pos) => {
+  //   if (pos.x > maxX) maxX = pos.x;
+  //   if (pos.x < minX) minX = pos.x;
+  //   if (pos.y > maxY) maxY = pos.y;
+  //   if (pos.y < minY) minY = pos.y;
+  // })
+  // const floorPlanWidth = Math.abs(maxX) + Math.abs(minX) + 1;
+  // const floorPlanHeight = Math.abs(maxY) + Math.abs(minY) + 1;
+  // console.log(floorPlanWidth);
+  // console.log(floorPlanHeight);
   
-  floorPlan.forEach((unit, i) => {
-    let offsetUnit = {
-      x: unit.x + offsetX + (unitSize * unit.x),
-      y: unit.y + offsetY + (unitSize * unit.y),
-    }
-    createUnit(map, offsetUnit, unitSize, 0)
-  })
-  removeInnerWalls(map);
-  addInnerWalls(map);
+  let floorPlan = createFloorPlan();
+  let kill = 1000
+  while (floorPlan.length < unitCount) {
+    let unit = createRoomInFloorPlan(floorPlan);
+    const unitPosition = getUnitPosition(unit, offsetX, offsetY, unitSize);
+    let didCreate = createUnit(map, unitPosition, unitSize, borderWidth);
+    if (didCreate) floorPlan.push(unit);
+    kill -= 1;
+    if (kill <= 0) break;
+  }
+  removeInnerWalls(map)
+  addInnerWalls(map, floorPlan.length)
   return data;
 }
 
-const createFloorPlan = (unitCount) => {
+const createFloorPlan = () => {
   // create origin
-  let result = [{x: 0, y: 0}];
-  // until result meets unit count 
-  for (let i = 0; i < unitCount - 1; i++) {
-    // randomly choose previously created unit
-    let origin = Helper.getRandomInArray(result);
-    // randomly choose neighboring point
-    let newUnit = Helper.getRandomInArray(getNeighboringPoints(origin));
-    let unitAlreadyExists = result.filter((unit) => unit.x === newUnit.x && unit.y === newUnit.y).length > 0;
-    let kill = 100
-    while (unitAlreadyExists) {
-      newUnit = Helper.getRandomInArray(getNeighboringPoints(origin));
-      unitAlreadyExists = result.filter((unit) => unit.x === newUnit.x && unit.y === newUnit.y).length > 0;
-      kill -= 1;
-      if (kill <= 0) unitAlreadyExists = false;
-    }
-    // add this point as a new unit
-    result.push(newUnit);
+  let floorPlan = [{x: 0, y: 0}];
+  return floorPlan
+}
+
+const createRoomInFloorPlan = (floorPlan) => {
+  // randomly choose previously created unit
+  let origin = Helper.getRandomInArray(floorPlan);
+  // randomly choose neighboring point
+  let newUnit = getNeighboringUnit(origin);
+  let unitAlreadyExists = unitExists(newUnit, floorPlan)
+  let kill = 100
+  while (unitAlreadyExists) {
+    newUnit = getNeighboringUnit(origin);
+    unitAlreadyExists = unitExists(newUnit, floorPlan)
+    kill -= 1;
+    if (kill <= 0) unitAlreadyExists = false;
   }
-  return result
+  return newUnit
+}
+
+const getNeighboringUnit = (origin) => Helper.getRandomInArray(getNeighboringPoints(origin))
+const unitExists = (newUnit, existingUnits) => existingUnits.filter((unit) => unit.x === newUnit.x && unit.y === newUnit.y).length > 0;
+const getUnitPosition = (floorPlanPos, mapOffsetX, mapOffsetY, unitSize) => {
+  return {
+    x: floorPlanPos.x + mapOffsetX + (unitSize * floorPlanPos.x),
+    y: floorPlanPos.y + mapOffsetY + (unitSize * floorPlanPos.y),
+  }
 }
 
 const getNeighboringPoints = (origin, eightWay = false) => {
@@ -101,19 +112,36 @@ const createUnit = (map, position, size, border) => {
   // const length = size + 1; // this will close the gap
   const length = size + 1 - border; // this will calculate using border
 
-  for (let i = 0; i < length; i++) {
-    for (let j = 0; j < length; j++) {
+  // prevent units from hitting map edge
+  let unitCollidesWithEdge = false;
+  for (let i = 0; i < length + border; i++) {
+    for (let j = 0; j < length + border; j++) {
       const newPosition = {
         x: position.x + i,
         y: position.y + j,
       }
-      let type = 'FLOOR';
-      if (i === 0 || i === (length - 1)) type = 'WALL';
-      if (j === 0 || j === (length - 1)) type = 'WALL';
       let tile = map[Helper.coordsToString(newPosition)];
-      if (tile) tile.type = type;
+      if (!tile) unitCollidesWithEdge = true;
     }
   }
+
+  if (!unitCollidesWithEdge) {
+    for (let i = 0; i < length; i++) {
+      for (let j = 0; j < length; j++) {
+        const newPosition = {
+          x: position.x + i,
+          y: position.y + j,
+        }
+        let type = 'FLOOR';
+        if (i === 0 || i === (length - 1)) type = 'WALL';
+        if (j === 0 || j === (length - 1)) type = 'WALL';
+        let tile = map[Helper.coordsToString(newPosition)];
+        if (tile) tile.type = type;
+      }
+    }
+  }
+
+  return !unitCollidesWithEdge;
 }
 
 const removeInnerWalls = (map) => {
@@ -174,6 +202,7 @@ const addInnerWalls = (map, count = 2) => {
   // building walls
   let wallCount = 0;
   while (wallCount < count) {
+  // while (wallCount < corners.length) {
   // for (let i = 0; i < count; i++) {
     const corner = Helper.getRandomInArray(corners);
     const coordArray = corner.split(',').map((i) => parseInt(i));
@@ -206,11 +235,13 @@ const addInnerWalls = (map, count = 2) => {
       currentPosition.y += direction.y;
       let tile = map[Helper.coordsToString(currentPosition)];
       if (!tile) break;
-      if (tile.type === 'WALL') continue;
+      // if (tile.type === 'WALL') continue;
       if (tile.type === 'FLOOR') {
         tile.type = 'WALL';
         previousFloorPositions.push({...currentPosition})
-      } else if (tile.type === 'GROUND') {
+        // console.log(previousFloorPositions.length);
+        
+      } else if (tile.type === 'GROUND' || (tile.type === 'WALL' && previousFloorPositions.length)) {
         // go back two and make FLOOR
         let prevPos = {
           x: currentPosition.x - (direction.x * 2),
