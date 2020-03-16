@@ -1,6 +1,6 @@
 import * as Helper from '../../helper';
 
-export const generate = (map, offsetX, offsetY, unitCount = 20, unitSize = 4, borderWidth = 0) => {
+export const generate = (map, offsetX, offsetY, unitCount = 12, unitSize = 4, borderWidth = 1) => {
   let data = {};
   // const floorPlan = createFloorPlan(unitCount);
   // let maxX = 0; 
@@ -20,14 +20,18 @@ export const generate = (map, offsetX, offsetY, unitCount = 20, unitSize = 4, bo
   
   let floorPlan = createFloorPlan();
   let kill = 1000
-  while (floorPlan.length < unitCount) {
+  while (floorPlan.length < unitCount + 1) {
+    
     let unit = createRoomInFloorPlan(floorPlan);
     const unitPosition = getUnitPosition(unit, offsetX, offsetY, unitSize);
-    let didCreate = createUnit(map, unitPosition, unitSize, borderWidth);
+    let didCreate = createUnit(map, unitPosition, unitSize, 0);
+    
     if (didCreate) floorPlan.push(unit);
     kill -= 1;
     if (kill <= 0) break;
   }
+  console.log(floorPlan);
+  
   removeInnerWalls(map)
   addInnerWalls(map, floorPlan.length)
   return data;
@@ -41,17 +45,20 @@ const createFloorPlan = () => {
 
 const createRoomInFloorPlan = (floorPlan) => {
   // randomly choose previously created unit
+  // let origin = floorPlan[floorPlan.length - 1];
   let origin = Helper.getRandomInArray(floorPlan);
   // randomly choose neighboring point
   let newUnit = getNeighboringUnit(origin);
   let unitAlreadyExists = unitExists(newUnit, floorPlan)
-  let kill = 100
+  let kill = 1000
   while (unitAlreadyExists) {
+    origin = Helper.getRandomInArray(floorPlan.filter((pnt) => !Helper.coordsAreEqual(pnt, origin)));
     newUnit = getNeighboringUnit(origin);
     unitAlreadyExists = unitExists(newUnit, floorPlan)
     kill -= 1;
     if (kill <= 0) unitAlreadyExists = false;
   }
+  
   return newUnit
 }
 
@@ -65,7 +72,7 @@ const getUnitPosition = (floorPlanPos, mapOffsetX, mapOffsetY, unitSize) => {
 }
 
 const getNeighboringPoints = (origin, eightWay = false) => {
-  const neighbors = [
+  let neighbors = [
     {
       x: origin.x,
       y: origin.y + 1
@@ -114,8 +121,8 @@ const createUnit = (map, position, size, border) => {
 
   // prevent units from hitting map edge
   let unitCollidesWithEdge = false;
-  for (let i = 0; i < length + border; i++) {
-    for (let j = 0; j < length + border; j++) {
+  for (let i = 0; i < length; i++) {
+    for (let j = 0; j < length; j++) {
       const newPosition = {
         x: position.x + i,
         y: position.y + j,
@@ -155,7 +162,7 @@ const removeInnerWalls = (map) => {
       x: coordArray[0],
       y: coordArray[1],
     }
-    const neighbors = getNeighboringPoints(coords, false).filter((point) => {
+    const neighbors = getNeighboringPoints(coords, true).filter((point) => {
       let t = map[Helper.coordsToString(point)];
       if (t) {
         if (['WALL', 'FLOOR'].includes(t.type)) {
@@ -165,7 +172,7 @@ const removeInnerWalls = (map) => {
       return false
     });
     
-    if (neighbors.length === 4) {
+    if (neighbors.length === 8) {
       return true;
     }
     return false;
@@ -248,12 +255,14 @@ const addInnerWalls = (map, count = 2) => {
           y: currentPosition.y - (direction.y * 2),
         }
         map[Helper.coordsToString(prevPos)].type = 'DOOR';
+        // map[Helper.coordsToString(prevPos)].type = 'FLOOR';
         // go back one more and make FLOOR
         prevPos = {
           x: currentPosition.x - (direction.x * 3),
           y: currentPosition.y - (direction.y * 3),
         }
         map[Helper.coordsToString(prevPos)].type = 'DOOR';
+        // map[Helper.coordsToString(prevPos)].type = 'FLOOR';
         if (previousFloorPositions.length <= 0) {
           //   // we need to create another wall, this one is bust
           if (count <= 100) count += 1

@@ -80,6 +80,19 @@ export class Game {
       const offsetY = Math.floor(MAP_HEIGHT / 2)
       // generateBuilding(this.map, offsetX, offsetY, 2, 1, 1);
       generateBuilding(this.map, offsetX, offsetY);
+
+      // let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
+      // for (let index = 0; index < 10; index++) {
+      //   let pos = Helper.getRandomInArray(array);
+      //   let posXY = pos.split(',').map((coord) => parseInt(coord));
+      //   this.addDebris({ x: posXY[0], y: posXY[1] });
+      // }
+      // for (let index = 0; index < 1; index++) {
+      //   let pos = Helper.getRandomInArray(array);
+      //   let posXY = pos.split(',').map((coord) => parseInt(coord));
+      //   this.addFire({ x: posXY[0], y: posXY[1] });
+      // }
+
       this.draw()
     } 
     
