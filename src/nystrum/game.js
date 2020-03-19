@@ -9,6 +9,7 @@ import { Display } from './Display/konvaCustom';
 import { FireSpread, Speaker, Debris } from './entites';
 import { MESSAGE_TYPE } from './message';
 import { generate as generateBuilding } from './Maps/generator';
+import * as MapHelper from './Maps/helper';
 
 // const MAP_DATA = require('./Maps/building.json');
 // const MAP_DATA = require('./Maps/building_w_floor.json');
@@ -44,21 +45,21 @@ export class Game {
       tileOffset: TILE_OFFSET,
     }),
     tileKey = Constant.TILE_KEY,
-    mode = {
-      type: GAME_MODE_TYPES.TEST,
-      data: {}
-    },
     // mode = {
-    //   type: GAME_MODE_TYPES.PLAY,
-    //   data: {
-    //     level: 1,
-    //     highestLevel: null,
-    //     fireIntensity: 1, // increase this number to increase fire spread
-    //     npcCount: 1,
-    //     debrisCount: 4,
-    //     gasCanCount: 0,
-    //   }
+    //   type: GAME_MODE_TYPES.TEST,
+    //   data: {}
     // },
+    mode = {
+      type: GAME_MODE_TYPES.PLAY,
+      data: {
+        level: 1,
+        highestLevel: null,
+        fireIntensity: 1, // increase this number to increase fire spread
+        npcCount: 1,
+        debrisCount: 4,
+        gasCanCount: 0,
+      }
+    },
     messages = [],
   }) {
     this.engine = engine;
@@ -76,27 +77,24 @@ export class Game {
 
   initializeMode () {
     if (this.mode.type === GAME_MODE_TYPES.TEST) {
-      const offsetX = Math.floor(MAP_WIDTH / 2)
-      const offsetY = Math.floor(MAP_HEIGHT / 2)
-      // generateBuilding(this.map, offsetX, offsetY, 2, 1, 1);
-      generateBuilding(this.map, offsetX, offsetY);
-
-      // let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
-      // for (let index = 0; index < 10; index++) {
-      //   let pos = Helper.getRandomInArray(array);
-      //   let posXY = pos.split(',').map((coord) => parseInt(coord));
-      //   this.addDebris({ x: posXY[0], y: posXY[1] });
-      // }
-      // for (let index = 0; index < 1; index++) {
-      //   let pos = Helper.getRandomInArray(array);
-      //   let posXY = pos.split(',').map((coord) => parseInt(coord));
-      //   this.addFire({ x: posXY[0], y: posXY[1] });
-      // }
-
-      this.draw()
+      // code here
     } 
     
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
+      const offsetX = Math.floor(MAP_WIDTH / 2)
+      const offsetY = Math.floor(MAP_HEIGHT / 2)
+      generateBuilding(this.map, offsetX, offsetY);
+      MapHelper.addTileZone(
+        { x: 0, y: 0 },
+        3,
+        'SAFE',
+        this.map,
+        this.mapHeight,
+        this.mapWidth,
+      );
+      this.placeInitialEntities();
+      this.placePlayersInSafeZone();
+    
       let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
       for (let index = 0; index < this.mode.data.debrisCount; index++) {
         let pos = Helper.getRandomInArray(array);
@@ -441,6 +439,26 @@ export class Game {
     this.randomlyPlaceAllActorsOnMap()
   }
 
+  createEmptyLevel () {
+    for (let i = 0; i < this.mapHeight; i ++) {
+      for (let j = 0; j < this.mapWidth; j ++) {
+        const key = `${j},${i}`
+        let type = 'GROUND';
+        let currentFrame = 0;
+
+        if (Constant.TILE_KEY[type].animation) {
+          currentFrame = Helper.getRandomInt(0, Constant.TILE_KEY[type].animation.length)
+        }
+
+        this.map[key] = {
+          type,
+          currentFrame,
+          entities: [],
+        };
+      }
+    }
+  }
+
   createCustomLevel (data) {
     Object.keys(data.tiles).forEach((key, i) => {
       const tile = data.tiles[key];
@@ -462,20 +480,49 @@ export class Game {
       };
     })
 
-    this.placeInitialObjects();
+    this.placeInitialEntities();
   }
 
-  placeInitialObjects () {
-    const objectsToPlace = {
-      '18,20': Item.axe(this.engine),
-      '19,20': Item.waterGun(this.engine),
-      '20,20': Item.fireJacket(this.engine),
-    }
+  placeInitialEntities () {
+    let objects = [
+      Item.axe(this.engine),
+      Item.waterGun(this.engine),
+      Item.fireJacket(this.engine),
+    ];
 
-    Object.keys(objectsToPlace).forEach((key) => {
-      let tile = this.map[key];
-      if (tile) {
-        tile.entities.push(objectsToPlace[key]);
+    const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'SAFE');
+
+    objects.forEach((item) => {
+      const key = keys.pop();
+      if (key) {
+        const position = {
+          x: parseInt(key.split(',')[0]),
+          y: parseInt(key.split(',')[1]),
+        }
+        item.pos = position;
+        let tile = this.map[key];
+        if (tile) {
+          tile.entities.push(item);
+        }
+      }
+    })
+  }
+
+  placePlayersInSafeZone () {
+    let players = this.engine.actors.filter((actor) => actor.entityTypes.includes('PLAYING'))
+    const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'SAFE');
+    players.forEach((player) => {
+      const key = keys.shift();
+      if (key) {
+        const position = {
+          x: parseInt(key.split(',')[0]),
+          y: parseInt(key.split(',')[1]),
+        }
+        player.pos = position;
+        let tile = this.map[key];
+        if (tile) {
+          tile.entities.push(player);
+        }
       }
     })
   }
@@ -616,12 +663,13 @@ export class Game {
     this.engine.actors.forEach((actor) => {
       actor.game = this;
     });
-    this.createLevel();
+    this.createEmptyLevel();
+    // this.createLevel();
     // this.createCustomLevel(MAP_DATA);
     this.initializeMap();
     this.draw();
     // this.randomlyPlaceAllActorsOnMap()
-    this.placeActorsOnMap()
+    // this.placeActorsOnMap()
     this.initializeMode();
   }
 

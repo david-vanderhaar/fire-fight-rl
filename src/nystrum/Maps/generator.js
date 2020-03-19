@@ -23,14 +23,15 @@ export const generate = (map, offsetX, offsetY, unitCount = 12, unitSize = 4, bo
   while (floorPlan.length < unitCount + 1) {
     
     let unit = createRoomInFloorPlan(floorPlan);
-    const unitPosition = getUnitPosition(unit, offsetX, offsetY, unitSize);
-    let didCreate = createUnit(map, unitPosition, unitSize, 0);
+    if (unit) {
+      const unitPosition = getUnitPosition(unit, offsetX, offsetY, unitSize);
+      let didCreate = createUnit(map, unitPosition, unitSize, 0);
+      if (didCreate) floorPlan.push(unit);
+    }
     
-    if (didCreate) floorPlan.push(unit);
     kill -= 1;
     if (kill <= 0) break;
   }
-  console.log(floorPlan);
   
   removeInnerWalls(map)
   addInnerWalls(map, floorPlan.length)
@@ -56,7 +57,11 @@ const createRoomInFloorPlan = (floorPlan) => {
     newUnit = getNeighboringUnit(origin);
     unitAlreadyExists = unitExists(newUnit, floorPlan)
     kill -= 1;
-    if (kill <= 0) unitAlreadyExists = false;
+    if (kill <= 0) {
+      unitAlreadyExists = false;
+      newUnit = false;
+      break;
+    }
   }
   
   return newUnit
