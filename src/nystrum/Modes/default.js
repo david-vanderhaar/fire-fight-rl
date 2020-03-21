@@ -9,15 +9,10 @@ export class Mode {
     this.id = id;
     this.game = game;
     this.data = data;
-    // this.type = type;
   }
 
-  initialize() {
-    console.log('initializing mode');
-  }
+  initialize() {}
 
-  update() {
-    console.log('updating mode');
-  }
+  update() {}
 
 }
