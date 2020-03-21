@@ -2,25 +2,15 @@ import React from 'react';
 import * as ROT from 'rot-js';
 import * as Constant from './constants';
 import * as Helper from '../helper';
-import { addActor as addWaveEnemy } from './Keymap/KeyActions/addActor';
-import * as Item from './items';
 import * as Message from './message';
 import { Display } from './Display/konvaCustom';
-import { FireSpread, Speaker, Debris } from './entites';
-import { MESSAGE_TYPE } from './message';
-import { generate as generateBuilding } from './Maps/generator';
-import * as MapHelper from './Maps/helper';
+import * as Mode from './Modes/index';
 
 // const MAP_DATA = require('./Maps/building.json');
 // const MAP_DATA = require('./Maps/building_w_floor.json');
-const MAP_DATA = require('./Maps/building_w_ambo.json');
-const SOLANGE = require('./Data/solange.json');
+// const MAP_DATA = require('./Maps/building_w_ambo.json');
+// const SOLANGE = require('./Data/solange.json');
 
-const GAME_MODE_TYPES = {
-  WAVE: 0,
-  TEST: 1,
-  PLAY: 2,
-};
 const MAP_WIDTH = 50;
 const MAP_HEIGHT = 25;
 const TILE_WIDTH = 30;
@@ -45,12 +35,8 @@ export class Game {
       tileOffset: TILE_OFFSET,
     }),
     tileKey = Constant.TILE_KEY,
-    // mode = {
-    //   type: GAME_MODE_TYPES.TEST,
-    //   data: {}
-    // },
-    mode = {
-      type: GAME_MODE_TYPES.PLAY,
+    mode = new Mode.Play({
+      game: this,
       data: {
         level: 1,
         highestLevel: null,
@@ -58,8 +44,8 @@ export class Game {
         npcCount: 1,
         debrisCount: 4,
         gasCanCount: 0,
-      }
-    },
+      },
+    }),
     messages = [],
   }) {
     this.engine = engine;
@@ -76,280 +62,12 @@ export class Game {
   }
 
   initializeMode () {
-    if (this.mode.type === GAME_MODE_TYPES.TEST) {
-      // code here
-    } 
-    
-    if (this.mode.type === GAME_MODE_TYPES.PLAY) {
-      const offsetX = Math.floor(MAP_WIDTH / 2)
-      const offsetY = Math.floor(MAP_HEIGHT / 2)
-      generateBuilding(this.map, offsetX, offsetY);
-      MapHelper.addTileZone(
-        { x: 0, y: 0 },
-        3,
-        'SAFE',
-        this.map,
-        this.mapHeight,
-        this.mapWidth,
-      );
-      this.placeInitialEntities();
-      this.placePlayersInSafeZone();
-    
-      let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
-      for (let index = 0; index < this.mode.data.debrisCount; index++) {
-        let pos = Helper.getRandomInArray(array);
-        let posXY = pos.split(',').map((coord) => parseInt(coord));
-        this.addDebris({ x: posXY[0], y: posXY[1] });
-      }
-      for (let index = 0; index < this.mode.data.gasCanCount; index++) {
-        let pos = Helper.getRandomInArray(array);
-        let posXY = pos.split(',').map((coord) => parseInt(coord));
-        this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'X', 1, 3, Constant.THEMES.SOLARIZED.orange);
-      }
-      for (let index = 0; index < this.mode.data.fireIntensity; index++) {
-        let pos = Helper.getRandomInArray(array);
-        let posXY = pos.split(',').map((coord) => parseInt(coord));
-        this.addFire({x: posXY[0], y: posXY[1]});
-      }
-      for (let index = 0; index < this.mode.data.npcCount; index++) {
-        let pos = Helper.getRandomInArray(array);
-        let posXY = pos.split(',').map((coord) => parseInt(coord));
-        this.addNPC({x: posXY[0], y: posXY[1]});
-      }
-        
-    }
+    this.mode.initialize();
   }
   
   updateMode () { // this is run every game turn
-    if (this.mode.type === GAME_MODE_TYPES.PLAY) {
-      this.propogateFire();
-      this.burnEntities();
-
-      if (this.hasLost()) {
-        this.resetMode();
-        this.initializeGameData();
-      }
-      // triggerd once all npcs are saved
-      if (this.hasWon()) { 
-        this.nextModeLevel();
-        this.increaseIntensity()
-        this.initializeGameData();
-      }
-    }
-
+    this.mode.update();
   }
-
-  setModeLevel (level) {
-    this.mode.data.level = level;
-  }
-
-  nextModeLevel () {
-    this.setModeLevel(this.mode.data.level + 1);
-  }
-  
-  resetMode () {
-    if (this.mode.type === GAME_MODE_TYPES.PLAY) {
-      this.resetIntensity();
-    }
-    this.setModeLevel(1);
-    this.initializeMode();
-  }
-
-  // Fire Fight Specific
-
-  increaseIntensity () {
-
-    switch (this.mode.data.level){
-      case 1:
-        this.mode.data.fireIntensity = 1;
-        this.mode.data.npcCount = 1;
-        this.mode.data.debrisCount = 4;
-        this.mode.data.gasCanCount = 0;
-        break;
-      case 2:
-        this.mode.data.fireIntensity = 2;
-        this.mode.data.npcCount = 1;
-        this.mode.data.debrisCount = 4;
-        this.mode.data.gasCanCount = 1;
-        break;
-      case 3:
-        this.mode.data.fireIntensity = 3;
-        this.mode.data.npcCount = 2;
-        this.mode.data.debrisCount = 50;
-        this.mode.data.gasCanCount = 1;
-        break;
-      case 4:
-        this.mode.data.fireIntensity = 4;
-        this.mode.data.npcCount = 2;
-        this.mode.data.debrisCount = 6;
-        this.mode.data.gasCanCount = 3;
-        break;
-      case 5:
-        this.mode.data.fireIntensity = 5;
-        this.mode.data.npcCount = 3;
-        this.mode.data.debrisCount = 6;
-        this.mode.data.gasCanCount = 3;
-        break;
-      case 6:
-        this.mode.data.fireIntensity = 4;
-        this.mode.data.npcCount = 3;
-        this.mode.data.debrisCount = 10;
-        this.mode.data.gasCanCount = 3;
-        break;
-      case 7:
-        this.mode.data.fireIntensity = 1;
-        this.mode.data.npcCount = 3;
-        this.mode.data.debrisCount = 80;
-        this.mode.data.gasCanCount = 25;
-        break;
-      case 8:
-        this.mode.data.fireIntensity = 3;
-        this.mode.data.npcCount = 3;
-        this.mode.data.debrisCount = 20;
-        this.mode.data.gasCanCount = 6;
-        break;
-      default:
-        this.mode.data.fireIntensity = 3;
-        this.mode.data.npcCount = 3;
-        this.mode.data.debrisCount = 20;
-        this.mode.data.gasCanCount = 5;
-        break;
-    }
-  }
-
-  resetIntensity () {
-    this.mode.data.fireIntensity = 1;
-    this.mode.data.npcCount = 1;
-    this.mode.data.debrisCount = 4;
-  }
-
-  countNpcSafe () {
-    const helpless = this.engine.actors.filter((actor) => {
-      if (actor.entityTypes.includes('HELPLESS')) {
-        const tile = this.map[Helper.coordsToString(actor.pos)];
-        if (tile.type === 'SAFE') {
-          return true;
-        }
-      }
-      return false
-    });
-    
-    return helpless.length;
-  }
-
-  getSaveCountRequirement () {
-    const minimum = Math.ceil(this.mode.data.npcCount * 0.66);
-    return Math.max(1, minimum);
-  }
-
-  hasWon () {
-    return this.countNpcSafe() >= this.getSaveCountRequirement();
-  }
-
-  hasLost () {
-    const helpless = this.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
-    if (helpless.length < this.getSaveCountRequirement()) {
-      return true;
-    }
-    return false;
-  }
-
-  addDebris(pos, name = 'box', character = '%', durability = 5, explosivity = 0, background = Constant.THEMES.SOLARIZED.base01) {
-    let box = new Debris({
-      pos,
-      renderer: {
-        character,
-        color: Constant.THEMES.SOLARIZED.base2,
-        background,
-      },
-      name,
-      game: this,
-      durability,
-      explosivity,
-      flammability: 0,
-    })
-
-    this.placeActorOnMap(box)
-    this.draw();
-  }
-
-  addNPC (pos) {
-    // create new entity and place
-    let entity = new Speaker({
-      name: 'Helpless Citizen',
-      // messages: SOLANGE.lyrics,
-      messages: ['help!', 'ahh!', 'It\'s getting hot in hurr.'],
-      messageType: MESSAGE_TYPE.ACTION,
-      pos,
-      game: this,
-      renderer: {
-        character: 'C',
-        color: Constant.THEMES.SOLARIZED.base3,
-        background: Constant.THEMES.SOLARIZED.violet,
-      },
-      durability: 2,
-    })
-
-    if (this.placeActorOnMap(entity)) {
-      this.engine.addActor(entity);
-      this.draw();
-    };
-  }
-
-  addFire (pos) {
-    // create new fire actor and place
-    let fire = new FireSpread({
-      name: 'Pyro',
-      pos,
-      game: this,
-      renderer: {
-        character: '*',
-        color: Constant.THEMES.SOLARIZED.base3,
-        background: Constant.THEMES.SOLARIZED.red,
-      },
-      timeToSpread: 1,
-      spreadCount: 1,
-      durability: 1,
-      attackDamage: 2,
-      speed: 100,
-    })
-
-    if (this.placeActorOnMap(fire)) {
-      this.engine.addActor(fire);
-      this.draw();
-    };
-  }
-
-  propogateFire () {
-    const fires = this.engine.actors.filter((actor) => actor.name === 'Pyro')
-    if (fires.length < this.mode.data.fireIntensity) {
-      // find burnt tile
-      const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'BURNT');
-      const key = Helper.getRandomInArray(keys);
-      if (key) {
-        const position = {
-          x: parseInt(key.split(',')[0]),
-          y: parseInt(key.split(',')[1]),
-        }
-        this.addFire(position)
-      }
-    }
-  }
-
-  burnEntities () {
-    // burn all entiies on burning tiles
-    const coordinates = Object.keys(this.map).filter((key) => this.map[key].type === 'BURNT');
-    const entities = coordinates.reduce((acc, curr) => acc.concat(this.map[curr].entities), []);
-    entities.forEach((ent) => {
-      if (ent.entityTypes.includes('BURNABLE')) {
-        const burned = ent.burn();
-        if (burned) this.addMessage(`${ent.name} is burned.`, MESSAGE_TYPE.DANGER);
-        if (ent.willResetCanBurn) ent.resetCanBurn();
-      }
-    })
-  }
-
-  // End
 
   randomlyPlaceActorOnMap(actor) {
     let kill = 0;
@@ -481,50 +199,6 @@ export class Game {
     })
 
     this.placeInitialEntities();
-  }
-
-  placeInitialEntities () {
-    let objects = [
-      Item.axe(this.engine),
-      Item.waterGun(this.engine),
-      Item.fireJacket(this.engine),
-    ];
-
-    const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'SAFE');
-
-    objects.forEach((item) => {
-      const key = keys.pop();
-      if (key) {
-        const position = {
-          x: parseInt(key.split(',')[0]),
-          y: parseInt(key.split(',')[1]),
-        }
-        item.pos = position;
-        let tile = this.map[key];
-        if (tile) {
-          tile.entities.push(item);
-        }
-      }
-    })
-  }
-
-  placePlayersInSafeZone () {
-    let players = this.engine.actors.filter((actor) => actor.entityTypes.includes('PLAYING'))
-    const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'SAFE');
-    players.forEach((player) => {
-      const key = keys.shift();
-      if (key) {
-        const position = {
-          x: parseInt(key.split(',')[0]),
-          y: parseInt(key.split(',')[1]),
-        }
-        player.pos = position;
-        let tile = this.map[key];
-        if (tile) {
-          tile.entities.push(player);
-        }
-      }
-    })
   }
 
   canOccupyPosition (pos, entity = {passable: false}) {
@@ -670,7 +344,8 @@ export class Game {
     this.draw();
     // this.randomlyPlaceAllActorsOnMap()
     // this.placeActorsOnMap()
-    this.initializeMode();
+    // this.initializeMode();
+    this.mode.initialize();
   }
 
   initialize (presserRef, document) {
