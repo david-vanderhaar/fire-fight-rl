@@ -8,6 +8,8 @@ import * as Message from './message';
 import { Display } from './Display/konvaCustom';
 import { FireSpread, Speaker, Debris } from './entites';
 import { MESSAGE_TYPE } from './message';
+import { generate as generateBuilding } from './Maps/generator';
+import * as MapHelper from './Maps/helper';
 
 // const MAP_DATA = require('./Maps/building.json');
 // const MAP_DATA = require('./Maps/building_w_floor.json');
@@ -43,6 +45,10 @@ export class Game {
       tileOffset: TILE_OFFSET,
     }),
     tileKey = Constant.TILE_KEY,
+    // mode = {
+    //   type: GAME_MODE_TYPES.TEST,
+    //   data: {}
+    // },
     mode = {
       type: GAME_MODE_TYPES.PLAY,
       data: {
@@ -70,21 +76,25 @@ export class Game {
   }
 
   initializeMode () {
-    if (this.mode.type === GAME_MODE_TYPES.WAVE) {
-      let highestLevel = localStorage.getItem('hidden_leaf_rl__highestLevel');
-      if (!highestLevel) { 
-        highestLevel = this.mode.data.level;
-      } else { 
-        highestLevel = Math.max(highestLevel , this.mode.data.level);
-      }
-      localStorage.setItem('hidden_leaf_rl__highestLevel', highestLevel);
-      this.mode.data.highestLevel = highestLevel
-      for (let i = 0; i < Math.pow(this.mode.data.level, 2); i++) {
-        addWaveEnemy(this);
-      }
+    if (this.mode.type === GAME_MODE_TYPES.TEST) {
+      // code here
     } 
     
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
+      const offsetX = Math.floor(MAP_WIDTH / 2)
+      const offsetY = Math.floor(MAP_HEIGHT / 2)
+      generateBuilding(this.map, offsetX, offsetY);
+      MapHelper.addTileZone(
+        { x: 0, y: 0 },
+        3,
+        'SAFE',
+        this.map,
+        this.mapHeight,
+        this.mapWidth,
+      );
+      this.placeInitialEntities();
+      this.placePlayersInSafeZone();
+    
       let array = Object.keys(this.map).filter((key) => this.map[key].type === 'FLOOR')
       for (let index = 0; index < this.mode.data.debrisCount; index++) {
         let pos = Helper.getRandomInArray(array);
@@ -111,14 +121,6 @@ export class Game {
   }
   
   updateMode () { // this is run every game turn
-    if (this.mode.type === GAME_MODE_TYPES.WAVE) {
-      const nonPlayerCharacters = this.engine.actors.filter((actor) => !actor.entityTypes.includes('PLAYING'));
-      if (!nonPlayerCharacters.length) {
-        this.nextModeLevel();
-        this.initializeMode();
-      }
-    }
-
     if (this.mode.type === GAME_MODE_TYPES.PLAY) {
       this.propogateFire();
       this.burnEntities();
@@ -437,6 +439,26 @@ export class Game {
     this.randomlyPlaceAllActorsOnMap()
   }
 
+  createEmptyLevel () {
+    for (let i = 0; i < this.mapHeight; i ++) {
+      for (let j = 0; j < this.mapWidth; j ++) {
+        const key = `${j},${i}`
+        let type = 'GROUND';
+        let currentFrame = 0;
+
+        if (Constant.TILE_KEY[type].animation) {
+          currentFrame = Helper.getRandomInt(0, Constant.TILE_KEY[type].animation.length)
+        }
+
+        this.map[key] = {
+          type,
+          currentFrame,
+          entities: [],
+        };
+      }
+    }
+  }
+
   createCustomLevel (data) {
     Object.keys(data.tiles).forEach((key, i) => {
       const tile = data.tiles[key];
@@ -458,20 +480,49 @@ export class Game {
       };
     })
 
-    this.placeInitialObjects();
+    this.placeInitialEntities();
   }
 
-  placeInitialObjects () {
-    const objectsToPlace = {
-      '18,20': Item.axe(this.engine),
-      '19,20': Item.waterGun(this.engine),
-      '20,20': Item.fireJacket(this.engine),
-    }
+  placeInitialEntities () {
+    let objects = [
+      Item.axe(this.engine),
+      Item.waterGun(this.engine),
+      Item.fireJacket(this.engine),
+    ];
 
-    Object.keys(objectsToPlace).forEach((key) => {
-      let tile = this.map[key];
-      if (tile) {
-        tile.entities.push(objectsToPlace[key]);
+    const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'SAFE');
+
+    objects.forEach((item) => {
+      const key = keys.pop();
+      if (key) {
+        const position = {
+          x: parseInt(key.split(',')[0]),
+          y: parseInt(key.split(',')[1]),
+        }
+        item.pos = position;
+        let tile = this.map[key];
+        if (tile) {
+          tile.entities.push(item);
+        }
+      }
+    })
+  }
+
+  placePlayersInSafeZone () {
+    let players = this.engine.actors.filter((actor) => actor.entityTypes.includes('PLAYING'))
+    const keys = Object.keys(this.map).filter((key) => this.map[key].type == 'SAFE');
+    players.forEach((player) => {
+      const key = keys.shift();
+      if (key) {
+        const position = {
+          x: parseInt(key.split(',')[0]),
+          y: parseInt(key.split(',')[1]),
+        }
+        player.pos = position;
+        let tile = this.map[key];
+        if (tile) {
+          tile.entities.push(player);
+        }
       }
     })
   }
@@ -612,12 +663,13 @@ export class Game {
     this.engine.actors.forEach((actor) => {
       actor.game = this;
     });
+    this.createEmptyLevel();
     // this.createLevel();
-    this.createCustomLevel(MAP_DATA);
+    // this.createCustomLevel(MAP_DATA);
     this.initializeMap();
     this.draw();
     // this.randomlyPlaceAllActorsOnMap()
-    this.placeActorsOnMap()
+    // this.placeActorsOnMap()
     this.initializeMode();
   }
 
