@@ -332,7 +332,8 @@ export class CrankEngine extends Engine {
     if (actor.keymap) {
       this.game.visibleKeymap = actor.keymap;
     }
-    this.game.updateMode();
+    // this.game.updateMode();
+    this.game.mode.update();
     await this.game.updateReact(this.game);
   }
 }
