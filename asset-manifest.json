@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/fire-fight-rl/static/css/main.37cf6e44.chunk.css",
-    "main.js": "/fire-fight-rl/static/js/main.0ccb80f7.chunk.js",
-    "main.js.map": "/fire-fight-rl/static/js/main.0ccb80f7.chunk.js.map",
+    "main.js": "/fire-fight-rl/static/js/main.38a9ca65.chunk.js",
+    "main.js.map": "/fire-fight-rl/static/js/main.38a9ca65.chunk.js.map",
     "runtime~main.js": "/fire-fight-rl/static/js/runtime~main.a72310dd.js",
     "runtime~main.js.map": "/fire-fight-rl/static/js/runtime~main.a72310dd.js.map",
-    "static/js/2.7903e8f9.chunk.js": "/fire-fight-rl/static/js/2.7903e8f9.chunk.js",
-    "static/js/2.7903e8f9.chunk.js.map": "/fire-fight-rl/static/js/2.7903e8f9.chunk.js.map",
+    "static/js/2.7630a610.chunk.js": "/fire-fight-rl/static/js/2.7630a610.chunk.js",
+    "static/js/2.7630a610.chunk.js.map": "/fire-fight-rl/static/js/2.7630a610.chunk.js.map",
     "index.html": "/fire-fight-rl/index.html",
-    "precache-manifest.50dd4d7511f77fe638cb0908c32a2c21.js": "/fire-fight-rl/precache-manifest.50dd4d7511f77fe638cb0908c32a2c21.js",
+    "precache-manifest.844d955e9c106f56d2e2c4266304dafc.js": "/fire-fight-rl/precache-manifest.844d955e9c106f56d2e2c4266304dafc.js",
     "service-worker.js": "/fire-fight-rl/service-worker.js",
     "static/css/main.37cf6e44.chunk.css.map": "/fire-fight-rl/static/css/main.37cf6e44.chunk.css.map"
   }
