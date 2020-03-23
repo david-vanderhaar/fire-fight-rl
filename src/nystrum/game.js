@@ -16,6 +16,8 @@ const MAP_HEIGHT = 25;
 const TILE_WIDTH = 30;
 const TILE_HEIGHT = 30;
 const TILE_OFFSET = 5;
+const canvasWidth = (MAP_WIDTH * TILE_WIDTH) + TILE_OFFSET;
+const canvasHeight = (MAP_HEIGHT * TILE_HEIGHT) + TILE_OFFSET;
 
 export class Game {
   constructor({
@@ -28,11 +30,12 @@ export class Game {
     getSelectedCharacter = () => false,
     display = new Display({
       containerId: 'display',
-      width: (MAP_WIDTH * TILE_WIDTH) + TILE_OFFSET,
-      height: (MAP_HEIGHT * TILE_HEIGHT) + TILE_OFFSET,
+      width: canvasWidth,
+      height: canvasHeight,
       tileWidth: TILE_WIDTH,
       tileHeight: TILE_HEIGHT,
       tileOffset: TILE_OFFSET,
+      cameraFollow: false,
     }),
     tileKey = Constant.TILE_KEY,
     mode = new Mode.Play({
@@ -269,12 +272,21 @@ export class Game {
     });
     this.display.draw();
   }
+
+  getPlayers () {
+    return this.engine.actors.filter((actor) => actor.entityTypes.includes('PLAYING'))
+  }
   
   draw () {
     this.processTileMap((tileKey, x, y, character, foreground, background) => {
       this.display.updateTile(this.tileMap[tileKey], character, foreground, background);
     });
-    this.display.draw();
+
+    let playerPos = null;
+    const players = this.getPlayers();
+    if (players.length) { playerPos = players[0].pos }
+
+    this.display.draw(playerPos);
   }
   
   animateEntity (entity) {

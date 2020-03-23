@@ -9,14 +9,18 @@ export class Display {
     tileHeight = 10,
     tileGutter = 0,
     tileOffset = 10,
+    cameraFollow = false,
   }) {
     this.containerId = containerId;
     this.width = width;
     this.height = height;
+    this.tilesWide = this.getTilesWide(width, tileOffset, tileWidth);
+    this.tilesHigh = this.getTilesHigh(height, tileOffset, tileHeight);
     this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
     this.tileGutter = tileGutter;
     this.tileOffset = tileOffset;
+    this.cameraFollow = cameraFollow;
     this.stage = null;
     this.layer = null;
   }
@@ -41,7 +45,6 @@ export class Display {
   updateTile(tile, character, foreground, background) {
     // child[0] is the rectangle
     // child[1] is the text
-
     tile.children[0].fill(background);
     tile.children[1].fill(foreground);
     tile.children[1].text(character);
@@ -95,7 +98,45 @@ export class Display {
     return node;
   }
 
-  draw () {
+  getAbsoultueX(x) {
+    return (this.tileWidth * x) + (this.tileOffset + this.tileGutter)
+  }
+
+  getAbsoultueY(y) {
+    return (this.tileWidth * y) + (this.tileOffset + this.tileGutter)
+  }
+
+  getTilesWide (width, tileOffset, tileWidth) {
+    return Math.floor((width - tileOffset) / tileWidth)
+  }
+  
+  getTilesHigh(height, tileOffset, tileHeight) {
+    return Math.floor((height - tileOffset) / tileHeight)
+  }
+
+  draw (playerPos) {
+    if (this.cameraFollow && playerPos) {
+      const tilesWide = this.tilesWide;
+      const tilesHigh = this.tilesHigh;
+      console.log(tilesWide);
+      console.log(tilesHigh);
+      
+      const tilesAcrossOnScreen = Math.floor(this.width / this.tileWidth)
+      const tilesDownOnScreen = Math.floor(this.height / this.tileHeight)
+      
+      const bufferX = Math.ceil(tilesWide - (tilesAcrossOnScreen / 2));
+      const bufferY = Math.ceil(tilesHigh - (tilesDownOnScreen / 2));
+      let newX = 0;
+      let newY = 0;
+      if (playerPos.x > tilesWide - bufferX) {
+        newX = tilesWide - bufferX - playerPos.x
+      }
+      if (playerPos.y > tilesHigh - bufferY) {
+        newY = tilesHigh - bufferY - playerPos.y;
+      }
+      this.layer.x(this.getAbsoultueX(newX))
+      this.layer.y(this.getAbsoultueY(newY))
+    }
     this.layer.batchDraw();
     // this.layer.draw();
   }
