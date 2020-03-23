@@ -51,11 +51,24 @@ export class Play extends Mode {
     }
   }
 
+  checkRemoveSafeFloors () {
+    const currentActor = this.game.engine.actors[this.game.engine.currentActor];
+    if (currentActor.name !== Constant.PLAYER_NAME) return;
+
+    this.data.turnCount += 1;
+    if (this.data.turnCount > this.getSaveCountRequirement() * 50) {
+      Object.keys(this.game.map).filter((key) => this.game.map[key].type == 'SAFE_FLOOR').forEach((key) => {
+        this.game.map[key].type = 'FLOOR';
+      });
+
+    }
+  }
+
   update () {
     super.update();
     this.propogateFire();
     this.burnEntities();
-
+    this.checkRemoveSafeFloors();
     if (this.hasLost()) {
       this.reset();
       this.game.initializeGameData();
@@ -72,6 +85,7 @@ export class Play extends Mode {
 
   setLevel (level) {
     this.data.level = level;
+    this.data.turnCount = 0;
   }
 
   nextLevel () {
@@ -202,7 +216,7 @@ export class Play extends Mode {
   addNPC (pos) {
     // create new entity and place
     let entity = new Speaker({
-      name: 'Helpless Citizen',
+      name: Constant.NPC_NAME,
       // messages: SOLANGE.lyrics,
       messages: ['help!', 'ahh!', 'It\'s getting hot in hurr.'],
       messageType: MESSAGE_TYPE.ACTION,
@@ -217,6 +231,8 @@ export class Play extends Mode {
     })
 
     if (this.game.placeActorOnMap(entity)) {
+      const tile = this.game.map[Helper.coordsToString(entity.pos)];
+      tile.type = 'SAFE_FLOOR';
       this.game.engine.addActor(entity);
       this.game.draw();
     };

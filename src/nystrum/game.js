@@ -47,6 +47,7 @@ export class Game {
         npcCount: 1,
         debrisCount: 4,
         gasCanCount: 0,
+        turnCount: 0,
       },
     }),
     messages = [],

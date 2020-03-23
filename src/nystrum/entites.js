@@ -960,7 +960,7 @@ const Spreading = superclass => class extends superclass {
         let canBurn = false;
         if (newTile) {
           notBurnt = newTile.type !== 'BURNT';
-          canBurn = ['WALL', 'FLOOR'].includes(newTile.type)
+          canBurn = ['WALL', 'FLOOR', 'DOOR'].includes(newTile.type)
         }
         if (tileExists && notBurnt && canBurn) {
           adjacentPos = newPos;
