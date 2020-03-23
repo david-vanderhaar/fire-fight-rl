@@ -44,7 +44,7 @@ export default function (engine) {
       color: Constant.THEMES.SOLARIZED.base3,
       background: Constant.THEMES.SOLARIZED.yellow,
     },
-    name: 'Fire Fighter',
+    name: Constant.PLAYER_NAME,
     equipment: Constant.EQUIPMENT_LAYOUTS.limited(),
     actions: [],
     speed: 100,

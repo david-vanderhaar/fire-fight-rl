@@ -37,6 +37,9 @@ export const THEMES = {
   }
 }
 
+export const NPC_NAME = 'Helpless Citizen';
+export const PLAYER_NAME = 'Fire Fighter';
+
 export const TILE_KEY = {
   'GROUND': {
     background: THEMES.SOLARIZED.base03,
@@ -45,6 +48,12 @@ export const TILE_KEY = {
     passable: true,
   },
   'FLOOR': {
+    background: THEMES.SOLARIZED.base02,
+    foreground: THEMES.SOLARIZED.base0,
+    character: '',
+    passable: true,
+  },
+  'SAFE_FLOOR': {
     background: THEMES.SOLARIZED.base02,
     foreground: THEMES.SOLARIZED.base0,
     character: '',
