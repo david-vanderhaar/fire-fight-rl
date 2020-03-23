@@ -16,16 +16,6 @@ const grabDirection = (direction, engine, actor) => {
       game: engine.game,
       actor,
       energyCost: Constant.ENERGY_THRESHOLD,
-      // if player grabs an npc, change the safe floor back to normal
-      // onSuccess: () => {
-      //   const tile = engine.game.map[coordsToString(pos)];
-      //   if (tile) {
-      //     const hasNPC = tile.entities.filter((ent) => ent.name === Constant.NPC_NAME).length;
-      //     if (hasNPC && tile.type === 'SAFE_FLOOR') {
-      //       tile.type = 'FLOOR';
-      //     }
-      //   }
-      // }
     })
   )
 }
