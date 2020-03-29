@@ -1,4 +1,105 @@
 import Konva from 'konva';
+import uuid from 'uuid/v1';
+import * as Helper from '../../helper';
+
+export const ANIMATION_TYPES = {
+  DEFAULT: 0,
+  BLINK_TILE: 1,
+  SOLID_TILE: 2,
+}
+
+class Animation {
+  constructor({display}) {
+    const id = uuid();
+    this.id = id;
+    this.lifeTime = 0;
+    this.active = true;
+    this.display = display;
+    this.node = null;
+    console.log(`adding animation w/ id: ${id}`);
+    
+  }
+
+  getActive () {
+    return false;
+  }
+
+  initialize () {
+    return;
+  }
+
+  update (frame) {
+    this.lifeTime += frame.timeDiff;
+    this.active = this.getActive();
+    if (!this.active) {
+      this.display.removeAnimation(this.id);
+    }
+  }
+}
+
+class ExampleAnimation extends Animation {
+  constructor({...args}) {
+    super({...args})
+  }
+
+  getActive () {
+    if (this.lifeTime > 500) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class BlinkTile extends Animation {
+  constructor({
+    x,
+    y,
+    lerpDirection = -1,
+    color = '#fff',
+    ...args
+  }) {
+    super({ ...args });
+    this.x = x;
+    this.y = y;
+    this.lerpDirection = lerpDirection;
+    this.color = color;
+  }
+
+  getActive () {
+    return this.active;
+  }
+
+  initialize () {
+    this.active = true;
+    let rect = new Konva.Rect({
+      name: 'rect',
+      x: (this.display.tileWidth * this.x) + (this.display.tileOffset + this.display.tileGutter),
+      y: (this.display.tileHeight * this.y) + (this.display.tileOffset + this.display.tileGutter),
+      width: this.display.tileWidth,
+      height: this.display.tileHeight,
+      fill: this.color,
+      strokeEnabled: false,
+      // for optimization
+      transformsEnabled: 'position',
+      perfectDrawEnabled: false,
+      listening: false,
+      shadowForStrokeEnabled: false,
+    });
+    this.display.animationLayer.add(rect);
+    this.node = rect;
+    super.initialize();
+  }
+
+  update (frame) {
+    let opacity = this.node.opacity();
+    if (opacity >= 1) this.lerpDirection = -1;
+    if (opacity <= 0) this.lerpDirection = 1;
+    opacity += (0.05 * this.lerpDirection)
+    this.node.opacity(Helper.clamp(opacity, 0, 1))
+    super.update(frame);
+  }
+  
+}
 
 export class Display {
   constructor({
@@ -23,6 +124,9 @@ export class Display {
     this.cameraFollow = cameraFollow;
     this.stage = null;
     this.layer = null;
+    this.animationLayer = null;
+    this.animations = [];
+    this.animationLoop = null;
   }
 
   initialize (document) {
@@ -36,10 +140,56 @@ export class Display {
       height: this.height
     });
 
+    // setting up main tile map layer
     this.layer = new Konva.Layer({
       hitGraphEnabled: false,
     });
     this.stage.add(this.layer);
+    
+    // setting up animation layer
+    this.animationLayer = new Konva.Layer({});
+    this.stage.add(this.animationLayer);
+    let animationLoop = new Konva.Animation((frame) => {
+      this.animations.forEach((animation) => animation.update(frame))
+      // Stop animation updates if no animations to process
+      if (this.animations.length <= 0) {
+        if (this.animationLoop) {
+          if (this.animationLoop.isRunning()) {
+            this.animationLoop.stop();
+          }
+        }
+      }
+    }, this.animationLayer);
+    this.animationLoop = animationLoop;
+    animationLoop.start();
+  }
+
+  addAnimation (type, args) {
+    let animation;
+    switch (type) {
+      case ANIMATION_TYPES.DEFAULT:
+        animation = new Animation({display: this, ...args})
+        break;
+      case ANIMATION_TYPES.SOLID_TILE:
+        animation = new ExampleAnimation({display: this, ...args})
+        break;
+      case ANIMATION_TYPES.BLINK_TILE:
+        animation = new BlinkTile({display: this, ...args})
+        break;
+      
+      default:
+        animation = new Animation({ display: this, ...args})
+        break;
+    }
+    animation.initialize();
+    this.animations.push(animation)
+    if (!this.animationLoop.isRunning()) this.animationLoop.start();
+  }
+
+  removeAnimation (id) {
+    console.log(`removing anim by id: ${id}`);
+    this.animations = this.animations.filter((anim) => anim.id !== id);
+    
   }
 
   updateTile(tile, character, foreground, background) {
@@ -118,9 +268,6 @@ export class Display {
     if (this.cameraFollow && playerPos) {
       const tilesWide = this.tilesWide;
       const tilesHigh = this.tilesHigh;
-      console.log(tilesWide);
-      console.log(tilesHigh);
-      
       const tilesAcrossOnScreen = Math.floor(this.width / this.tileWidth)
       const tilesDownOnScreen = Math.floor(this.height / this.tileHeight)
       
@@ -138,6 +285,7 @@ export class Display {
       this.layer.y(this.getAbsoultueY(newY))
     }
     this.layer.batchDraw();
+    // this.animationLayer.batchDraw();
     // this.layer.draw();
   }
 }

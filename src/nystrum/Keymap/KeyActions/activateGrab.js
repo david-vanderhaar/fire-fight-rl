@@ -10,6 +10,7 @@ const grabDirection = (direction, engine, actor) => {
     x: actor.pos.x + direction[0],
     y: actor.pos.y + direction[1],
   };
+  engine.game.display.addAnimation(1, { x: pos.x, y: pos.y, color: Constant.THEMES.SOLARIZED.base3 })
   actor.setNextAction(
     new Action.GrabDirection({
       targetPos: pos,
