@@ -43,7 +43,11 @@ export class Game {
         fireIntensity: 1, // increase this number to increase fire spread
         npcCount: 1,
         debrisCount: 4,
-        gasCanCount: 0,
+        mediumDebrisCount: 3,
+        heavyDebrisCount: 4,
+        smallGasCanCount: 30,
+        mediumGasCanCount: 0,
+        largeGasCanCount: 1,
       },
     }),
     messages = [],

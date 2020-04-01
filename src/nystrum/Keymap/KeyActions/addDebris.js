@@ -17,8 +17,8 @@ export const addDebris = (game, name = 'box', character = '%', durability = 10) 
       color: Constant.THEMES.SOLARIZED.base2,
       background: Constant.THEMES.SOLARIZED.base01,
     },
-    name,
     game,
+    name,
     durability,
   })
   game.placeActorOnMap(box)

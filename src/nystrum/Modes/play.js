@@ -34,10 +34,30 @@ export class Play extends Mode {
       let posXY = pos.split(',').map((coord) => parseInt(coord));
       this.addDebris({ x: posXY[0], y: posXY[1] });
     }
+    for (let index = 0; index < this.data.mediumDebrisCount; index++) {
+      let pos = Helper.getRandomInArray(array);
+      let posXY = pos.split(',').map((coord) => parseInt(coord));
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'Medium Sized Debris', 'm', 10, 0);
+    }
+    for (let index = 0; index < this.data.mediumDebrisCount; index++) {
+      let pos = Helper.getRandomInArray(array);
+      let posXY = pos.split(',').map((coord) => parseInt(coord));
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'Heavy Sized Debris', 'm', 10, 0);
+    }
+    for (let index = 0; index < this.data.smallGasCanCount; index++) {
+      let pos = Helper.getRandomInArray(array);
+      let posXY = pos.split(',').map((coord) => parseInt(coord));
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'Xs', 1, 1, Constant.THEMES.SOLARIZED.orange);
+    }
     for (let index = 0; index < this.data.gasCanCount; index++) {
       let pos = Helper.getRandomInArray(array);
       let posXY = pos.split(',').map((coord) => parseInt(coord));
       this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'X', 1, 3, Constant.THEMES.SOLARIZED.orange);
+    }
+    for (let index = 0; index < this.data.largeGasCanCount; index++) {
+      let pos = Helper.getRandomInArray(array);
+      let posXY = pos.split(',').map((coord) => parseInt(coord));
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'XL', 1, 10, Constant.THEMES.SOLARIZED.orange);
     }
     for (let index = 0; index < this.data.fireIntensity; index++) {
       let pos = Helper.getRandomInArray(array);
