@@ -16,8 +16,6 @@ class Animation {
     this.active = true;
     this.display = display;
     this.node = null;
-    console.log(`adding animation w/ id: ${id}`);
-    
   }
 
   getActive () {
@@ -75,8 +73,10 @@ class BlinkTile extends Animation {
       name: 'rect',
       x: (this.display.tileWidth * this.x) + (this.display.tileOffset + this.display.tileGutter),
       y: (this.display.tileHeight * this.y) + (this.display.tileOffset + this.display.tileGutter),
-      width: this.display.tileWidth,
-      height: this.display.tileHeight,
+      offsetX: this.display.tileWidth / -4,
+      offsetY: this.display.tileHeight / -4,
+      width: this.display.tileWidth / 2,
+      height: this.display.tileHeight / 2,
       fill: this.color,
       strokeEnabled: false,
       // for optimization
@@ -184,11 +184,16 @@ export class Display {
     animation.initialize();
     this.animations.push(animation)
     if (!this.animationLoop.isRunning()) this.animationLoop.start();
+    return animation
   }
 
   removeAnimation (id) {
-    console.log(`removing anim by id: ${id}`);
-    this.animations = this.animations.filter((anim) => anim.id !== id);
+    this.animations = this.animations.filter((anim) => {
+      if (anim.id !== id) return true;
+      // if anim is being removed, remove associated nodes and shapes too
+      anim.node.destroy();
+      return false;
+    });
     
   }
 
