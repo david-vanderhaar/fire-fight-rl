@@ -234,9 +234,12 @@ export class Display {
     let text = new Konva.Text({
       name: 'text',
       text: character,
+      // text: '\e9a9',
+      // text: '',
       width: this.tileWidth,
       height: this.tileHeight,
       fontSize: 18,
+      fontFamily: 'Sprite',
       fill: foreground,
       align: 'center',
       verticalAlign: 'middle',
@@ -294,3 +297,10 @@ export class Display {
     // this.layer.draw();
   }
 }
+
+
+// creating sprites
+// use https://icomoon.io/app/#/select/font to convert singular svgs into .ttf font
+// include font in index.html
+// use https://ezgif.com/sprite-cutter if you need to split sprite sheet into single images
+// https://convertio.co/png-svg/ to convert png to svg
