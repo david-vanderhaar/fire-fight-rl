@@ -299,8 +299,9 @@ export class Display {
 }
 
 
-// creating sprites
+// CREATE SPRITES
 // use https://icomoon.io/app/#/select/font to convert singular svgs into .ttf font
-// include font in index.html
+// include new font in index.html
+// Other Tools for process
 // use https://ezgif.com/sprite-cutter if you need to split sprite sheet into single images
 // https://convertio.co/png-svg/ to convert png to svg
