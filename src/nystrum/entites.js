@@ -270,7 +270,7 @@ const Rendering = superclass => class extends superclass {
     let targetTile = this.game.map[Helper.coordsToString(targetPos)];
     if (targetTile) {
       targetTile.entities.map((entity) => { 
-        if (!entity.passable) {
+        if (!entity.passable && entity.pushability) {
           let newX = entity.pos.x + direction[0];
           let newY = entity.pos.y + direction[1];
           let newPos = { x: newX, y: newY };
@@ -856,10 +856,13 @@ const Dragging = superclass => class extends superclass {
     if (!tile) return false;
     if (tile.entities.length > 0) {
       const entity = tile.entities[0];
-      if (!this.draggedEntity && entity.entityTypes.includes('DRAGGABLE')) {
+      console.log('hi there:', entity.draggability);
+      
+      if (!this.draggedEntity && entity.draggability == true) {
         this.draggedEntity = entity;
         return true;
       }
+      
     }
     return false;
   }
@@ -899,9 +902,17 @@ const Dragging = superclass => class extends superclass {
 }
 
 const Draggable = superclass => class extends superclass {
-  constructor({ ...args }) {
+  constructor({draggability = true, ...args }) {
     super({ ...args })
+    this.draggability = draggability
     this.entityTypes = this.entityTypes.concat('DRAGGABLE')
+  }
+}
+const Pushable = superclass => class extends superclass {
+  constructor({pushability = true, ...args}) {
+    super({ ...args })
+    this.pushability = pushability
+    this.entityTypes = this.entityTypes.concat('PUSHABLE')
   }
 }
 
@@ -960,7 +971,7 @@ const Spreading = superclass => class extends superclass {
         let canBurn = false;
         if (newTile) {
           notBurnt = newTile.type !== 'BURNT';
-          canBurn = ['WALL', 'FLOOR'].includes(newTile.type)
+          canBurn = ['WALL', 'FLOOR', 'DOOR'].includes(newTile.type)
         }
         if (tileExists && notBurnt && canBurn) {
           adjacentPos = newPos;
@@ -1285,6 +1296,7 @@ export const Speaker = pipe(
   Destructable,
   Speaking,
   Draggable,
+  Pushable,
   Burnable,
   Helpless,
 )(Entity);
@@ -1301,6 +1313,7 @@ export const Debris = pipe(
   Burnable,
   Destructable,
   Exploding,
+  Pushable,
 )(Entity);
 
 export const MovingWall = pipe(

@@ -42,7 +42,7 @@ export class Play extends Mode {
     for (let index = 0; index < this.data.mediumDebrisCount; index++) {
       let pos = Helper.getRandomInArray(array);
       let posXY = pos.split(',').map((coord) => parseInt(coord));
-      this.addDebris({ x: posXY[0], y: posXY[1] }, 'Heavy Sized Debris', 'm', 10, 0);
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'Heavy Sized Debris', 'H', 10, 0, false, false);
     }
     for (let index = 0; index < this.data.smallGasCanCount; index++) {
       let pos = Helper.getRandomInArray(array);
@@ -200,7 +200,7 @@ export class Play extends Mode {
     return false;
   }
 
-  addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, background = Constant.THEMES.SOLARIZED.base01) {
+  addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, pushability = true, draggability = true, background = Constant.THEMES.SOLARIZED.base01) {
     let box = new Debris({
       pos,
       renderer: {
@@ -213,6 +213,8 @@ export class Play extends Mode {
       durability,
       explosivity,
       flammability: 0,
+      draggability,
+      pushability,
     })
 
     this.game.placeActorOnMap(box)
