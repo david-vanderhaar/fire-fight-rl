@@ -36,7 +36,9 @@ export class Game {
       tileHeight: TILE_HEIGHT,
       tileOffset: TILE_OFFSET,
       cameraFollow: false,
+      game: this,
     }),
+    spriteMode = false,
     tileKey = Constant.TILE_KEY,
     mode = new Mode.Play({
       game: this,
@@ -59,6 +61,7 @@ export class Game {
     this.mapWidth = mapWidth;
     this.mapHeight = mapHeight;
     this.display = display;
+    this.spriteMode = spriteMode;
     this.tileKey = tileKey;
     this.mode = mode;
     this.messages = messages;
@@ -241,14 +244,13 @@ export class Game {
       let x = parseInt(parts[0]);
       let y = parseInt(parts[1]);
       let tile = this.map[key];
-      let { character, foreground, background } = this.tileKey[tile.type]
-
+      // let { foreground, background } = this.tileKey[tile.type]
       // Proto code to handle tile animations
       let tileRenderer = this.tileKey[tile.type]
       let nextFrame = this.animateTile(tile, tileRenderer);
-      character = nextFrame.character;
-      foreground = nextFrame.foreground;
-      background = nextFrame.background;
+      let character = nextFrame.character;
+      let foreground = nextFrame.foreground;
+      let background = nextFrame.background;
 
       if (tile.entities.length > 0) {
         let entity = tile.entities[tile.entities.length - 1]
@@ -289,26 +291,49 @@ export class Game {
 
     this.display.draw(playerPos);
   }
+
+  getEntityRenderer (renderer) {
+    // console.log(renderer);
+    
+    // if sprite mode is on and the renderer has a sprite defined, use that
+    if (this.spriteMode && renderer.hasOwnProperty('sprite')) {
+      // return {...renderer, character: renderer.sprite, foreground: renderer.color}
+      return {character: renderer.sprite, foreground: renderer.background, background: ''}
+    }
+    // else us the ascii character
+    return {...renderer, foreground: renderer.color}
+  }
+
+  getTileRenderer (renderer) {
+    // console.log(renderer);
+    
+    // if sprite mode is on and the renderer has a sprite defined, use that
+    if (this.spriteMode && renderer.hasOwnProperty('sprite')) {
+      return {...renderer, character: renderer.sprite}
+    }
+    // else us the ascii character
+    return renderer
+  }
   
   animateEntity (entity) {
     let renderer = entity.renderer;
-    let {character, color, background} = {...renderer}
+    let { character, foreground, background } = this.getEntityRenderer(renderer)
+    // let character = this.getDisplayCharacter(renderer)
     if (renderer.animation) {
-      let frame = renderer.animation[entity.currentFrame];
-
+      let frame = this.getEntityRenderer(renderer.animation[entity.currentFrame]);
       character = frame.character;
-      color = frame.foreground;
+      foreground = frame.foreground;
       background = frame.background;
       entity.currentFrame = (entity.currentFrame + 1) % renderer.animation.length;
     }
-    return {character, foreground: color, background}
+    return {character, foreground, background}
   }
 
   animateTile (tile, renderer) {
-    let {character, foreground, background} = {...renderer}
+    let {character, foreground, background} = this.getTileRenderer(renderer)
     if (renderer.animation) {
-      let frame = renderer.animation[tile.currentFrame];
-      character = frame.character;
+      let frame = this.getTileRenderer(renderer.animation[tile.currentFrame]);
+      character = frame.character
       foreground = frame.foreground;
       background = frame.background;
       tile.currentFrame = (tile.currentFrame + 1) % renderer.animation.length;

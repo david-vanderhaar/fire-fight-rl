@@ -45,6 +45,7 @@ export const TILE_KEY = {
     background: THEMES.SOLARIZED.base03,
     foreground: THEMES.SOLARIZED.base01,
     character: '.',
+    sprite: '',
     passable: true,
   },
   'FLOOR': {
@@ -63,48 +64,53 @@ export const TILE_KEY = {
     background: THEMES.SOLARIZED.base03,
     foreground: THEMES.SOLARIZED.red,
     character: 'X',
+    sprite: '',
     passable: true,
     animation: [
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'x', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'x', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'X', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.yellow, character: 'x', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'x', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'x', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.orange, character: 'X', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.yellow, character: 'x', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.red, character: 'X', sprite: '', passable: true, },
     ]
   },
   'WET': {
     background: THEMES.SOLARIZED.base03,
     foreground: THEMES.SOLARIZED.blue,
     character: '=',
+    sprite: '',
     passable: true,
     animation: [
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '~', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base0, character: '~', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base1, character: '=', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base1, character: '~', passable: true, },
-      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '~', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base0, character: '~', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base1, character: '=', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.base1, character: '~', sprite: '', passable: true, },
+      { background: THEMES.SOLARIZED.base03, foreground: THEMES.SOLARIZED.blue, character: '=', sprite: '', passable: true, },
     ]
   },
   'WALL': {
     background: THEMES.SOLARIZED.base02,
     foreground: THEMES.SOLARIZED.base2,
     character: '#',
+    sprite: '',
     passable: false,
   },
   'DOOR': {
     background: THEMES.SOLARIZED.base02,
     foreground: THEMES.SOLARIZED.base0,
     character: '+',
+    sprite: '',
     passable: true,
   },
   'SAFE': {
     background: THEMES.SOLARIZED.base02,
     foreground: THEMES.SOLARIZED.green,
     character: '+',
+    sprite: '',
     passable: true,
   },
 
@@ -128,12 +134,6 @@ export const TILE_KEY = {
     character: '░',
     passable: false,
   },
-  'WIN': {
-    background: 'white',
-    foreground: 'black',
-    character: 'W',
-    passable: true,
-  }
 }
 
 export const HAND_SIGNS = {

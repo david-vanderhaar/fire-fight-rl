@@ -199,6 +199,7 @@ export class Play extends Mode {
       pos,
       renderer: {
         character,
+        sprite: Helper.getRandomInArray(['','','','','','']),
         color: Constant.THEMES.SOLARIZED.base2,
         background,
       },
@@ -224,6 +225,7 @@ export class Play extends Mode {
       game: this.game,
       renderer: {
         character: 'C',
+        sprite: '',
         color: Constant.THEMES.SOLARIZED.base3,
         background: Constant.THEMES.SOLARIZED.violet,
       },
@@ -246,6 +248,7 @@ export class Play extends Mode {
       game: this.game,
       renderer: {
         character: '*',
+        sprite: '',
         color: Constant.THEMES.SOLARIZED.base3,
         background: Constant.THEMES.SOLARIZED.red,
       },

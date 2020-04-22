@@ -111,6 +111,7 @@ export class Display {
     tileGutter = 0,
     tileOffset = 10,
     cameraFollow = false,
+    game = null,
   }) {
     this.containerId = containerId;
     this.width = width;
@@ -127,6 +128,7 @@ export class Display {
     this.animationLayer = null;
     this.animations = [];
     this.animationLoop = null;
+    this.game = game;
   }
 
   initialize (document) {
@@ -234,12 +236,10 @@ export class Display {
     let text = new Konva.Text({
       name: 'text',
       text: character,
-      // text: '\e9a9',
-      // text: '',
       width: this.tileWidth,
       height: this.tileHeight,
-      fontSize: 18,
-      fontFamily: 'Sprite',
+      fontSize: 24,
+      fontFamily: 'scroll-o-script',
       fill: foreground,
       align: 'center',
       verticalAlign: 'middle',
@@ -300,8 +300,18 @@ export class Display {
 
 
 // CREATE SPRITES
-// use https://icomoon.io/app/#/select/font to convert singular svgs into .ttf font
+// use https://icomoon.io/app/#/select/font or https://glyphter.com/ to convert singular svgs into .ttf font
 // include new font in index.html
 // Other Tools for process
 // use https://ezgif.com/sprite-cutter if you need to split sprite sheet into single images
 // https://convertio.co/png-svg/ to convert png to svg
+
+// SCROLL-O-Sprites
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
