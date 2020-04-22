@@ -45,7 +45,7 @@ export class Game {
         debrisCount: 4,
         mediumDebrisCount: 3,
         heavyDebrisCount: 4,
-        smallGasCanCount: 30,
+        smallGasCanCount: 3,
         mediumGasCanCount: 0,
         largeGasCanCount: 1,
       },
