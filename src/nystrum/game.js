@@ -293,8 +293,6 @@ export class Game {
   }
 
   getEntityRenderer (renderer) {
-    // console.log(renderer);
-    
     // if sprite mode is on and the renderer has a sprite defined, use that
     if (this.spriteMode && renderer.hasOwnProperty('sprite')) {
       return {...renderer, character: renderer.sprite, foreground: renderer.color}
@@ -305,8 +303,6 @@ export class Game {
   }
 
   getTileRenderer (renderer) {
-    // console.log(renderer);
-    
     // if sprite mode is on and the renderer has a sprite defined, use that
     if (this.spriteMode && renderer.hasOwnProperty('sprite')) {
       return {...renderer, character: renderer.sprite}
@@ -318,7 +314,6 @@ export class Game {
   animateEntity (entity) {
     let renderer = entity.renderer;
     let { character, foreground, background } = this.getEntityRenderer(renderer)
-    // let character = this.getDisplayCharacter(renderer)
     if (renderer.animation) {
       let frame = this.getEntityRenderer(renderer.animation[entity.currentFrame]);
       character = frame.character;
