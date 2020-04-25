@@ -977,6 +977,7 @@ const Spreading = superclass => class extends superclass {
           game,
           renderer: {
             character: '*',
+            sprite: '',
             color: Constant.THEMES.SOLARIZED.base3,
             background: Constant.THEMES.SOLARIZED.red,
           },

@@ -195,11 +195,13 @@ export class Play extends Mode {
   }
 
   addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, background = Constant.THEMES.SOLARIZED.base01) {
+    let sprite = Helper.getRandomInArray(['', '', '', '', '', '']);
+    if (explosivity > 0) sprite = ''
     let box = new Debris({
       pos,
       renderer: {
         character,
-        sprite: Helper.getRandomInArray(['','','','','','']),
+        sprite,
         color: Constant.THEMES.SOLARIZED.base2,
         background,
       },

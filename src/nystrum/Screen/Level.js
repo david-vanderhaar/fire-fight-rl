@@ -28,6 +28,8 @@ class Level extends React.Component {
     this.state.game['backToTitle'] = () => this.props.setActiveScreen(SCREENS.TITLE);
     this.state.game.updateReact = (newGameState) => { this.setState({game: newGameState}) }
     this.state.game.engine.start()
+    // setTimeout(this.state.game.draw, 1000)
+    // this.state.game.draw();
   }
 
   toggleSpriteMode () {

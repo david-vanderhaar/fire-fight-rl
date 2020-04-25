@@ -38,7 +38,7 @@ export class Game {
       cameraFollow: false,
       game: this,
     }),
-    spriteMode = false,
+    spriteMode = true,
     tileKey = Constant.TILE_KEY,
     mode = new Mode.Play({
       game: this,
@@ -297,8 +297,8 @@ export class Game {
     
     // if sprite mode is on and the renderer has a sprite defined, use that
     if (this.spriteMode && renderer.hasOwnProperty('sprite')) {
-      // return {...renderer, character: renderer.sprite, foreground: renderer.color}
-      return {character: renderer.sprite, foreground: renderer.background, background: ''}
+      return {...renderer, character: renderer.sprite, foreground: renderer.color}
+      // return {character: renderer.sprite, foreground: renderer.background, background: ''}
     }
     // else us the ascii character
     return {...renderer, foreground: renderer.color}
@@ -389,6 +389,7 @@ export class Game {
   initialize (presserRef, document) {
     this.initializeUI(presserRef, document);
     this.initializeGameData();
+    setTimeout(() => this.display.draw(), 100) // hack to register sprite mode
   }
 
   addMessage (text, type) {
