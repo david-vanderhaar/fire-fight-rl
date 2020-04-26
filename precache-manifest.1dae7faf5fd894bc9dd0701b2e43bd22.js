@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "cd8074d362efb4084c7185b40b57577e",
+    "revision": "e404e4d3f38c6fc0c6758ca7d0ccb0cf",
     "url": "/fire-fight-rl/index.html"
   },
   {
-    "revision": "15bb5746d0c22ce6a67d",
+    "revision": "d8a5631348f2da920454",
     "url": "/fire-fight-rl/static/css/main.847d0c47.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/fire-fight-rl/static/js/2.246ded11.chunk.js"
   },
   {
-    "revision": "15bb5746d0c22ce6a67d",
-    "url": "/fire-fight-rl/static/js/main.cf05e4c3.chunk.js"
+    "revision": "d8a5631348f2da920454",
+    "url": "/fire-fight-rl/static/js/main.c8444e3c.chunk.js"
   },
   {
     "revision": "6a3195c702d4ae03f018",
