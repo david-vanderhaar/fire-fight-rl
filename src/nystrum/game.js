@@ -384,7 +384,16 @@ export class Game {
   initialize (presserRef, document) {
     this.initializeUI(presserRef, document);
     this.initializeGameData();
-    setTimeout(() => this.display.draw(), 100) // hack to register sprite mode
+    // hack to register sprite mode
+    setTimeout(() => {
+      this.spriteMode = false;
+      this.draw()
+    }, 100)
+    setTimeout(() => {
+      this.spriteMode = true;
+      this.draw()
+    }, 100)
+    // end hack
   }
 
   addMessage (text, type) {
