@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://david-vanderhaar.github.io/fire-fight-rl",
   "dependencies": {
+    "howler": "^2.1.3",
     "konva": "^4.1.5",
     "lodash": "^4.17.15",
     "react": "^16.9.0",

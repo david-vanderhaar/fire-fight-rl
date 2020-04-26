@@ -6,6 +6,7 @@ import uuid from 'uuid/v1';
 import { Particle } from './entites';
 import { MESSAGE_TYPE } from './message';
 import { TYPE as ITEM_TYPES } from './items';
+import SOUNDS from './sounds';
 
 export class Base {
   constructor({
@@ -878,6 +879,7 @@ export class Attack extends Base {
     
     success = this.actor.attack(this.targetPos);
     if (success) {
+      SOUNDS.test.play();
       this.addParticle(1, {...this.targetPos}, {x: 0, y:0})
       this.actor.energy -= this.energyCost;
     }
