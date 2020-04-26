@@ -49,7 +49,7 @@ class Lose extends React.Component {
             height: '100vh',
             backgroundColor: '#222',
             // backgroundColor: 'rgb(4, 49, 61)',
-            backgroundImage: `url("/fire_man_blue.jpg")`,
+            backgroundImage: `url("${window.PUBLIC_URL}/fire_man_blue.jpg")`,
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundPositionY: '10px'
