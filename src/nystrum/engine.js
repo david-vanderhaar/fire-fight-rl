@@ -129,7 +129,7 @@ export class Engine {
     let actor = this.actors[this.currentActor]
     
     if (!actor) {
-      this.game.backToTitle();
+      // this.game.backToTitle();
       return false;
     }
     

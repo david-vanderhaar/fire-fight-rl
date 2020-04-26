@@ -3,7 +3,9 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { SCREENS } from './Screen/constants';
 import Level from './Screen/Level';
 import Title from './Screen/Title';
+import Lose from './Screen/Lose';
 import Characters from './Characters/index';
+import SOUNDS from './sounds';
 
 class Nystrum extends React.Component {
   constructor() {
@@ -25,6 +27,11 @@ class Nystrum extends React.Component {
   }
 
   setActiveScreen (activeScreen) {
+    if (activeScreen === SCREENS.TITLE) {
+      Object.keys(SOUNDS).forEach(key => {
+        SOUNDS[key].stop();
+      });
+    }
     this.setState({activeScreen})
   }
 
@@ -40,6 +47,13 @@ class Nystrum extends React.Component {
       selectedCharacter={this.state.selectedCharacter}
       characters={this.state.characters}
     />
+    const loseScreen = <Lose 
+      key={SCREENS.LOSE} 
+      setActiveScreen={this.setActiveScreen.bind(this)}
+      setSelectedCharacter={this.setSelectedCharacter.bind(this)}
+      selectedCharacter={this.state.selectedCharacter}
+      characters={this.state.characters}
+    />
     const levelScreen = <Level 
       key={SCREENS.LEVEL} 
       setActiveScreen={this.setActiveScreen.bind(this)}
@@ -49,6 +63,8 @@ class Nystrum extends React.Component {
     switch (this.state.activeScreen) {
       case SCREENS.TITLE:
         return titleScreen
+      case SCREENS.LOSE:
+        return loseScreen
       case SCREENS.LEVEL:
         return levelScreen
       default:

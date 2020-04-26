@@ -7,6 +7,7 @@ import * as Action from './actions';
 import * as Engine from './engine';
 import { cloneDeep, cloneDeepWith } from 'lodash';
 import { MESSAGE_TYPE } from './message';
+import SOUNDS from './sounds';
 
 export class Entity {
   constructor({ game = null, passable = false, name = 'nameless'}) {
@@ -366,6 +367,7 @@ const Equiping = superclass => class extends superclass {
       if (!foundSlot && slot.type === slotName && slot.item === null) {
         slot.item = item;
         foundSlot = true;
+        SOUNDS.equip_1.play();
       }
       return slot;
     })
@@ -377,6 +379,7 @@ const Equiping = superclass => class extends superclass {
       if (slot.item) {
         if (slot.item.id === item.id) {
           slot.item = null;
+          SOUNDS.equip_0.play();
         }
       }
       return slot;
@@ -1251,6 +1254,8 @@ const Exploding = superclass => class extends superclass {
       if (tile) tile.type = 'BURNT';
     });
 
+    if (this.explosivity > 0) SOUNDS.explosion_0.play();
+
     // this.game.draw(); //may not need draw here
   }
 
@@ -1264,7 +1269,19 @@ const Exploding = superclass => class extends superclass {
 const Helpless = superclass => class extends superclass {
   constructor({ ...args }) {
     super({ ...args })
-    this.entityTypes = this.entityTypes.concat('HELPLESS')
+    this.entityTypes = this.entityTypes.concat('HELPLESS');
+    this.saved = false;
+  }
+
+  save () {
+    this.saved = true;
+    SOUNDS.save.play();
+  }
+
+  destroy () {
+    const sound = Helper.getRandomInArray([SOUNDS.scream_0, SOUNDS.scream_1, SOUNDS.scream_2])
+    sound.play();
+    super.destroy();
   }
 }
 

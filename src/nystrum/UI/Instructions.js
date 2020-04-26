@@ -20,7 +20,7 @@ class Instructions extends React.Component {
     return (
       <div className="Instructions UI">
         <p className='flow-text'>
-          Save all of the citizens from the burning building and get them to the safe zone!
+          Save all of the citizens from the burning keep and get them to the safe zone!
         </p>
         <div className='flow-text'>
           { modeDetails }

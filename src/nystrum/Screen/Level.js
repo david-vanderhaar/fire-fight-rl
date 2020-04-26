@@ -26,6 +26,7 @@ class Level extends React.Component {
   async componentDidMount() {
     this.state.game.initialize(this.presserRef, document)
     this.state.game['backToTitle'] = () => this.props.setActiveScreen(SCREENS.TITLE);
+    this.state.game['toLose'] = () => this.props.setActiveScreen(SCREENS.LOSE);
     this.state.game.updateReact = (newGameState) => { this.setState({game: newGameState}) }
     this.state.game.engine.start()
   }

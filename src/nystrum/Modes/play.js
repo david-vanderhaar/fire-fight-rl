@@ -6,6 +6,7 @@ import { generate as generateBuilding } from '../Maps/generator';
 import { FireSpread, Speaker, Debris } from '../entites';
 import { MESSAGE_TYPE } from '../message';
 import { Mode } from './default';
+import SOUNDS from '../sounds';
 
 export class Play extends Mode {
   constructor({ ...args }) {
@@ -49,6 +50,8 @@ export class Play extends Mode {
       let posXY = pos.split(',').map((coord) => parseInt(coord));
       this.addNPC({ x: posXY[0], y: posXY[1] });
     }
+    // sounds
+    if (!SOUNDS.fire_1.playing()) SOUNDS.fire_1.play();    
   }
 
   checkRemoveSafeFloors () {
@@ -168,6 +171,7 @@ export class Play extends Mode {
       if (actor.entityTypes.includes('HELPLESS')) {
         const tile = this.game.map[Helper.coordsToString(actor.pos)];
         if (tile.type === 'SAFE') {
+          if (!actor.saved) actor.save();
           return true;
         }
       }
@@ -189,6 +193,8 @@ export class Play extends Mode {
   hasLost () {
     const helpless = this.game.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
     if (helpless.length < this.getSaveCountRequirement()) {
+      SOUNDS.lose.play();
+      this.game.toLose();
       return true;
     }
     return false;
