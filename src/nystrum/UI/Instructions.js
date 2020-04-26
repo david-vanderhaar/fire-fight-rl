@@ -34,8 +34,22 @@ class Instructions extends React.Component {
             {/* <button className='btn btn-main' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>
               Restart
             </button> */}
-            <button className='btn btn-main' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>
+            <button className='btn btn-main'>
               Restart
+            </button>
+          </div>
+          <div 
+            className='Instructions__block'
+            onClick={() => this.props.toggleSpriteMode()}
+          >
+            <button className='btn btn-main'>
+              {
+                this.props.spriteMode ? (
+                  'ASCII mode'
+                ) : (
+                  'Sprite mode'
+                )
+              }
             </button>
           </div>
         </div>

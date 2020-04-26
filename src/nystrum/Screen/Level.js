@@ -18,6 +18,7 @@ class Level extends React.Component {
     this.state = {
       game: game,
       activeTab: 0,
+      spriteMode: game.spriteMode,
     };
     this.presserRef = React.createRef();
   }
@@ -27,6 +28,13 @@ class Level extends React.Component {
     this.state.game['backToTitle'] = () => this.props.setActiveScreen(SCREENS.TITLE);
     this.state.game.updateReact = (newGameState) => { this.setState({game: newGameState}) }
     this.state.game.engine.start()
+  }
+
+  toggleSpriteMode () {
+    this.state.game.spriteMode = !this.state.game.spriteMode;
+    this.state.game.draw();
+    this.presserRef.current.focus();
+    this.setState({ spriteMode: this.state.game.spriteMode})
   }
 
   render() {
@@ -62,7 +70,7 @@ class Level extends React.Component {
               {Game.DisplayElement(this.presserRef, Game.handleKeyPress, this.state.game.engine)}
               {/* <Information data={data} /> */}
             </div>
-            <Instructions game={this.state.game} setActiveScreen={this.props.setActiveScreen} />
+            <Instructions game={this.state.game} spriteMode={this.state.game.spriteMode} setActiveScreen={this.props.setActiveScreen} toggleSpriteMode={this.toggleSpriteMode.bind(this)} />
           </div>
           <div className='col s2'>
             <KeymapUI keymap={this.state.game.visibleKeymap} />

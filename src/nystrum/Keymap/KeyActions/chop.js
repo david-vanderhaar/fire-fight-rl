@@ -98,7 +98,7 @@ export const chop = (engine) => {
       x: currentActor.pos.x + direction[0],
       y: currentActor.pos.y + direction[1],
     }
-    const animation = engine.game.display.addAnimation(1, { x: pos.x, y: pos.y, color: THEMES.SOLARIZED.green })
+    const animation = engine.game.display.addAnimation(1, { x: pos.x, y: pos.y, color: THEMES.SOLARIZED.base3 })
     animations.push(animation);
   })
   // end

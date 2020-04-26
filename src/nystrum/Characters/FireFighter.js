@@ -41,6 +41,7 @@ export default function (engine) {
     pos: { x: 19, y: 22 },
     renderer: {
       character: 'F',
+      sprite: '',
       color: Constant.THEMES.SOLARIZED.base3,
       background: Constant.THEMES.SOLARIZED.yellow,
     },

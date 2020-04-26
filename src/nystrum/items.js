@@ -358,6 +358,7 @@ export const axe = (engine) => new Entity.Weapon({
   equipmentType: Constant.EQUIPMENT_TYPES.GENERIC,
   renderer: {
     character: 'a',
+    sprite: '',
     color: 'white',
     background: '',
   },
@@ -371,6 +372,7 @@ export const waterGun = (engine) => new Entity.Weapon({
   equipmentType: Constant.EQUIPMENT_TYPES.GENERIC,
   renderer: {
     character: 'w',
+    sprite: '',
     color: Constant.THEMES.SOLARIZED.blue,
     background: '',
   },
@@ -384,6 +386,7 @@ export const fireJacket = (engine) => new Entity.Armor({
   equipmentType: Constant.EQUIPMENT_TYPES.GENERIC,
   renderer: {
     character: 'J',
+    sprite: '',
     color: Constant.THEMES.SOLARIZED.magenta,
     background: '',
   },

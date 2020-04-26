@@ -111,6 +111,7 @@ export class Display {
     tileGutter = 0,
     tileOffset = 10,
     cameraFollow = false,
+    game = null,
   }) {
     this.containerId = containerId;
     this.width = width;
@@ -127,6 +128,7 @@ export class Display {
     this.animationLayer = null;
     this.animations = [];
     this.animationLoop = null;
+    this.game = game;
   }
 
   initialize (document) {
@@ -236,7 +238,8 @@ export class Display {
       text: character,
       width: this.tileWidth,
       height: this.tileHeight,
-      fontSize: 18,
+      fontSize: 24,
+      fontFamily: 'scroll-o-script',
       fill: foreground,
       align: 'center',
       verticalAlign: 'middle',
