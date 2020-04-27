@@ -4,6 +4,7 @@ import { SCREENS } from './Screen/constants';
 import Level from './Screen/Level';
 import Title from './Screen/Title';
 import Lose from './Screen/Lose';
+import Win from './Screen/Win';
 import Characters from './Characters/index';
 import SOUNDS from './sounds';
 
@@ -54,6 +55,13 @@ class Nystrum extends React.Component {
       selectedCharacter={this.state.selectedCharacter}
       characters={this.state.characters}
     />
+    const winScreen = <Win 
+      key={SCREENS.WIN} 
+      setActiveScreen={this.setActiveScreen.bind(this)}
+      setSelectedCharacter={this.setSelectedCharacter.bind(this)}
+      selectedCharacter={this.state.selectedCharacter}
+      characters={this.state.characters}
+    />
     const levelScreen = <Level 
       key={SCREENS.LEVEL} 
       setActiveScreen={this.setActiveScreen.bind(this)}
@@ -65,6 +73,8 @@ class Nystrum extends React.Component {
         return titleScreen
       case SCREENS.LOSE:
         return loseScreen
+      case SCREENS.WIN:
+        return winScreen
       case SCREENS.LEVEL:
         return levelScreen
       default:

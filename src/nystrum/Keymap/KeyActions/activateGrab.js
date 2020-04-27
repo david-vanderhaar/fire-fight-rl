@@ -20,17 +20,25 @@ const grabDirection = (direction, engine, actor, animation) => {
   )
 }
 
+
 const keymapCursorToGrabEntity = (engine, initiatedBy, initialKeymap, animations) => {
+  const goToPreviousKeymap = () => {
+    initiatedBy.keymap = initialKeymap;
+    // animation code
+    if (animations.length) {
+      animations.forEach((animation) => engine.game.display.removeAnimation(animation.id))
+    }
+    // end
+  }
   return {
+    Escape: {
+      activate: goToPreviousKeymap,
+      label: 'Cancel Grab',
+    },
     ...createFourDirectionMoveOptions(
       (direction, engine) => {
         grabDirection(direction, engine, initiatedBy);
-        initiatedBy.keymap = initialKeymap;
-        // animation code
-        if (animations.length) {
-          animations.forEach((animation) => engine.game.display.removeAnimation(animation.id))
-        }
-        // end
+        goToPreviousKeymap();
       },
       engine,
       'grab',

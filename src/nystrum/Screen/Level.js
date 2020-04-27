@@ -27,14 +27,20 @@ class Level extends React.Component {
     this.state.game.initialize(this.presserRef, document)
     this.state.game['backToTitle'] = () => this.props.setActiveScreen(SCREENS.TITLE);
     this.state.game['toLose'] = () => this.props.setActiveScreen(SCREENS.LOSE);
+    this.state.game['toWin'] = () => this.props.setActiveScreen(SCREENS.WIN);
     this.state.game.updateReact = (newGameState) => { this.setState({game: newGameState}) }
     this.state.game.engine.start()
+  }
+
+  refocus () {
+    if (this.presserRef) this.presserRef.current.focus();
   }
 
   toggleSpriteMode () {
     this.state.game.spriteMode = !this.state.game.spriteMode;
     this.state.game.draw();
-    this.presserRef.current.focus();
+    // this.presserRef.current.focus();
+    this.refocus();
     this.setState({ spriteMode: this.state.game.spriteMode})
   }
 
@@ -74,7 +80,7 @@ class Level extends React.Component {
             <Instructions game={this.state.game} spriteMode={this.state.game.spriteMode} setActiveScreen={this.props.setActiveScreen} toggleSpriteMode={this.toggleSpriteMode.bind(this)} />
           </div>
           <div className='col s2'>
-            <KeymapUI keymap={this.state.game.visibleKeymap} />
+            <KeymapUI keymap={this.state.game.visibleKeymap} game={this.state.game} refocus={this.refocus.bind(this)}/>
             <Messages messages={this.state.game.messages.slice(-5).reverse()} />
           </div>
           {/* <button className='btn' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>Quit</button> */}

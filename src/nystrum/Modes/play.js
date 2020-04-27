@@ -151,6 +151,9 @@ export class Play extends Mode {
         this.data.debrisCount = 20;
         this.data.gasCanCount = 6;
         break;
+      case 9:
+        this.game.toWin();
+        break;
       default:
         this.data.fireIntensity = 3;
         this.data.npcCount = 3;
