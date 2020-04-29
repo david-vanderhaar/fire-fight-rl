@@ -28,7 +28,6 @@ import { sandWall } from './KeyActions/sandWall';
 import { chop } from './KeyActions/chop';
 import { die } from './KeyActions/die';
 import { none } from './KeyActions/none';
-import { addDebris } from './KeyActions/addDebris';
 import { activateGrab } from './KeyActions/activateGrab';
 import { releaseGrab } from './KeyActions/activateGrab';
 
@@ -51,7 +50,6 @@ export {
   tackle,
   die,
   none,
-  addDebris,
   activateGrab,
   releaseGrab,
   // Rock Lee

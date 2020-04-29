@@ -35,10 +35,30 @@ export class Play extends Mode {
       let posXY = pos.split(',').map((coord) => parseInt(coord));
       this.addDebris({ x: posXY[0], y: posXY[1] });
     }
+    for (let index = 0; index < this.data.mediumDebrisCount; index++) {
+      let pos = Helper.getRandomInArray(array);
+      let posXY = pos.split(',').map((coord) => parseInt(coord));
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'Medium Sized Debris', 'm', 10, 0);
+    }
+    for (let index = 0; index < this.data.mediumDebrisCount; index++) {
+      let pos = Helper.getRandomInArray(array);
+      let posXY = pos.split(',').map((coord) => parseInt(coord));
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'Heavy Sized Debris', 'H', 10, 0, false, false);
+    }
+    for (let index = 0; index < this.data.smallGasCanCount; index++) {
+      let pos = Helper.getRandomInArray(array);
+      let posXY = pos.split(',').map((coord) => parseInt(coord));
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'Xs', 1, 1, Constant.THEMES.SOLARIZED.orange);
+    }
     for (let index = 0; index < this.data.gasCanCount; index++) {
       let pos = Helper.getRandomInArray(array);
       let posXY = pos.split(',').map((coord) => parseInt(coord));
       this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'X', 1, 3, Constant.THEMES.SOLARIZED.orange);
+    }
+    for (let index = 0; index < this.data.largeGasCanCount; index++) {
+      let pos = Helper.getRandomInArray(array);
+      let posXY = pos.split(',').map((coord) => parseInt(coord));
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'XL', 1, 10, Constant.THEMES.SOLARIZED.orange);
     }
     for (let index = 0; index < this.data.fireIntensity; index++) {
       let pos = Helper.getRandomInArray(array);
@@ -103,53 +123,76 @@ export class Play extends Mode {
 
   increaseIntensity () {
     switch (this.data.level) {
-      case 1:
-        this.data.fireIntensity = 1;
-        this.data.npcCount = 1;
-        this.data.debrisCount = 4;
-        this.data.gasCanCount = 0;
-        break;
+
       case 2:
         this.data.fireIntensity = 2;
         this.data.npcCount = 1;
         this.data.debrisCount = 4;
-        this.data.gasCanCount = 1;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 1;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 3:
         this.data.fireIntensity = 3;
         this.data.npcCount = 2;
         this.data.debrisCount = 50;
-        this.data.gasCanCount = 1;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 1;
+        this.data.mediumGasCanCount = 2;
+        this.data.largeGasCanCount = 1;
         break;
       case 4:
         this.data.fireIntensity = 4;
         this.data.npcCount = 2;
         this.data.debrisCount = 6;
-        this.data.gasCanCount = 3;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 3;
+        this.data.mediumGasCanCount = 2;
+        this.data.largeGasCanCount = 1;
         break;
       case 5:
         this.data.fireIntensity = 5;
         this.data.npcCount = 3;
         this.data.debrisCount = 6;
-        this.data.gasCanCount = 3;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 3;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 6:
         this.data.fireIntensity = 4;
         this.data.npcCount = 3;
         this.data.debrisCount = 10;
-        this.data.gasCanCount = 3;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 3;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 7:
         this.data.fireIntensity = 1;
         this.data.npcCount = 3;
         this.data.debrisCount = 80;
-        this.data.gasCanCount = 25;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 25;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 8:
         this.data.fireIntensity = 3;
         this.data.npcCount = 3;
         this.data.debrisCount = 20;
-        this.data.gasCanCount = 6;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 6;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 9:
         this.game.toWin();
@@ -158,6 +201,8 @@ export class Play extends Mode {
         this.data.fireIntensity = 3;
         this.data.npcCount = 3;
         this.data.debrisCount = 20;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
         this.data.gasCanCount = 5;
         break;
     }
@@ -203,7 +248,7 @@ export class Play extends Mode {
     return false;
   }
 
-  addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, background = Constant.THEMES.SOLARIZED.base01) {
+  addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, pushable = true, draggable = true, background = Constant.THEMES.SOLARIZED.base01) {
     let sprite = Helper.getRandomInArray(['', '', '', '', '', '']);
     if (explosivity > 0) sprite = ''
     let box = new Debris({
@@ -219,6 +264,8 @@ export class Play extends Mode {
       durability,
       explosivity,
       flammability: 0,
+      draggable,
+      pushable,
     })
 
     this.game.placeActorOnMap(box)
