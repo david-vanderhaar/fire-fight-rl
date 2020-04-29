@@ -200,7 +200,7 @@ export class Play extends Mode {
     return false;
   }
 
-  addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, pushability = true, draggability = true, background = Constant.THEMES.SOLARIZED.base01) {
+  addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, pushable = true, draggable = true, background = Constant.THEMES.SOLARIZED.base01) {
     let box = new Debris({
       pos,
       renderer: {
@@ -213,8 +213,8 @@ export class Play extends Mode {
       durability,
       explosivity,
       flammability: 0,
-      draggability,
-      pushability,
+      draggable,
+      pushable,
     })
 
     this.game.placeActorOnMap(box)
