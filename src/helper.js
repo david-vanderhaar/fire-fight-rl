@@ -6,6 +6,10 @@ export const delay = (timeDelayed = 100) => {
   return new Promise(resolve => setTimeout(resolve, timeDelayed));
 }
 
+export const clamp = (value, min, max) => {
+  return Math.min(Math.max(value, min), max);
+};
+
 export const getRandomInArray = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 }

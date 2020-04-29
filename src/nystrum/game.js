@@ -16,6 +16,8 @@ const MAP_HEIGHT = 25;
 const TILE_WIDTH = 30;
 const TILE_HEIGHT = 30;
 const TILE_OFFSET = 5;
+const canvasWidth = (MAP_WIDTH * TILE_WIDTH) + TILE_OFFSET;
+const canvasHeight = (MAP_HEIGHT * TILE_HEIGHT) + TILE_OFFSET;
 
 export class Game {
   constructor({
@@ -28,12 +30,15 @@ export class Game {
     getSelectedCharacter = () => false,
     display = new Display({
       containerId: 'display',
-      width: (MAP_WIDTH * TILE_WIDTH) + TILE_OFFSET,
-      height: (MAP_HEIGHT * TILE_HEIGHT) + TILE_OFFSET,
+      width: canvasWidth,
+      height: canvasHeight,
       tileWidth: TILE_WIDTH,
       tileHeight: TILE_HEIGHT,
       tileOffset: TILE_OFFSET,
+      cameraFollow: false,
+      game: this,
     }),
+    spriteMode = true,
     tileKey = Constant.TILE_KEY,
     mode = new Mode.Play({
       game: this,
@@ -48,6 +53,7 @@ export class Game {
         smallGasCanCount: 3,
         mediumGasCanCount: 0,
         largeGasCanCount: 1,
+        turnCount: 0,
       },
     }),
     messages = [],
@@ -59,6 +65,7 @@ export class Game {
     this.mapWidth = mapWidth;
     this.mapHeight = mapHeight;
     this.display = display;
+    this.spriteMode = spriteMode;
     this.tileKey = tileKey;
     this.mode = mode;
     this.messages = messages;
@@ -241,14 +248,13 @@ export class Game {
       let x = parseInt(parts[0]);
       let y = parseInt(parts[1]);
       let tile = this.map[key];
-      let { character, foreground, background } = this.tileKey[tile.type]
-
+      // let { foreground, background } = this.tileKey[tile.type]
       // Proto code to handle tile animations
       let tileRenderer = this.tileKey[tile.type]
       let nextFrame = this.animateTile(tile, tileRenderer);
-      character = nextFrame.character;
-      foreground = nextFrame.foreground;
-      background = nextFrame.background;
+      let character = nextFrame.character;
+      let foreground = nextFrame.foreground;
+      let background = nextFrame.background;
 
       if (tile.entities.length > 0) {
         let entity = tile.entities[tile.entities.length - 1]
@@ -273,33 +279,60 @@ export class Game {
     });
     this.display.draw();
   }
+
+  getPlayers () {
+    return this.engine.actors.filter((actor) => actor.entityTypes.includes('PLAYING'))
+  }
   
   draw () {
     this.processTileMap((tileKey, x, y, character, foreground, background) => {
       this.display.updateTile(this.tileMap[tileKey], character, foreground, background);
     });
-    this.display.draw();
+
+    let playerPos = null;
+    const players = this.getPlayers();
+    if (players.length) { playerPos = players[0].pos }
+
+    this.display.draw(playerPos);
+  }
+
+  getEntityRenderer (renderer) {
+    // if sprite mode is on and the renderer has a sprite defined, use that
+    if (this.spriteMode && renderer.hasOwnProperty('sprite')) {
+      return {...renderer, character: renderer.sprite, foreground: renderer.color}
+      // return {character: renderer.sprite, foreground: renderer.background, background: ''}
+    }
+    // else us the ascii character
+    return {...renderer, foreground: renderer.color}
+  }
+
+  getTileRenderer (renderer) {
+    // if sprite mode is on and the renderer has a sprite defined, use that
+    if (this.spriteMode && renderer.hasOwnProperty('sprite')) {
+      return {...renderer, character: renderer.sprite}
+    }
+    // else us the ascii character
+    return renderer
   }
   
   animateEntity (entity) {
     let renderer = entity.renderer;
-    let {character, color, background} = {...renderer}
+    let { character, foreground, background } = this.getEntityRenderer(renderer)
     if (renderer.animation) {
-      let frame = renderer.animation[entity.currentFrame];
-
+      let frame = this.getEntityRenderer(renderer.animation[entity.currentFrame]);
       character = frame.character;
-      color = frame.foreground;
+      foreground = frame.foreground;
       background = frame.background;
       entity.currentFrame = (entity.currentFrame + 1) % renderer.animation.length;
     }
-    return {character, foreground: color, background}
+    return {character, foreground, background}
   }
 
   animateTile (tile, renderer) {
-    let {character, foreground, background} = {...renderer}
+    let {character, foreground, background} = this.getTileRenderer(renderer)
     if (renderer.animation) {
-      let frame = renderer.animation[tile.currentFrame];
-      character = frame.character;
+      let frame = this.getTileRenderer(renderer.animation[tile.currentFrame]);
+      character = frame.character
       foreground = frame.foreground;
       background = frame.background;
       tile.currentFrame = (tile.currentFrame + 1) % renderer.animation.length;
@@ -355,6 +388,16 @@ export class Game {
   initialize (presserRef, document) {
     this.initializeUI(presserRef, document);
     this.initializeGameData();
+    // hack to register sprite mode
+    setTimeout(() => {
+      this.spriteMode = false;
+      this.draw()
+    }, 100)
+    setTimeout(() => {
+      this.spriteMode = true;
+      this.draw()
+    }, 100)
+    // end hack
   }
 
   addMessage (text, type) {

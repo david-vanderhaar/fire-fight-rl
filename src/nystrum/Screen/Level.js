@@ -18,6 +18,7 @@ class Level extends React.Component {
     this.state = {
       game: game,
       activeTab: 0,
+      spriteMode: game.spriteMode,
     };
     this.presserRef = React.createRef();
   }
@@ -25,8 +26,22 @@ class Level extends React.Component {
   async componentDidMount() {
     this.state.game.initialize(this.presserRef, document)
     this.state.game['backToTitle'] = () => this.props.setActiveScreen(SCREENS.TITLE);
+    this.state.game['toLose'] = () => this.props.setActiveScreen(SCREENS.LOSE);
+    this.state.game['toWin'] = () => this.props.setActiveScreen(SCREENS.WIN);
     this.state.game.updateReact = (newGameState) => { this.setState({game: newGameState}) }
     this.state.game.engine.start()
+  }
+
+  refocus () {
+    if (this.presserRef) this.presserRef.current.focus();
+  }
+
+  toggleSpriteMode () {
+    this.state.game.spriteMode = !this.state.game.spriteMode;
+    this.state.game.draw();
+    // this.presserRef.current.focus();
+    this.refocus();
+    this.setState({ spriteMode: this.state.game.spriteMode})
   }
 
   render() {
@@ -62,10 +77,10 @@ class Level extends React.Component {
               {Game.DisplayElement(this.presserRef, Game.handleKeyPress, this.state.game.engine)}
               {/* <Information data={data} /> */}
             </div>
-            <Instructions game={this.state.game} setActiveScreen={this.props.setActiveScreen} />
+            <Instructions game={this.state.game} spriteMode={this.state.game.spriteMode} setActiveScreen={this.props.setActiveScreen} toggleSpriteMode={this.toggleSpriteMode.bind(this)} />
           </div>
           <div className='col s2'>
-            <KeymapUI keymap={this.state.game.visibleKeymap} />
+            <KeymapUI keymap={this.state.game.visibleKeymap} game={this.state.game} refocus={this.refocus.bind(this)}/>
             <Messages messages={this.state.game.messages.slice(-5).reverse()} />
           </div>
           {/* <button className='btn' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>Quit</button> */}

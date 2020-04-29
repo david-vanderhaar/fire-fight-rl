@@ -20,7 +20,7 @@ class Instructions extends React.Component {
     return (
       <div className="Instructions UI">
         <p className='flow-text'>
-          Save all of the citizens from the burning building and get them to the safe zone!
+          Save all of the citizens from the burning keep and get them to the safe zone!
         </p>
         <div className='flow-text'>
           { modeDetails }
@@ -34,8 +34,22 @@ class Instructions extends React.Component {
             {/* <button className='btn btn-main' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>
               Restart
             </button> */}
-            <button className='btn btn-main' onClick={() => this.props.setActiveScreen(SCREENS.TITLE)}>
+            <button className='btn btn-main'>
               Restart
+            </button>
+          </div>
+          <div 
+            className='Instructions__block'
+            onClick={() => this.props.toggleSpriteMode()}
+          >
+            <button className='btn btn-main'>
+              {
+                this.props.spriteMode ? (
+                  'ASCII mode'
+                ) : (
+                  'Sprite mode'
+                )
+              }
             </button>
           </div>
         </div>

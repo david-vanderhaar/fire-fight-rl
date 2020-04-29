@@ -6,6 +6,7 @@ import { generate as generateBuilding } from '../Maps/generator';
 import { FireSpread, Speaker, Debris } from '../entites';
 import { MESSAGE_TYPE } from '../message';
 import { Mode } from './default';
+import SOUNDS from '../sounds';
 
 export class Play extends Mode {
   constructor({ ...args }) {
@@ -69,13 +70,28 @@ export class Play extends Mode {
       let posXY = pos.split(',').map((coord) => parseInt(coord));
       this.addNPC({ x: posXY[0], y: posXY[1] });
     }
+    // sounds
+    if (!SOUNDS.fire_1.playing()) SOUNDS.fire_1.play();    
+  }
+
+  checkRemoveSafeFloors () {
+    const currentActor = this.game.engine.actors[this.game.engine.currentActor];
+    if (currentActor.name !== Constant.PLAYER_NAME) return;
+
+    this.data.turnCount += 1;
+    if (this.data.turnCount > this.getSaveCountRequirement() * 50) {
+      Object.keys(this.game.map).filter((key) => this.game.map[key].type == 'SAFE_FLOOR').forEach((key) => {
+        this.game.map[key].type = 'FLOOR';
+      });
+
+    }
   }
 
   update () {
     super.update();
     this.propogateFire();
     this.burnEntities();
-
+    this.checkRemoveSafeFloors();
     if (this.hasLost()) {
       this.reset();
       this.game.initializeGameData();
@@ -92,6 +108,7 @@ export class Play extends Mode {
 
   setLevel (level) {
     this.data.level = level;
+    this.data.turnCount = 0;
   }
 
   nextLevel () {
@@ -154,6 +171,9 @@ export class Play extends Mode {
         this.data.debrisCount = 20;
         this.data.gasCanCount = 6;
         break;
+      case 9:
+        this.game.toWin();
+        break;
       default:
         this.data.fireIntensity = 3;
         this.data.npcCount = 3;
@@ -174,6 +194,7 @@ export class Play extends Mode {
       if (actor.entityTypes.includes('HELPLESS')) {
         const tile = this.game.map[Helper.coordsToString(actor.pos)];
         if (tile.type === 'SAFE') {
+          if (!actor.saved) actor.save();
           return true;
         }
       }
@@ -195,16 +216,21 @@ export class Play extends Mode {
   hasLost () {
     const helpless = this.game.engine.actors.filter((actor) => actor.entityTypes.includes('HELPLESS'));
     if (helpless.length < this.getSaveCountRequirement()) {
+      SOUNDS.lose.play();
+      this.game.toLose();
       return true;
     }
     return false;
   }
 
   addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, pushable = true, draggable = true, background = Constant.THEMES.SOLARIZED.base01) {
+    let sprite = Helper.getRandomInArray(['', '', '', '', '', '']);
+    if (explosivity > 0) sprite = ''
     let box = new Debris({
       pos,
       renderer: {
         character,
+        sprite,
         color: Constant.THEMES.SOLARIZED.base2,
         background,
       },
@@ -224,7 +250,7 @@ export class Play extends Mode {
   addNPC (pos) {
     // create new entity and place
     let entity = new Speaker({
-      name: 'Helpless Citizen',
+      name: Constant.NPC_NAME,
       // messages: SOLANGE.lyrics,
       messages: ['help!', 'ahh!', 'It\'s getting hot in hurr.'],
       messageType: MESSAGE_TYPE.ACTION,
@@ -232,6 +258,7 @@ export class Play extends Mode {
       game: this.game,
       renderer: {
         character: 'C',
+        sprite: '',
         color: Constant.THEMES.SOLARIZED.base3,
         background: Constant.THEMES.SOLARIZED.violet,
       },
@@ -239,6 +266,8 @@ export class Play extends Mode {
     })
 
     if (this.game.placeActorOnMap(entity)) {
+      const tile = this.game.map[Helper.coordsToString(entity.pos)];
+      tile.type = 'SAFE_FLOOR';
       this.game.engine.addActor(entity);
       this.game.draw();
     };
@@ -252,6 +281,7 @@ export class Play extends Mode {
       game: this.game,
       renderer: {
         character: '*',
+        sprite: '',
         color: Constant.THEMES.SOLARIZED.base3,
         background: Constant.THEMES.SOLARIZED.red,
       },

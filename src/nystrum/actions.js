@@ -6,6 +6,7 @@ import uuid from 'uuid/v1';
 import { Particle } from './entites';
 import { MESSAGE_TYPE } from './message';
 import { TYPE as ITEM_TYPES } from './items';
+import SOUNDS from './sounds';
 
 export class Base {
   constructor({
@@ -189,6 +190,10 @@ export class SprayWater extends Base {
         },
       )
     })
+
+    // sounds
+    const sound = Helper.getRandomInArray([SOUNDS.water_0, SOUNDS.water_1])
+    sound.play();
 
     this.actor.energy -= this.energyCost;
     return {
@@ -773,6 +778,8 @@ export class GrabDirection extends Base {
         { x: 0, y: 0 },
         Constant.PARTICLE_TEMPLATES.succede.renderer,
       )
+
+      SOUNDS.grab_0.play();
     }
 
     return {
@@ -803,6 +810,7 @@ export class ReleaseGrab extends Base {
         Constant.PARTICLE_TEMPLATES.succede.renderer,
       )
       success = true;
+      SOUNDS.release_0.play();
     };
 
     return {
@@ -878,6 +886,8 @@ export class Attack extends Base {
     
     success = this.actor.attack(this.targetPos);
     if (success) {
+      const sound = Helper.getRandomInArray([SOUNDS.chop_0, SOUNDS.chop_1])
+      sound.play();
       this.addParticle(1, {...this.targetPos}, {x: 0, y:0})
       this.actor.energy -= this.energyCost;
     }

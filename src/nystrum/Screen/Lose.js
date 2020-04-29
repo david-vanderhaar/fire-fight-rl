@@ -24,7 +24,7 @@ const CharacterSelect = (props) => {
                 props.setActiveScreen(SCREENS.LEVEL)
               }}
             >
-              Play Game
+              You Lost. Try Again?
             </button>
           )
         })
@@ -33,7 +33,7 @@ const CharacterSelect = (props) => {
   );
 }
 
-class Title extends React.Component {
+class Lose extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -47,7 +47,8 @@ class Title extends React.Component {
 
             width: '100vw',
             height: '100vh',
-            backgroundColor: 'rgb(4, 49, 61)',
+            backgroundColor: '#222',
+            // backgroundColor: 'rgb(4, 49, 61)',
             backgroundImage: `url("${window.PUBLIC_URL}/fire_man_blue.jpg")`,
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
@@ -67,4 +68,4 @@ class Title extends React.Component {
   }
 }
 
-export default Title;
+export default Lose;

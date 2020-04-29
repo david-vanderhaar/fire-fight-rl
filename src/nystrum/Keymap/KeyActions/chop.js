@@ -1,10 +1,17 @@
 import { Attack }from '../../actions'
-import { getDirectionKey, DIRECTIONS, ENERGY_THRESHOLD } from '../../constants';
+import { getDirectionKey, DIRECTIONS, ENERGY_THRESHOLD, THEMES } from '../../constants';
 
 
-const keyMapChop = (engine, initiatedBy, previousKeymap) => {
+const keyMapChop = (engine, initiatedBy, previousKeymap, animations) => {
   let actor = engine.actors[engine.currentActor];
-  const goToPreviousKeymap = () => initiatedBy.keymap = previousKeymap;
+  const goToPreviousKeymap = () => {
+    initiatedBy.keymap = previousKeymap;
+    // animation code
+    if (animations.length) {
+      animations.forEach((animation) => engine.game.display.removeAnimation(animation.id))
+    }
+    // end
+  }
   return {
     Escape: {
       activate: goToPreviousKeymap,
@@ -75,5 +82,26 @@ const keyMapChop = (engine, initiatedBy, previousKeymap) => {
 
 export const chop = (engine) => {
   let currentActor = engine.actors[engine.currentActor]
-  currentActor.keymap = keyMapChop(engine, currentActor, { ...currentActor.keymap });
+
+  // animation code: could be abstrated for easier use
+  const directions = [
+    DIRECTIONS.N,
+    DIRECTIONS.E,
+    DIRECTIONS.S,
+    DIRECTIONS.W,
+  ];
+
+  let animations = [];
+
+  directions.forEach((direction) => {
+    let pos = {
+      x: currentActor.pos.x + direction[0],
+      y: currentActor.pos.y + direction[1],
+    }
+    const animation = engine.game.display.addAnimation(1, { x: pos.x, y: pos.y, color: THEMES.SOLARIZED.base3 })
+    animations.push(animation);
+  })
+  // end
+
+  currentActor.keymap = keyMapChop(engine, currentActor, { ...currentActor.keymap }, animations);
 }
