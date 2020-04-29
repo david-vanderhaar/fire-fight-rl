@@ -272,7 +272,7 @@ const Rendering = superclass => class extends superclass {
     if (targetTile) {
       targetTile.entities.map((entity) => { 
         if(entity.entityTypes.includes('PUSHABLE')){
-          if (!entity.passable && entity.pushability) {
+          if (!entity.passable && entity.pushable) {
             let newX = entity.pos.x + direction[0];
             let newY = entity.pos.y + direction[1];
             let newPos = { x: newX, y: newY };
@@ -862,7 +862,7 @@ const Dragging = superclass => class extends superclass {
     if (tile.entities.length > 0) {
       const entity = tile.entities[0];
       if(entity.entityTypes.includes('DRAGGABLE'))
-        if (!this.draggedEntity && entity.draggability === true) {
+        if (!this.draggedEntity && entity.draggable === true) {
           this.draggedEntity = entity;
           return true;
         }

@@ -123,53 +123,76 @@ export class Play extends Mode {
 
   increaseIntensity () {
     switch (this.data.level) {
-      case 1:
-        this.data.fireIntensity = 1;
-        this.data.npcCount = 1;
-        this.data.debrisCount = 4;
-        this.data.gasCanCount = 0;
-        break;
+
       case 2:
         this.data.fireIntensity = 2;
         this.data.npcCount = 1;
         this.data.debrisCount = 4;
-        this.data.gasCanCount = 1;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 1;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 3:
         this.data.fireIntensity = 3;
         this.data.npcCount = 2;
         this.data.debrisCount = 50;
-        this.data.gasCanCount = 1;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 1;
+        this.data.mediumGasCanCount = 2;
+        this.data.largeGasCanCount = 1;
         break;
       case 4:
         this.data.fireIntensity = 4;
         this.data.npcCount = 2;
         this.data.debrisCount = 6;
-        this.data.gasCanCount = 3;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 3;
+        this.data.mediumGasCanCount = 2;
+        this.data.largeGasCanCount = 1;
         break;
       case 5:
         this.data.fireIntensity = 5;
         this.data.npcCount = 3;
         this.data.debrisCount = 6;
-        this.data.gasCanCount = 3;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 3;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 6:
         this.data.fireIntensity = 4;
         this.data.npcCount = 3;
         this.data.debrisCount = 10;
-        this.data.gasCanCount = 3;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 3;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 7:
         this.data.fireIntensity = 1;
         this.data.npcCount = 3;
         this.data.debrisCount = 80;
-        this.data.gasCanCount = 25;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 25;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 8:
         this.data.fireIntensity = 3;
         this.data.npcCount = 3;
         this.data.debrisCount = 20;
-        this.data.gasCanCount = 6;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
+        this.data.smallGasCanCount = 6;
+        this.data.mediumGasCanCount = 1;
+        this.data.largeGasCanCount = 1;
         break;
       case 9:
         this.game.toWin();
@@ -178,6 +201,8 @@ export class Play extends Mode {
         this.data.fireIntensity = 3;
         this.data.npcCount = 3;
         this.data.debrisCount = 20;
+        this.data.mediumDebrisCount = 4;
+        this.data.heavyDebrisCount = 1
         this.data.gasCanCount = 5;
         break;
     }
