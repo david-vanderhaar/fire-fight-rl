@@ -270,11 +270,13 @@ const Rendering = superclass => class extends superclass {
     let targetTile = this.game.map[Helper.coordsToString(targetPos)];
     if (targetTile) {
       targetTile.entities.map((entity) => { 
-        if (!entity.passable && entity.pushability) {
-          let newX = entity.pos.x + direction[0];
-          let newY = entity.pos.y + direction[1];
-          let newPos = { x: newX, y: newY };
-          entity.move(newPos);
+        if(entity.entityTypes.includes('PUSHABLE')){
+          if (!entity.passable && entity.pushability) {
+            let newX = entity.pos.x + direction[0];
+            let newY = entity.pos.y + direction[1];
+            let newPos = { x: newX, y: newY };
+            entity.move(newPos);
+          }
         }
       });
     }
@@ -856,12 +858,11 @@ const Dragging = superclass => class extends superclass {
     if (!tile) return false;
     if (tile.entities.length > 0) {
       const entity = tile.entities[0];
-      console.log('hi there:', entity.draggability);
-      
-      if (!this.draggedEntity && entity.draggability == true) {
-        this.draggedEntity = entity;
-        return true;
-      }
+      if(entity.entityTypes.includes('DRAGGABLE'))
+        if (!this.draggedEntity && entity.draggability === true) {
+          this.draggedEntity = entity;
+          return true;
+        }
       
     }
     return false;
@@ -902,16 +903,16 @@ const Dragging = superclass => class extends superclass {
 }
 
 const Draggable = superclass => class extends superclass {
-  constructor({draggability = true, ...args }) {
+  constructor({draggable = true, ...args }) {
     super({ ...args })
-    this.draggability = draggability
+    this.draggable = draggable
     this.entityTypes = this.entityTypes.concat('DRAGGABLE')
   }
 }
 const Pushable = superclass => class extends superclass {
-  constructor({pushability = true, ...args}) {
+  constructor({pushable = true, ...args}) {
     super({ ...args })
-    this.pushability = pushability
+    this.pushable = pushable
     this.entityTypes = this.entityTypes.concat('PUSHABLE')
   }
 }
