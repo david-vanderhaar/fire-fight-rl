@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "e211e98fc70ad4d36988fce51f8cd257",
+    "revision": "ba02e41629e61304ea8bd34a318276ee",
     "url": "/fire-fight-rl/index.html"
   },
   {
