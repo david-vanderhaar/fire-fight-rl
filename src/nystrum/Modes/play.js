@@ -40,7 +40,7 @@ export class Play extends Mode {
       let posXY = pos.split(',').map((coord) => parseInt(coord));
       this.addDebris({ x: posXY[0], y: posXY[1] }, 'Medium Sized Debris', 'm', 10, 0);
     }
-    for (let index = 0; index < this.data.mediumDebrisCount; index++) {
+    for (let index = 0; index < this.data.heavyDebrisCount; index++) {
       let pos = Helper.getRandomInArray(array);
       let posXY = pos.split(',').map((coord) => parseInt(coord));
       this.addDebris({ x: posXY[0], y: posXY[1] }, 'Heavy Sized Debris', 'H', 10, 0, false, false);
@@ -48,17 +48,17 @@ export class Play extends Mode {
     for (let index = 0; index < this.data.smallGasCanCount; index++) {
       let pos = Helper.getRandomInArray(array);
       let posXY = pos.split(',').map((coord) => parseInt(coord));
-      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'Xs', 1, 1, Constant.THEMES.SOLARIZED.orange);
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'Xs', 1, 1, true, true, Constant.THEMES.SOLARIZED.orange);
     }
-    for (let index = 0; index < this.data.gasCanCount; index++) {
+    for (let index = 0; index < this.data.mediumCanCount; index++) {
       let pos = Helper.getRandomInArray(array);
       let posXY = pos.split(',').map((coord) => parseInt(coord));
-      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'X', 1, 3, Constant.THEMES.SOLARIZED.orange);
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'X', 1, 3, true, true, Constant.THEMES.SOLARIZED.orange);
     }
     for (let index = 0; index < this.data.largeGasCanCount; index++) {
       let pos = Helper.getRandomInArray(array);
       let posXY = pos.split(',').map((coord) => parseInt(coord));
-      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'XL', 1, 10, Constant.THEMES.SOLARIZED.orange);
+      this.addDebris({ x: posXY[0], y: posXY[1] }, 'gas can', 'XL', 1, 10, true, true, Constant.THEMES.SOLARIZED.orange);
     }
     for (let index = 0; index < this.data.fireIntensity; index++) {
       let pos = Helper.getRandomInArray(array);
@@ -250,7 +250,30 @@ export class Play extends Mode {
 
   addDebris (pos, name = 'box', character = '%', durability = 5, explosivity = 0, pushable = true, draggable = true, background = Constant.THEMES.SOLARIZED.base01) {
     let sprite = Helper.getRandomInArray(['', '', '', '', '', '']);
-    if (explosivity > 0) sprite = ''
+    switch (character) {
+      case '%':
+        sprite = Helper.getRandomInArray(['', '']);
+        break;
+      case 'm':
+        sprite = Helper.getRandomInArray(['', '']);
+        break;
+      case 'H':
+        sprite = Helper.getRandomInArray(['', '']);
+        break;
+      case 'Xs':
+        sprite = ''
+        break;
+      case 'X':
+        sprite = ''
+        break;
+      case 'XL':
+        sprite = ''
+        break;
+      default:
+        sprite = '';
+        break;
+    }
+
     let box = new Debris({
       pos,
       renderer: {
