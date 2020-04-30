@@ -44,7 +44,9 @@
     "electron-dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "npm run build",
-    "electron-pack": "electron-builder -w"
+    "electron-pack-linux": "electron-builder --linux deb tar.xz",
+    "electron-pack-windows": "electron-builder -w",
+    "electron-pack-mac": "electron-builder -m"
   },
   "eslintConfig": {
     "extends": "react-app"
